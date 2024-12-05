@@ -1,0 +1,46 @@
+:root {
+	--header-h-mobile: 60px;
+	--header-h-desktop: 90px;
+	--full-screen: calc(var(--vh, 1vh) * 100);
+}
+
+body {
+
+	strong {
+		font-weight: bold;
+	}
+}
+
+@layer components {
+	.image_contain {
+		@apply w-full h-full object-contain
+	}
+
+	.image_cover {
+		@apply w-full h-full object-cover
+	}
+
+}
+
+@layer utilities {
+
+	.hamburgerOpen .space-y-2 .hamburgerLine:nth-of-type(1) {
+		@apply rotate-45 origin-left
+	}
+
+	.hamburgerOpen .space-y-2 .hamburgerLine:nth-of-type(2) {
+		@apply opacity-0
+	}
+
+	.hamburgerOpen .space-y-2 .hamburgerLine:nth-of-type(3) {
+		@apply -rotate-45 origin-left translate-y-[2.5px]
+	}
+
+	.menuActive+ul {
+		@apply flex
+	}
+
+	.itemActive>ul {
+		@apply flex lg:w-[160px] lg:p-9
+	}
+}

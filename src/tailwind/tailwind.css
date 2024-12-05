@@ -1,0 +1,15 @@
+/*!
+Theme Name: Wp Zero
+*/
+@import "./components/base.css";
+@import "./components/fonts.css";
+@import "./components/typography.css";
+@import "./components/layout.css";
+@import "./components/buttons.css";
+@import "./components/video_vimeo_embed.css";
+
+
+/* 
+	NB: Per far funzionare l'import nei file css di tailwind è necessario avere un file contenente solo @import senza altra logica css 
+	Fonte: https: //tailwindcss.com/docs/using-with-preprocessors
+*/

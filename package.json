@@ -1,0 +1,100 @@
+{
+  "author": "Beaverlab-team",
+  "name": "beaverlab-webpack-template",
+  "version": "1.0.0",
+  "description": "Webpack 5, scss, svg sprite template",
+  "scripts": {
+    "stats": "webpack --config settings/webpack.prod.config.js --mode=production --json > dist/stats.json && webpack-bundle-analyzer dist/stats.json",
+    "dev": "cross-env NODE_ENV=wp webpack --config settings/webpack.wp_dev.config.js --watch",
+    "dev-tailwind": "npx tailwind -i ./src/tailwind/tailwind.css -o ./src/tailwind/build/main_tailwind.css --watch",
+    "wp-build": "npx tailwind -i ./src/tailwind/tailwind.css -o ./src/tailwind/build/main_tailwind.css --minify && cross-env NODE_ENV=wp webpack --config settings/webpack.wp_prod.config.js",
+    "wp-dev": "concurrently --kill-others \"npm run dev-tailwind\" \"npm run dev\""
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/preset-env": "^7.16.0",
+    "@squoosh/lib": "^0.4.0",
+    "@tailwindcss/typography": "^0.5.15",
+    "autoprefixer": "^10.4.0",
+    "babel-loader": "^8.2.3",
+    "babel-plugin-transform-regenerator": "^6.26.0",
+    "babel-polyfill": "^6.26.0",
+    "clean-webpack-plugin": "^4.0.0",
+    "concurrently": "^8.2.0",
+    "copy-webpack-plugin": "^10.2.0",
+    "css-loader": "^6.5.1",
+    "css-minimizer-webpack-plugin": "^3.1.1",
+    "css-mqpacker": "^7.0.0",
+    "cssnano": "^5.0.11",
+    "daisyui": "^3.7.3",
+    "eslint": "^8.4.1",
+    "eslint-config-airbnb": "^19.0.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.27.0",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "eslint-webpack-plugin": "^3.1.1",
+    "fancybox": "^3.0.1",
+    "html-webpack-plugin": "^5.5.0",
+    "image-minimizer-webpack-plugin": "^3.2.2",
+    "image-webpack-loader": "^8.1.0",
+    "imagemin": "^8.0.1",
+    "imagemin-webp-webpack-plugin": "^3.3.6",
+    "mini-css-extract-plugin": "2.4.5",
+    "portfinder-sync": "0.0.2",
+    "postcss": "^8.3.11",
+    "postcss-loader": "^6.2.0",
+    "postcss-preset-env": "^8.4.2",
+    "sass": "^1.43.4",
+    "sass-lint": "^1.13.1",
+    "sass-loader": "^12.3.0",
+    "style-loader": "^3.3.1",
+    "svg-sprite-loader": "^6.0.11",
+    "svgo-loader": "^3.0.0",
+    "tailwindcss": "^3.3.2",
+    "terser-webpack-plugin": "^5.2.5",
+    "webpack": "^5.64.0",
+    "webpack-bundle-analyzer": "^4.5.0",
+    "webpack-cli": "^4.9.1",
+    "webpack-dev-server": "^4.4.0",
+    "webpack-merge": "^5.8.0"
+  },
+  "dependencies": {
+    "@fancyapps/ui": "^4.0.31",
+    "@vimeo/player": "^2.20.1",
+    "babel-runtime": "^6.26.0",
+    "cross-env": "^7.0.3",
+    "gsap": "^3.12.5",
+    "ismobilejs": "^1.1.1",
+    "jquery": "^3.5.1",
+    "js-share": "^2.3.2",
+    "lottie-web": "^5.12.0",
+    "plyr": "^3.7.8",
+    "swiper": "^9.4.1",
+    "uuid": "^9.0.0",
+    "youtube-player": "^5.6.0"
+  },
+  "resolutions": {
+    "mini-css-extract-plugin": "2.4.5"
+  },
+  "browserslist": [
+    "last 2 versions",
+    "> 5%"
+  ],
+  "engines": {
+    "node": "^12 || >=14"
+  },
+  "keywords": [
+    "webpack",
+    "boilerplate",
+    "template",
+    "setup",
+    "scss",
+    "svg sprite "
+  ],
+  "target": "web",
+  "volta": {
+    "node": "14.21.1"
+  }
+}

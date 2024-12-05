@@ -1,0 +1,193 @@
+@layer utilities {
+  .mainMenu.menuOpened {
+    @apply max-lg:opacity-100 max-lg:visible transition-opacity;
+  }
+
+  .hamburgerOpen .hamburgerLine:nth-of-type(1) {
+    @apply rotate-45 origin-top-left max-lg:bg-white translate-y-[-11px] translate-x-[6px] m-0;
+  }
+
+  .hamburgerOpen .hamburgerLine:nth-of-type(2) {
+    @apply -rotate-45 origin-top-left translate-y-[9px] translate-x-[5px] max-lg:bg-white m-0;
+  }
+
+  .menuActive + .wrap-menu {
+    @apply flex;
+  }
+
+  .itemActive > .wrap-menu {
+    @apply flex max-lg:max-h-[1000px] lg:min-w-[298px];
+  }
+
+  .firstLevelMenu.itemActive .wrap-menu {
+    @apply lg:opacity-100 lg:visible lg:transition-opacity max-lg:transition-all;
+  }
+
+  .firstLevelMenu .menuItemWChild .wrap-menu {
+    @apply lg:opacity-0 lg:invisible lg:transition-opacity max-lg:transition-all;
+  }
+
+  .firstLevelMenu .menuItemWChild.itemActive .wrap-menu {
+    @apply lg:opacity-100 lg:visible lg:transition-opacity max-lg:transition-all;
+  }
+
+  .main-menu.slidedNav {
+    @apply max-lg:translate-x-[-100%];
+  }
+
+  .itemActive > .toggleMenu {
+    @apply lg:opacity-100 lg:translate-x-0 transition-all;
+  }
+
+  .itemActive > .toggleMenu svg {
+    @apply fill-blue;
+  }
+
+  .plusMenu:before {
+    @apply content-["\002B"] inline-flex text-4xl font-thin;
+  }
+
+  .plusMenu.openAccordion:before {
+    @apply content-["\2212"] text-4xl font-thin;
+  }
+
+  .firstLevelMenu.itemActive > a::after {
+    @apply lg:opacity-100 lg:-translate-x-0;
+  }
+
+  .firstLevelMenu:hover > a::after {
+    @apply lg:opacity-100 lg:-translate-x-0;
+  }
+
+  .firstLevelMenu.itemActive > a::after {
+    @apply lg:opacity-100 lg:-translate-x-0;
+  }
+
+  .firstLevelMenu > a::after {
+    @apply -bottom-3;
+  }
+
+  .third-level-first-item svg path {
+    @apply lg:fill-white;
+  }
+
+  /* Hover menu */
+  .secondLevel menuItem:hover {
+    @apply lg:text-blue;
+  }
+
+  .third-level-first-item:hover .icon {
+    @apply lg:translate-x-1 transition-all;
+  }
+
+  /* WPMML LANG SWITCH */
+  .wpml-ls-legacy-dropdown-click a {
+    @apply !bg-transparent !border-none;
+  }
+
+  .js-wpml-ls-item-toggle {
+    @apply !p-0;
+  }
+
+  /* Dinamic Image Menu */
+  #dynamicImage {
+    @apply opacity-0 transition-opacity;
+  }
+
+  #dynamicImage.fade-in {
+    @apply opacity-100 transition-opacity;
+  }
+
+  /* Header in homepage */
+  @media only screen and (min-width: 1024px) {
+    .home:not(.headerMenuOpened) .wrapper {
+      @apply pt-0 transition-all;
+    }
+
+    .home:not(.headerMenuOpened) .menu-bottom,
+    .home:not(.headerMenuOpened) .mainMenu {
+      @apply bg-transparent transition-all;
+    }
+
+    .home:not(.headerMenuOpened) .firstLevelMenu {
+      @apply text-white transition-all;
+    }
+
+    .home:not(.headerMenuOpened) .menu-bottom::before {
+      @apply content-[''] absolute top-0 left-0 block bottom-[-230px] right-0 bg-gradient-header transition-all;
+    }
+
+    .home:not(.headerMenuOpened) .menu-bottom:after {
+      @apply content-[''] absolute top-0 left-0 block h-[136px] w-[327px] bg-gradient-logo transition-all;
+    }
+
+    .home:not(.headerMenuOpened) .menu-top {
+      @apply bg-blue-light text-blue transition-all;
+    }
+
+    .home:not(.headerMenuOpened) .menu-top .js-wpml-ls-item-toggle {
+      @apply !bg-blue-light !text-blue transition-all;
+    }
+
+    .home:not(.headerMenuOpened) .firstLevelMenu > a::after {
+      @apply bg-white transition-all;
+    }
+
+    .home:not(.headerMenuOpened) .logo-home {
+      @apply h-[44px] transition-all relative overflow-hidden;
+    }
+
+    .home:not(.headerMenuOpened) .logo-home::after {
+      @apply h-[100px] -left-20 opacity-20 absolute -top-5 w-6 bg-white;
+      content: "";
+      transform: rotate(35deg);
+      transition: left 1s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    .home:not(.headerMenuOpened) .logo-home:hover::after {
+      @apply bg-white left-[120%] z-[1];
+      transition: left 1s cubic-bezier(0.19, 1, 0.22, 1);
+    }
+
+    .home:not(.headerMenuOpened) .menu-top .icon-search {
+      @apply fill-blue transition-all;
+    }
+  }
+
+  .home:not(.headerMenuOpened) .menu-bottom::before {
+    @apply xl:!bottom-[-230px];
+  }
+
+  .home:not(.headerMenuOpened) .menu-bottom:after {
+    @apply xl:!h-[220px] xl:!w-[530px];
+  }
+
+  .home:not(.headerMenuOpened) .logo-home {
+    @apply xl:!h-[65px];
+  }
+
+  /* //SCROLL SPY MENU HOMEPAGE */
+  .scrollSpyElement.active span {
+    @apply opacity-100 transition-all;
+  }
+
+  .scrollSpyElement span {
+    @apply text-sm font-medium uppercase opacity-0 transition-all pr-[35px] transition-all;
+  }
+
+  .scrollSpyElement {
+    @apply relative leading-4 transition-all;
+  }
+
+  .scrollSpyElement:hover span {
+    @apply opacity-100 transition-all;
+  }
+
+  .scrollSpyElement:after {
+    @apply content-[''] h-[1px] w-4 bg-white absolute opacity-100 right-0 top-[50%];
+  }
+
+  .scrollSpyElement.active:after {
+    @apply w-6 bg-lime transition-all;
+  }
+}
