@@ -19,11 +19,11 @@
 
 <body <?= body_class();?>>
 
-	<header class="z-50 flex bg-yellow-light py-3 lg:p-5 fixed top-0 left-0 w-full transition-all h-[var(--header-h-mobile)] lg:h-[var(--header-h-desktop)] z-">
+	<header class="z-50 flex bg-blue py-3 lg:p-5 fixed top-0 left-0 w-full transition-all h-[var(--header-h-mobile)] lg:h-[var(--header-h-desktop)] z-">
 		<div class="tw-container  relative mx-auto flex justify-between ">
 			<!-- LOGO -->
 			<a class=" w-auto flex h-[30px] lg:h-auto" href="<?php echo get_home_url(); ?>">
-				<img src="<?php echo get_field('logo', 'option')['sizes']['medium']; ?>" alt="">
+				<img src="<?php echo get_field('logo', 'option')['url']; ?>" alt="">
 			</a>
 
 			<!-- MENU DESKTOP -->
