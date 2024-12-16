@@ -25,12 +25,29 @@
 					"johnpbloch/wordpress": "*"
 				}
 			}
+		},
+		{
+			"type": "package",
+			"package": {
+				"type": "wordpress-plugin",
+				"name": "myplugins/woocommerce",
+				"version": "9.4.3",
+				"dist": {
+					"type": "zip",
+					"url": "wordpress-plugins/woocommerce.9.4.3.zip"
+				},
+				"require": {
+					"composer/installers": "*",
+					"johnpbloch/wordpress": "*"
+				}
+			}
 		}
 	],
 	"require": {
 		"johnpbloch/wordpress": "6.6.2",
 		"wpackagist-plugin/svg-support": "2.3.18",
-		"myplugins/advanced-custom-fields-pro": "6.3.11"
+		"myplugins/advanced-custom-fields-pro": "6.3.11",
+		"myplugins/woocommerce": "9.4.3"
 	},
 	"autoload": {
 		"psr-0": {

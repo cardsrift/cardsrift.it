@@ -323,6 +323,22 @@
             "install-path": "../../public/wp-content/plugins/advanced-custom-fields-pro"
         },
         {
+            "name": "myplugins/woocommerce",
+            "version": "9.4.3",
+            "version_normalized": "9.4.3.0",
+            "dist": {
+                "type": "zip",
+                "url": "wordpress-plugins/woocommerce.9.4.3.zip"
+            },
+            "require": {
+                "composer/installers": "*",
+                "johnpbloch/wordpress": "*"
+            },
+            "type": "wordpress-plugin",
+            "installation-source": "dist",
+            "install-path": "../../public/wp-content/plugins/woocommerce"
+        },
+        {
             "name": "wpackagist-plugin/svg-support",
             "version": "2.3.18",
             "version_normalized": "2.3.18.0",

@@ -1,24 +1,24 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => '1.0.0+no-version-set',
-    'version' => '1.0.0.0',
+    'pretty_version' => 'dev-main',
+    'version' => 'dev-main',
     'aliases' => 
     array (
     ),
-    'reference' => NULL,
+    'reference' => 'd4726a7751da3639eea5080928af3ead0b93a893',
     'name' => 'acme/brilliant-wordpress-site',
   ),
   'versions' => 
   array (
     'acme/brilliant-wordpress-site' => 
     array (
-      'pretty_version' => '1.0.0+no-version-set',
-      'version' => '1.0.0.0',
+      'pretty_version' => 'dev-main',
+      'version' => 'dev-main',
       'aliases' => 
       array (
       ),
-      'reference' => NULL,
+      'reference' => 'd4726a7751da3639eea5080928af3ead0b93a893',
     ),
     'composer/installers' => 
     array (
@@ -60,6 +60,15 @@
     array (
       'pretty_version' => '6.3.11',
       'version' => '6.3.11.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => NULL,
+    ),
+    'myplugins/woocommerce' => 
+    array (
+      'pretty_version' => '9.4.3',
+      'version' => '9.4.3.0',
       'aliases' => 
       array (
       ),
