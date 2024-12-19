@@ -3,9 +3,7 @@
 	?>
    </div>
 
-   <footer class="footer">
-
-   </footer>
+   <?php include('global-components/footer/template.php'); ?>
 
    <?php
 	//wrapper

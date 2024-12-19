@@ -24,19 +24,4 @@ $footer_links = get_field('link_group', 'options')
   </div>
   <?php endforeach; ?>
 
-  <form>
-    <h6 class="footer-title">Newsletter</h6>
-    <fieldset class="form-control w-80">
-      <label class="label">
-        <span class="label-text">Enter your email address</span>
-      </label>
-      <div class="join">
-        <input
-          type="text"
-          placeholder="username@site.com"
-          class="input input-bordered join-item" />
-        <button class="btn btn-primary join-item">Subscribe</button>
-      </div>
-    </fieldset>
-  </form>
 </footer>
