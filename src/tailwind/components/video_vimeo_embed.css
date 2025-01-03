@@ -1,9 +1,0 @@
-@layer utilities {
-    .embed-container {
-        @apply relative pb-[56.25%] h-0 overflow-hidden max-w-full bg-blue;
-    }
-
-    .embed-container iframe {
-        @apply absolute top-0 left-0 w-full h-full;
-    }
-}

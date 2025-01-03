@@ -1,7 +1,7 @@
 <?php /* Template Name: Homepage */ ?>
 <?php get_header(); ?>
 
-<?php 
+<!-- <?php 
    $sections = get_field('builder_contents');
    foreach( $sections as $component) {
     $component_name = str_replace( '_', '-', $component['acf_fc_layout'] );
@@ -10,6 +10,8 @@
                 get_template_part("global-components/$component_name/template");
     }
 }
-?>
+?> -->
+<?php get_template_part('global-components/hero/template'); ?>
+
 
 <?php get_footer(); ?>
