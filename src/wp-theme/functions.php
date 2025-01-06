@@ -30,3 +30,12 @@ function insert_jquery()
 	wp_enqueue_script('jquery', false, array(), false, false);
 }
 add_filter('wp_enqueue_scripts', 'insert_jquery', 1);
+
+add_filter('woocommerce_account_menu_items', 'remove_my_account_tabs', 999);
+
+function remove_my_account_tabs($items) {
+
+    unset($items['downloads']);
+    
+	return $items;
+}

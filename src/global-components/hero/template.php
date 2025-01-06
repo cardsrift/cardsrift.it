@@ -3,12 +3,12 @@
 ?>
 
 <?php if($hero_slides) : ?>
-<section class="homepage-hero relative z-[0] pt-12 lg:pt-16 ">
+<section class="homepage-hero relative z-[0]">
 
 
-		<div class="swiper hero-slider !z-[6] max-lg:h-[400px] xl:max-h-[850px]">
+		<div class="swiper hero-slider !z-[6] max-lg:h-[400px] lg:h-[450px]">
 			<!-- Additional required wrapper -->
-			<div class="swiper-wrapper">
+			<div class="swiper-wrapper h-full">
 				<?php foreach($hero_slides as $key => $slide) : ?>
 					
 				<?php 
@@ -17,10 +17,10 @@
 					$image = $slide['slide']['url'];
 			    ?>
 							
-                <a href="#" class="swiper-slide overflow-hidden">
-						<picture class="h-full w-full relative aspect-video">
+                <a href="#" class="swiper-slide overflow-hidden block h-full">
+						<picture class="block h-full w-full relative ">
 						    <source media="(max-width: 767px)" srcset="<?php echo $image; ?>">
-						    <img class="h-full w-full object-cover transition-all aspect-video" 
+						    <img class=" block h-full w-full object-cover transition-all object-center" 
                                 src="<?php echo $image; ?>" 
                                 alt="<?php echo $image_alt; ?>" 
                                 title="<?php echo $image_title ?>">
