@@ -1,4 +1,4 @@
-<?php /* Template Name: My account */ ?>
+<?php /* Template Name: Checkout */ ?>
 
 <?php get_header(); ?>
 
