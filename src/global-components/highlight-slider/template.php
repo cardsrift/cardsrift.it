@@ -50,7 +50,7 @@ $slides =  $component_data['highlights'];
                                     </a>
                                     <?php echo '€'.$price  ?>
                                 </div>
-                                <a href="<?php echo get_permalink($product_id); ?>" class="highlight-slider-link text-center block w-full">
+                                <a href="?add-to-cart=<?php echo $product_id ?>" class="highlight-slider-link text-center block w-full">
                                     <?php echo __('Aggiungi al carrello', 'cardsrift'); ?>
                                 </a>
                             </div>
