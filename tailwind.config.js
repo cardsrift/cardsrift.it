@@ -1,27 +1,27 @@
 /** @type {import('tailwindcss').Config} */
 
 const themeFontSize = {
-	'xxs': '12px',
-	'xs': '13px',
-	'sm': '14px',
-	'tiny': '15px',
-	'base': '16px',
-	'md': '18px',
-	'lg': '20px',
-	'xl': '24px',
-	'2xl': '30px',
-	'3xl': '32px',
-	'4xl': '36px',
-	'5xl': '48px',
-	'6xl': '56px',
-	'7xl': '60px',
-	'8xl': '64px',
-	'9xl': '80px',
+  'xxs': '12px',
+  'xs': '13px',
+  'sm': '14px',
+  'tiny': '15px',
+  'base': '16px',
+  'md': '18px',
+  'lg': '20px',
+  'xl': '24px',
+  '2xl': '30px',
+  '3xl': '32px',
+  '4xl': '36px',
+  '5xl': '48px',
+  '6xl': '56px',
+  '7xl': '60px',
+  '8xl': '64px',
+  '9xl': '80px',
 }
 
 const themeFontFamily = {
-	avenir: ["Avenir", "sans-serif"],
-	gotham: ["Gotham", "sans-serif"],
+  bylon: ["Bylon", "sans-serif"],
+  adelle: ["adelle-sans", "sans-serif"],
 }
 
 const themeTypography = {
@@ -29,37 +29,37 @@ const themeTypography = {
     DEFAULT: themeFontSize["3xl"],
     tb: themeFontSize["6xl"],
     xl: themeFontSize["8xl"],
-	fontFamily: themeFontFamily.avenir,
+    fontFamily: themeFontFamily.bylon,
   },
   h2: {
     DEFAULT: themeFontSize["2xl"],
     tb: themeFontSize["4xl"],
     xl: themeFontSize["6xl"],
-	fontFamily: themeFontFamily.gotham,
+    fontFamily: themeFontFamily.bylon,
   },
   h3: {
     DEFAULT: themeFontSize.xl,
     tb: themeFontSize["2xl"],
     xl: themeFontSize["4xl"],
-	fontFamily: themeFontFamily.gotham,
+    fontFamily: themeFontFamily.bylon,
   },
   h4: {
     DEFAULT: themeFontSize.lg,
     tb: themeFontSize.xl,
     xl: themeFontSize["3xl"],
-	fontFamily: themeFontFamily.gotham,
+    fontFamily: themeFontFamily.bylon,
   },
   h5: {
     DEFAULT: themeFontSize.md,
     tb: themeFontSize.lg,
     xl: themeFontSize.xl,
-	fontFamily: themeFontFamily.gotham,
+    fontFamily: themeFontFamily.bylon,
   },
   h6: {
     DEFAULT: themeFontSize.base,
     tb: themeFontSize.md,
     xl: themeFontSize.md,
-	fontFamily: themeFontFamily.gotham,
+    fontFamily: themeFontFamily.bylon,
   },
 };
 
@@ -94,23 +94,10 @@ module.exports = {
     },
     colors: {
       transparent: "transparent",
-      blue: "#00ADEF",
-      grey: "#808284",
-      green: {
-        DEFAULT: "#87C440",
-        light: "#E7F3D9",
-      },
+      black: '#1d2125',
       white: "#ffffff",
-      black: "#000000",
-      orange: {
-        DEFAULT: "#F68E1F",
-        light: "#FDE8D2",
-      },
-      yellow: {
-        DEFAULT: "#FFE800",
-        light: "#FFFACC",
-      },
-      "light-orange": "#FDE8D2",
+      purple: '#8877b2',
+      yellow: '#feb601',
     },
 
     fontFamily: themeFontFamily,
@@ -150,7 +137,7 @@ module.exports = {
       addUtilities(
         Object.entries(themeTypography).map(([key, value]) => ({
           [`.tw-${key}, ${key}`]: {
-			fontFamily: value.fontFamily.join(", "),
+            fontFamily: value.fontFamily.join(", "),
             fontSize: value.DEFAULT,
             "@screen tb": {
               fontSize: value.tb,

@@ -1758,12 +1758,6 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
   background-color: hsl(var(--b2)/var(--tw-bg-opacity, 1));
 }
 
-.bg-blue {
-  --tw-bg-opacity:1;
-  background-color: #00adef;
-  background-color: rgba(0, 173, 239, var(--tw-bg-opacity, 1));
-}
-
 .bg-white {
   --tw-bg-opacity:1;
   background-color: #fff;
@@ -1773,12 +1767,6 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
 .bg-gradient-to-t {
   background-image: -webkit-gradient(linear, left bottom, left top, from(var(--tw-gradient-stops)));
   background-image: linear-gradient(to top, var(--tw-gradient-stops));
-}
-
-.from-blue {
-  --tw-gradient-from:#00adef var(--tw-gradient-from-position);
-  --tw-gradient-to:rgba(0,173,239,0) var(--tw-gradient-to-position);
-  --tw-gradient-stops:var(--tw-gradient-from),var(--tw-gradient-to);
 }
 
 .to-transparent {
@@ -1852,6 +1840,10 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
   text-align: center;
 }
 
+.font-adelle {
+  font-family: adelle-sans, sans-serif;
+}
+
 .text-xl {
   font-size: 24px;
 }
@@ -1899,36 +1891,38 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
 }
 
 .tw-h1, h1 {
-  font-family: Avenir, sans-serif;
   font-size: 32px;
+}
+
+.tw-h1, .tw-h2, h1, h2 {
+  font-family: Bylon, sans-serif;
 }
 
 .tw-h2, h2 {
   font-size: 30px;
 }
 
-.tw-h2, .tw-h3, h2, h3 {
-  font-family: Gotham, sans-serif;
-}
-
 .tw-h3, h3 {
   font-size: 24px;
+}
+
+.tw-h3, .tw-h4, h3, h4 {
+  font-family: Bylon, sans-serif;
 }
 
 .tw-h4, h4 {
   font-size: 20px;
 }
 
-.tw-h4, .tw-h5, h4, h5 {
-  font-family: Gotham, sans-serif;
-}
-
 .tw-h5, h5 {
   font-size: 18px;
 }
 
+.tw-h5, .tw-h6, h5, h6 {
+  font-family: Bylon, sans-serif;
+}
+
 .tw-h6, h6 {
-  font-family: Gotham, sans-serif;
   font-size: 16px;
 }
 
@@ -2451,40 +2445,22 @@ html {
 }
 
 @font-face {
-  font-family: Avenir;
-  font-style: normal;
-  font-weight: 800;
-  src: url(../../assets/fonts/avenir_heavy-webfont.woff2) format("woff2"), url(../../assets/fonts/avenir_heavy-webfont.woff) format("woff");
-}
-@font-face {
-  font-family: Avenir;
+  font-family: Bylon;
   font-style: normal;
   font-weight: 400;
-  src: url(../../assets/fonts/avenir_light-webfont.woff2) format("woff2"), url(../../assets/fonts/avenir_light-webfont.woff) format("woff");
+  src: url(../../assets/fonts/Bylon.woff2) format("woff2"), url(../../assets/fonts/Bylon.woff) format("woff");
 }
 @font-face {
-  font-family: Avenir;
-  font-style: normal;
-  font-weight: 500;
-  src: url(../../assets/fonts/avenir_regular-webfont.woff2) format("woff2"), url(../../assets/fonts/avenir_regular-webfont.woff) format("woff");
-}
-@font-face {
-  font-family: Gotham;
+  font-family: Bylon;
   font-style: normal;
   font-weight: 300;
-  src: url(../../assets/fonts/Gotham-Medium.woff2) format("woff2"), url(../../assets/fonts/Gotham-Medium.woff) format("woff");
+  src: url(../../assets/fonts/Bylon.woff2) format("woff2"), url(../../assets/fonts/Bylon.woff) format("woff");
 }
 @font-face {
-  font-family: Gotham;
+  font-family: Bylon;
   font-style: normal;
-  font-weight: 400;
-  src: url(../../assets/fonts/Gotham-Bold.woff2) format("woff2"), url(../../assets/fonts/Gotham-Bold.woff) format("woff");
-}
-@font-face {
-  font-family: Gotham;
-  font-style: normal;
-  font-weight: 500;
-  src: url(../../assets/fonts/Gotham-Ultra.woff2) format("woff2"), url(../../assets/fonts/Gotham-Ultra.woff) format("woff");
+  font-weight: 700;
+  src: url(../../assets/fonts/Bylon.woff2) format("woff2"), url(../../assets/fonts/Bylon.woff) format("woff");
 }
 :root {
   --header-h-mobile:60px;

@@ -12,8 +12,9 @@
 	<?php wp_head(); ?>
 	<meta name="msapplication-TileColor" content="#ffffff">
 	<meta name="theme-color" content="#ffffff">
-	<link rel="stylesheet" href="https://use.typekit.net/bny3ihn.css">
-	<script src="https://player.vimeo.com/api/player.js"></script>
+
+	<!-- adelle font -->
+	<link rel="stylesheet" href="https://use.typekit.net/lma6wbr.css"> 
 </head>
 
 

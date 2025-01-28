@@ -42,7 +42,7 @@ $slides =  $component_data['highlights'];
                                         <img class="h-[200px]" src="<?php echo $product_image; ?>">
                                     </picture>
                                 </a>
-                                <div class="py-10 xl:py-12 px-8 flex flex-col justify-between text-center">
+                                <div class="py-10 xl:py-12 px-8 flex flex-col justify-between text-center font-adelle">
                                         <a href="<?php echo get_permalink($product_id); ?>" class="highlight-slider-link">
                                         <h4 class="text-xxs">
                                             <?php echo $product_title; ?>
