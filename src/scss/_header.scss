@@ -1,5 +1,18 @@
-header{
-	&.header_scrolled{
-		top:-100%;
+header {
+	&.header_scrolled {
+		top: -100%;
+	}
+
+	.mainMenu {
+		@media screen and (max-width: 1024px) {
+
+
+			transform: translateX(-100%);
+
+			&.menuOpen {
+				transform: translateX(0)
+			}
+		}
+
 	}
 }
