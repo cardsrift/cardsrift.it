@@ -17,7 +17,7 @@
 
                 <?php foreach($slides as $key => $slide): ?>
 
-                    <div class="swiper-slide group border-2 border-white border-solid z-[1] bg-gradient-to-t from-blue to-transparent to-50%" data-index="<?php echo $key ?>">
+                    <div class="swiper-slide group border-2 border-white border-solid z-[1]" data-index="<?php echo $key ?>">
                         <div class="p-2 flex flex-col justify-end h-full w-full">
                         <img class="h-full w-full object-cover absolute -z-[1] lg:hidden" src="<?php echo $slide['image']['url'] ?>" alt="" data-index="<?php echo $key ?>">
                             <h3 class="text-white mb-4">

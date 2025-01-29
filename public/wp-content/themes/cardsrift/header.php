@@ -12,7 +12,7 @@
 	<?php wp_head(); ?>
 	<meta name="msapplication-TileColor" content="#ffffff">
 	<meta name="theme-color" content="#ffffff">
-
+	
 	<!-- adelle font -->
 	<link rel="stylesheet" href="https://use.typekit.net/lma6wbr.css"> 
 </head>
@@ -20,29 +20,29 @@
 
 <body <?= body_class();?>>
 
-	<header class="z-50 flex justify-between bg-blue py-3 lg:p-5 fixed top-0 left-0 w-full transition-all h-[var(--header-h-mobile)] lg:h-[var(--header-h-desktop)]">
-		
+	<header class="v1 z-50 flex bg-green py-3 lg:p-5 fixed top-0 jleft-0 w-full transition-all h-[var(--header-h-mobile)] lg:h-[var(--header-h-desktop)] z-">
+		<div class="tw-container tw-section relative mx-auto w-full flex justify-between ">
 			<!-- LOGO -->
-			<a class="flex h-full" href="<?php echo get_home_url(); ?>">
-				<img class="h-full" src="<?php echo get_field('logo', 'option')['url']; ?>" alt="">
+			<a class=" w-auto flex h-[30px] lg:h-auto" href="<?php echo get_home_url(); ?>">
+				<img src="<?php echo get_field('logo', 'option')['sizes']['medium']; ?>" alt="">
 			</a>
 
 			<!-- MENU DESKTOP -->
-			<div class="mainMenu w-full lg:w-auto fixed top-0 bottom-0 left-0 right-0 bg-blue-dark lg:block lg:static lg:bg-white transition-all ">
+			<div class="mainMenu hidden fixed top-0 bottom-0 left-0 right-0 bg-blue-dark lg:block lg:static lg:bg-transparent">
 				<?php include('nav-menu.php') ?>
 			</div>
 
 			<!-- HAMBURGER -->
 			<div class="hamburgerMenu flex absolute right-5 top-1/2 transform -translate-y-1/2 items-center cursor-pointer lg:hidden">
 				<div class="space-y-2">
-					<span class="hamburgerLine block w-8 h-0.5 bg-black transition-all"></span>
-					<span class="hamburgerLine block w-8 h-0.5 bg-black transition-all"></span>
-					<span class="hamburgerLine block w-8 h-0.5 bg-black transition-all"></span>
+					<span class="hamburgerLine block w-8 h-0.5 bg-white transition-all"></span>
+					<span class="hamburgerLine block w-8 h-0.5 bg-white transition-all"></span>
+					<span class="hamburgerLine block w-8 h-0.5 bg-white transition-all"></span>
 				</div>
 			</div>
-		
+		</div>
 	</header>
 
 
-	<div class="wrapper pt-[var(--header-h-mobile)] lg:pt-[var(--header-h-desktop)] font-adelle">
+	<div class="wrapper pt-[var(--header-h-mobile)] lg:pt-[var(--header-h-desktop)]">
 		<div class="base">

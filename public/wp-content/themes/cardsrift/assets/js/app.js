@@ -292,7 +292,7 @@ var Header = function Header() {
 
   // mobile menu
   hamburgerMenu.addEventListener('click', function () {
-    mainMenu.classList.toggle('menuOpen');
+    mainMenu.classList.toggle('hidden');
     hamburgerMenu.classList.toggle('hamburgerOpen');
     body.classList.toggle('overflow-y-hidden');
   });

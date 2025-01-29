@@ -35,7 +35,7 @@ const Header = () => {
 
 	// mobile menu
 	hamburgerMenu.addEventListener('click', () => {
-		mainMenu.classList.toggle('menuOpen');
+		mainMenu.classList.toggle('hidden');
 		hamburgerMenu.classList.toggle('hamburgerOpen');
 		body.classList.toggle('overflow-y-hidden');
 	});
