@@ -1668,6 +1668,10 @@ Theme Name: Wp Zero
   font-family: adelle-sans, sans-serif;
 }
 
+.font-metropolis {
+  font-family: metropolis, sans-serif;
+}
+
 .text-xl {
   font-size: 24px;
 }
@@ -2668,7 +2672,7 @@ html {
 }
 
 @font-face {
-  font-family: 'Metropolis Semi';
+  font-family: 'Metropolis';
 
   src: url('../../fonts/Metropolis-SemiBold.woff2') format('woff2'),
         url('../../fonts/Metropolis-SemiBold.woff') format('woff');
@@ -2759,7 +2763,7 @@ html {
 }
 
 @font-face {
-  font-family: 'Metropolis Semi';
+  font-family: 'Metropolis';
 
   src: url('../../fonts/Metropolis-SemiBoldItalic.woff2') format('woff2'),
         url('../../fonts/Metropolis-SemiBoldItalic.woff') format('woff');

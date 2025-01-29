@@ -1840,6 +1840,10 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
   font-family: adelle-sans, sans-serif;
 }
 
+.font-metropolis {
+  font-family: metropolis, sans-serif;
+}
+
 .text-xl {
   font-size: 24px;
 }
@@ -2473,7 +2477,7 @@ html {
 }
 @font-face {
   font-display: swap;
-  font-family: Metropolis Semi;
+  font-family: Metropolis;
   font-style: normal;
   font-weight: 600;
   src: url(../../assets/fonts/Metropolis-SemiBold.woff2) format("woff2"), url(../../assets/fonts/Metropolis-SemiBold.woff) format("woff");
@@ -2522,7 +2526,7 @@ html {
 }
 @font-face {
   font-display: swap;
-  font-family: Metropolis Semi;
+  font-family: Metropolis;
   font-style: italic;
   font-weight: 600;
   src: url(../../assets/fonts/Metropolis-SemiBoldItalic.woff2) format("woff2"), url(../../assets/fonts/Metropolis-SemiBoldItalic.woff) format("woff");

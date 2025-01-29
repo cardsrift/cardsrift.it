@@ -22,6 +22,7 @@ const themeFontSize = {
 const themeFontFamily = {
   bylon: ["Bylon", "sans-serif"],
   adelle: ["adelle-sans", "sans-serif"],
+  metropolis: ["metropolis", "sans-serif"],
 }
 
 const themeTypography = {

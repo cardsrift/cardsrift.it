@@ -40,7 +40,7 @@
 
 
 @font-face {
-    font-family: 'Metropolis Semi';
+    font-family: 'Metropolis';
     src: url('../../fonts/Metropolis-SemiBold.woff2') format('woff2'),
         url('../../fonts/Metropolis-SemiBold.woff') format('woff');
     font-weight: 600;
@@ -106,7 +106,7 @@
 
 
 @font-face {
-    font-family: 'Metropolis Semi';
+    font-family: 'Metropolis';
     src: url('../../fonts/Metropolis-SemiBoldItalic.woff2') format('woff2'),
         url('../../fonts/Metropolis-SemiBoldItalic.woff') format('woff');
     font-weight: 600;
