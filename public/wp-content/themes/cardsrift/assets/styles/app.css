@@ -152,7 +152,7 @@ header.header_scrolled {
 }
 @media screen and (max-width: 1024px) {
   header .mainMenu {
-    transform: translateX(-100%);
+    transform: translateX(-120%);
   }
   header .mainMenu.menuOpen {
     transform: translateX(0);
@@ -1656,6 +1656,10 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
   height: 100%;
 }
 
+.h-\[300px\] {
+  height: 300px;
+}
+
 .w-4 {
   width: 1rem;
 }
@@ -1670,6 +1674,14 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
 
 .w-full {
   width: 100%;
+}
+
+.w-screen {
+  width: 100vw;
+}
+
+.w-1\/3 {
+  width: 33.333333%;
 }
 
 .flex-1 {
@@ -1766,16 +1778,16 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
   border-style: solid;
 }
 
-.border-white {
-  --tw-border-opacity:1;
-  border-color: #fff;
-  border-color: rgba(255, 255, 255, var(--tw-border-opacity, 1));
-}
-
 .border-black {
   --tw-border-opacity:1;
   border-color: #1d2125;
   border-color: rgba(29, 33, 37, var(--tw-border-opacity, 1));
+}
+
+.border-white {
+  --tw-border-opacity:1;
+  border-color: #fff;
+  border-color: rgba(255, 255, 255, var(--tw-border-opacity, 1));
 }
 
 .bg-base-200 {
@@ -1788,6 +1800,12 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
   --tw-bg-opacity:1;
   background-color: #fff;
   background-color: rgba(255, 255, 255, var(--tw-bg-opacity, 1));
+}
+
+.bg-purple {
+  --tw-bg-opacity:1;
+  background-color: #8877b2;
+  background-color: rgba(136, 119, 178, var(--tw-bg-opacity, 1));
 }
 
 .fill-white {
@@ -1840,10 +1858,6 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
   padding-top: 1.5rem !important;
 }
 
-.pt-\[10\%\] {
-  padding-top: 10%;
-}
-
 .pt-\[var\(--header-h-mobile\)\] {
   padding-top: 60px;
   padding-top: var(--header-h-mobile);
@@ -1879,12 +1893,6 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
   color: hsl(var(--bc)/var(--tw-text-opacity, 1));
 }
 
-.text-white {
-  --tw-text-opacity:1;
-  color: #fff;
-  color: rgba(255, 255, 255, var(--tw-text-opacity, 1));
-}
-
 .text-black {
   --tw-text-opacity:1;
   color: #1d2125;
@@ -1895,6 +1903,12 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
   --tw-text-opacity:1;
   color: #8877b2;
   color: rgba(136, 119, 178, var(--tw-text-opacity, 1));
+}
+
+.text-white {
+  --tw-text-opacity:1;
+  color: #fff;
+  color: rgba(255, 255, 255, var(--tw-text-opacity, 1));
 }
 
 .blur {
@@ -2702,10 +2716,12 @@ body strong {
 @media (min-width: 1024px) {
   .itemActive > ul {
     padding: 2.25rem;
-    width: 160px;
   }
   .lg\:static {
     position: static;
+  }
+  .lg\:fixed {
+    position: fixed;
   }
   .lg\:absolute {
     position: absolute;
@@ -2715,6 +2731,9 @@ body strong {
   }
   .lg\:top-4 {
     top: 1rem;
+  }
+  .lg\:top-\[90px\] {
+    top: 90px;
   }
   .lg\:ml-0 {
     margin-left: 0;
@@ -2740,6 +2759,9 @@ body strong {
   .lg\:h-auto {
     height: auto;
   }
+  .lg\:h-\[300px\] {
+    height: 300px;
+  }
   .lg\:w-1\/3 {
     width: 33.333333%;
   }
@@ -2762,13 +2784,13 @@ body strong {
     -ms-flex-direction: row;
     flex-direction: row;
   }
-  .lg\:bg-transparent {
-    background-color: transparent;
-  }
   .lg\:bg-purple {
     --tw-bg-opacity:1;
     background-color: #8877b2;
     background-color: rgba(136, 119, 178, var(--tw-bg-opacity, 1));
+  }
+  .lg\:bg-transparent {
+    background-color: transparent;
   }
   .lg\:p-1 {
     padding: 0.25rem;

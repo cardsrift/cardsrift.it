@@ -6,8 +6,7 @@ header {
 	.mainMenu {
 		@media screen and (max-width: 1024px) {
 
-
-			transform: translateX(-100%);
+			transform: translateX(-120%);
 
 			&.menuOpen {
 				transform: translateX(0)

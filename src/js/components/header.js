@@ -35,7 +35,7 @@ const Header = () => {
 
 	// mobile menu
 	hamburgerMenu.addEventListener('click', () => {
-		mainMenu.classList.toggle('hidden');
+		mainMenu.classList.toggle('menuOpen');
 		hamburgerMenu.classList.toggle('hamburgerOpen');
 		body.classList.toggle('overflow-y-hidden');
 	});
@@ -46,6 +46,7 @@ const Header = () => {
 			});
 		}
 	});
+
 	menuItemWChild.forEach((element) => {
 		if (windowWidth > lg) {
 			element.addEventListener('mouseover', () => {

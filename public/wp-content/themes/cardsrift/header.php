@@ -20,7 +20,7 @@
 
 <body <?= body_class();?>>
 
-	<header class="v1 z-50 flex bg-green py-3 lg:p-5 fixed top-0 jleft-0 w-full transition-all h-[var(--header-h-mobile)] lg:h-[var(--header-h-desktop)] z-">
+	<header class="v1 z-50 flex bg-green fixed top-0 jleft-0 w-full transition-all h-[var(--header-h-mobile)] lg:h-[var(--header-h-desktop)] z-">
 		<div class="tw-container tw-section relative mx-auto w-full flex justify-between ">
 			<!-- LOGO -->
 			<a class=" w-auto flex h-[30px] lg:h-auto" href="<?php echo get_home_url(); ?>">
@@ -28,7 +28,7 @@
 			</a>
 
 			<!-- MENU DESKTOP -->
-			<div class="mainMenu hidden fixed top-0 bottom-0 left-0 right-0 bg-blue-dark lg:block lg:static lg:bg-transparent">
+			<div class="mainMenu fixed top-0 bottom-0 left-0 right-0 bg-purple lg:block lg:static lg:bg-purple">
 				<?php include('nav-menu.php') ?>
 			</div>
 
