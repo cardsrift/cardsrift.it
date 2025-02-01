@@ -28,7 +28,7 @@
 			</a>
 
 			<!-- MENU DESKTOP -->
-			<div class="mainMenu fixed top-0 bottom-0 left-0 right-0 bg-purple lg:block lg:static lg:bg-purple">
+			<div class="mainMenu fixed top-0 bottom-0 left-0 right-0 bg-white-70 p-1.5 lg:block lg:static lg:bg-white-70">
 				<?php include('nav-menu.php') ?>
 			</div>
 

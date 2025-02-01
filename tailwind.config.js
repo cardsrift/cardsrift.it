@@ -96,9 +96,25 @@ module.exports = {
     colors: {
       transparent: "transparent",
       black: '#1d2125',
-      white: "#ffffff",
-      purple: '#8877b2',
+      white: {
+        DEFAULT: "#ffffff",
+        70: "rgba(255, 255, 255, 0.7)",
+      },
+      purple: {
+        DEFAULT: '#8877b2',
+        light: '#9D89C9',
+      },
       yellow: '#feb601',
+      grey: {
+        DEFAULT: '#808284',
+        light: '#8F8F8F',
+        dark: '#7690B0',
+        silver: '#B0C4DE',
+
+        light2: '#E5E9ED', // accordion servizi chiaro
+        dark2: '#CFD1D5', // accordion esg scuro
+        light3: '#E5E6E8', // accordion esg chiaro
+      },
     },
 
     fontFamily: themeFontFamily,
