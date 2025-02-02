@@ -12,6 +12,19 @@ header {
 				transform: translateX(0)
 			}
 		}
+	}
 
+	.logo-black {
+		display: none;
+	}
+
+	.overflow-y-hidden & {
+		.logo-original {
+			display: none;
+		}
+
+		.logo-black {
+			display: block;
+		}
 	}
 }

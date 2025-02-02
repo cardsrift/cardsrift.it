@@ -23,8 +23,9 @@
 	<header class="v1 z-50 flex bg-green fixed top-0 jleft-0 w-full transition-all h-[var(--header-h-mobile)] lg:h-[var(--header-h-desktop)] z-">
 		<div class="tw-container tw-section relative mx-auto w-full flex justify-between ">
 			<!-- LOGO -->
-			<a class=" w-auto flex h-[30px] lg:h-auto" href="<?php echo get_home_url(); ?>">
-				<img src="<?php echo get_field('logo', 'option')['sizes']['medium']; ?>" alt="">
+			<a class="flex w-[180px] relative z-10" href="<?php echo get_home_url(); ?>">
+				<img class="logo-original" src="<?php echo get_field('logo', 'option')['sizes']['medium']; ?>" alt="">
+				<img class="logo-black" src="<?php echo get_field('logo_black', 'option')['sizes']['medium']; ?>" alt="">
 			</a>
 
 			<!-- MENU DESKTOP -->
@@ -35,9 +36,9 @@
 			<!-- HAMBURGER -->
 			<div class="hamburgerMenu flex absolute right-5 top-1/2 transform -translate-y-1/2 items-center cursor-pointer lg:hidden">
 				<div class="space-y-2">
-					<span class="hamburgerLine block w-8 h-0.5 bg-white transition-all"></span>
-					<span class="hamburgerLine block w-8 h-0.5 bg-white transition-all"></span>
-					<span class="hamburgerLine block w-8 h-0.5 bg-white transition-all"></span>
+					<span class="hamburgerLine block w-8 h-0.5 bg-black transition-all"></span>
+					<span class="hamburgerLine block w-8 h-0.5 bg-black transition-all"></span>
+					<span class="hamburgerLine block w-8 h-0.5 bg-black transition-all"></span>
 				</div>
 			</div>
 		</div>

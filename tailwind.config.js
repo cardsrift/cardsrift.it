@@ -62,6 +62,13 @@ const themeTypography = {
     xl: themeFontSize.md,
     fontFamily: themeFontFamily.bylon,
   },
+  pmenu: {
+    DEFAULT: themeFontSize.xl,
+    tb: themeFontSize.xl,
+    xl: themeFontSize.xl,
+    fontFamily: themeFontFamily.metropolis,
+    fontWeight: 500,
+  }
 };
 
 
@@ -102,7 +109,7 @@ module.exports = {
       },
       purple: {
         DEFAULT: '#8877b2',
-        light: '#9D89C9',
+        light: '#b6a9d9',
       },
       yellow: '#feb601',
       grey: {

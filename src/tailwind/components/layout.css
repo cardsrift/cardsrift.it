@@ -1,5 +1,5 @@
 :root {
-	--header-h-mobile: 60px;
+	--header-h-mobile: 75px;
 	--header-h-desktop: 90px;
 	--full-screen: calc(var(--vh, 1vh) * 100);
 }
