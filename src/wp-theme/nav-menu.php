@@ -1,7 +1,7 @@
-<nav class="main-menu bg-green container mx-auto  lg:pt-0 h-full">
+<nav class="main-menu max-lg:bg-purple-light container mx-auto rounded-[20px] lg:pt-0 h-full">
 	<?php $menu_hamburger = sort_wp_nav('header'); ?>
 
-	<ul class="flex justify-center align-center flex-col lg:flex-row h-full max-lg:bg-purple-light w-full max-lg:border-solid max-lg:border-8 max-lg:rounded-[20px] max-lg:border-black pt-24 pb-16">
+	<ul class="flex justify-center align-center flex-col lg:flex-row h-full  w-full max-lg:border-solid max-lg:border-8 max-lg:rounded-[20px] max-lg:border-black pt-24 pb-16">
 		<?php
 		foreach ($menu_hamburger as $item_hamburger) :
 			$class = ( $item_hamburger['url'] == 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ) ? 'current-menu-item' : '';

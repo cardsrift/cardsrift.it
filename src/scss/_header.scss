@@ -4,7 +4,9 @@ header {
 	}
 
 	.mainMenu {
+
 		@media screen and (max-width: 1024px) {
+
 
 			transform: translateX(-120%);
 
@@ -12,6 +14,13 @@ header {
 				transform: translateX(0)
 			}
 		}
+	}
+
+	.main-menu {
+		background-image: url(/src/images/logo/colored-icon.svg);
+		background-position: center 70%;
+		background-size: 90%;
+		background-repeat: no-repeat;
 	}
 
 	.logo-black {

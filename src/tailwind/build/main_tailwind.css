@@ -1607,6 +1607,10 @@ Theme Name: Wp Zero
   border-radius: 0.375rem;
 }
 
+.rounded-\[20px\] {
+  border-radius: 20px;
+}
+
 .border {
   border-width: 1px;
 }
@@ -1650,6 +1654,14 @@ Theme Name: Wp Zero
 
 .bg-white-70 {
   background-color: rgba(255, 255, 255, 0.7);
+}
+
+.bg-\[75\%\] {
+  background-position: 75%;
+}
+
+.bg-no-repeat {
+  background-repeat: no-repeat;
 }
 
 .fill-white {
