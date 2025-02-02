@@ -56,10 +56,12 @@
 					</ul>
 				</li>
 				<li>
-					<ul>
+					<ul class="flex ">
 						<li class="menuItemflex text-center mx-auto h-full max-lg:w-full max-lg:h-fit text-black">
 							<a class="" href="http://localhost/cardsrift/public/cart/">
-								<?php echo __('Carrello', 'cardsrift') ?>						
+								
+							
+								<?php //echo __('Carrello', 'cardsrift') ?>						
 							</a>
 						</li>
 						<li class="menuItemflex text-center mx-auto h-full max-lg:w-full max-lg:h-fit text-black">
