@@ -150,7 +150,7 @@ module.exports = {
       );
       addComponents({
         ".tw-section": {
-          "@apply px-8": {},
+          "@apply px-6": {},
         },
       });
     },

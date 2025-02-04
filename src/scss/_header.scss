@@ -6,8 +6,6 @@ header {
 	.mainMenu {
 
 		@media screen and (max-width: 1024px) {
-
-
 			transform: translateX(-120%);
 
 			&.menuOpen {
@@ -16,11 +14,42 @@ header {
 		}
 	}
 
-	.main-menu {
-		background-image: url(/src/images/logo/colored-icon.svg);
-		background-position: center 70%;
-		background-size: 90%;
-		background-repeat: no-repeat;
+
+	.menuOpen {
+
+		.main-menu {
+			ul {
+				@media screen and (max-width: 1024px) {
+					position: relative;
+				}
+			}
+
+			&::before {
+				content: "";
+				position: absolute;
+				width: 300vw;
+				top: -50%;
+				left: -135%;
+				right: 0;
+				bottom: 0;
+				z-index: 0;
+				background: url(/src/images/logo/colored-icon.svg) 0 0 repeat;
+				transform: rotate(140deg);
+				background-repeat: no-repeat;
+
+				@media screen and (min-width: 481px) {
+					top: -177%;
+					left: -112%;
+					bottom: -66%;
+
+				}
+
+				@media screen and (min-width: 1024px) {
+					display: none;
+
+				}
+			}
+		}
 	}
 
 	.logo-black {

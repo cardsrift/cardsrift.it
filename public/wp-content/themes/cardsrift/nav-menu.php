@@ -1,21 +1,21 @@
 <nav class="main-menu max-lg:bg-purple-light container mx-auto rounded-[20px] lg:pt-0 h-full">
 	<?php $menu_hamburger = sort_wp_nav('header'); ?>
 
-	<ul class="flex justify-center align-center flex-col lg:flex-row h-full  w-full max-lg:border-solid max-lg:border-8 max-lg:rounded-[20px] max-lg:border-black pt-24 pb-16">
+	<ul class="flex justify-center align-center flex-col lg:flex-row h-full w-full max-lg:border-solid max-lg:border-8 max-lg:rounded-[20px] max-lg:border-black max-lg:pt-24 max-lg:pb-16 lg:gap-10">
 		<?php
 		foreach ($menu_hamburger as $item_hamburger) :
 			$class = ( $item_hamburger['url'] == 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ) ? 'current-menu-item' : '';
 			if (!isset($item_hamburger['children'])) :
 		?>
 		
-				<li class="menuItemflex text-center tw-pmenu uppercase my-4 mx-auto h-full max-lg:w-full max-lg:h-fit <?= $class ?'text-purple': 'text-black'; ?>">
+				<li class="menuItemflex text-center tw-pmenu uppercase max-lg:my-4 lg:flex lg:items-center mx-auto h-full max-lg:w-full max-lg:h-fit <?= $class ?'text-purple': 'text-black'; ?>">
 					<a class=" " href="<?= $item_hamburger['url']; ?>">
 						<?= $item_hamburger['title']; ?>
 						
 					</a>
 				</li>
 			<?php else : ?>
-				<li class="menuItemWChild tw-pmenu uppercase my-4 text-center mx-auto relative max-lg:h-fit lg:h-full max-lg:w-full <?= $class ?'text-purple': 'text-black'; ?> ">
+				<li class="menuItemWChild tw-pmenu uppercase max-lg:my-4 lg:flex lg:items-center text-center mx-auto maxl-lg:relative max-lg:h-fit lg:h-full max-lg:w-full <?= $class ?'text-purple': 'text-black'; ?> ">
 					<a class="toggleMenu" href="<?= $item_hamburger['url']; ?>">
 						<?= $item_hamburger['title']; ?>
 					</a>
@@ -23,7 +23,7 @@
 					<!-- <span class="toggleMenu block w-full h-7 shadow-md shadow-black rounded-md pt-2 lg:hidden">&#43;</span> -->
 
 
-					<ul class="main_menu__list hidden mt-5 hover_arrow_state flex flex-wrap max-lg:h-fit max-lg:w-full lg:h-[300px] lg:bg-purple lg:fixed lg:right:0 lg:left:0 w-full lg:top-[90px] lg:left-[50%] lg:-translate-x-[50%]">
+					<ul class="main_menu__list hidden max-lg:mt-5 hover_arrow_state flex flex-wrap max-lg:h-fit max-lg:w-full lg:h-[300px] lg:bg-purple lg:fixed lg:right:0 lg:left:0 w-full lg:top-[90px] lg:left-[50%] lg:-translate-x-[50%]">
 						<?php foreach ($item_hamburger['children'] as $submenu_hamburger) :
 							if (!isset($submenu_hamburger['children'])) :
 						?>
@@ -55,7 +55,7 @@
 						<?php endforeach; ?>
 					</ul>
 				</li>
-				<li class="mt-auto">
+				<li class="max-lg:mt-auto lg:flex lg:items-center">
 					<ul class="flex gap-5 justify-center">
 						<li class="menuItemflex text-center  h-full max-lg:max-w-1/2 max-lg:h-fit text-black">
 							<a class="flex w-full h-full justify-center" href="http://localhost/cardsrift/public/cart/">

@@ -1324,8 +1324,8 @@ Theme Name: Wp Zero
 }
 
 .tw-section {
-  padding-left: 2rem;
-  padding-right: 2rem;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 .visible {
@@ -1372,6 +1372,10 @@ Theme Name: Wp Zero
   top: 50%;
 }
 
+.right-6 {
+  right: 1.5rem;
+}
+
 .\!z-\[6\] {
   z-index: 6 !important;
 }
@@ -1405,11 +1409,6 @@ Theme Name: Wp Zero
   margin-right: auto;
 }
 
-.my-4 {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
 .mb-3 {
   margin-bottom: 0.75rem;
 }
@@ -1418,24 +1417,16 @@ Theme Name: Wp Zero
   margin-bottom: 1rem;
 }
 
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
 .mt-14 {
   margin-top: 3.5rem;
 }
 
 .mt-4 {
   margin-top: 1rem;
-}
-
-.mt-5 {
-  margin-top: 1.25rem;
-}
-
-.mt-auto {
-  margin-top: auto;
-}
-
-.mb-6 {
-  margin-bottom: 1.5rem;
 }
 
 .block {
@@ -1599,16 +1590,16 @@ Theme Name: Wp Zero
   overflow-y: hidden;
 }
 
+.rounded-\[20px\] {
+  border-radius: 20px;
+}
+
 .rounded-\[7px\] {
   border-radius: 7px;
 }
 
 .rounded-md {
   border-radius: 0.375rem;
-}
-
-.rounded-\[20px\] {
-  border-radius: 20px;
 }
 
 .border {
@@ -1656,14 +1647,6 @@ Theme Name: Wp Zero
   background-color: rgba(255, 255, 255, 0.7);
 }
 
-.bg-\[75\%\] {
-  background-position: 75%;
-}
-
-.bg-no-repeat {
-  background-repeat: no-repeat;
-}
-
 .fill-white {
   fill: #ffffff;
 }
@@ -1683,10 +1666,6 @@ Theme Name: Wp Zero
      object-position: center;
 }
 
-.p-1\.5 {
-  padding: 0.375rem;
-}
-
 .p-10 {
   padding: 2.5rem;
 }
@@ -1695,9 +1674,9 @@ Theme Name: Wp Zero
   padding: 0.5rem;
 }
 
-.px-1 {
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
+.px-2 {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
 }
 
 .px-3 {
@@ -1710,6 +1689,11 @@ Theme Name: Wp Zero
   padding-right: 2rem;
 }
 
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+}
+
 .py-10 {
   padding-top: 2.5rem;
   padding-bottom: 2.5rem;
@@ -1720,16 +1704,6 @@ Theme Name: Wp Zero
   padding-bottom: 2rem;
 }
 
-.py-1 {
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-}
-
-.px-2 {
-  padding-left: 0.5rem;
-  padding-right: 0.5rem;
-}
-
 .\!pb-8 {
   padding-bottom: 2rem !important;
 }
@@ -1738,16 +1712,8 @@ Theme Name: Wp Zero
   padding-top: 1.5rem !important;
 }
 
-.pb-16 {
-  padding-bottom: 4rem;
-}
-
 .pt-2 {
   padding-top: 0.5rem;
-}
-
-.pt-24 {
-  padding-top: 6rem;
 }
 
 .pt-\[var\(--header-h-mobile\)\] {
@@ -7350,6 +7316,19 @@ body {
 }
 
 @media not all and (min-width: 1024px) {
+  .max-lg\:my-4 {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .max-lg\:mt-5 {
+    margin-top: 1.25rem;
+  }
+
+  .max-lg\:mt-auto {
+    margin-top: auto;
+  }
+
   .max-lg\:hidden {
     display: none;
   }
@@ -7396,6 +7375,18 @@ body {
   .max-lg\:bg-purple-light {
     --tw-bg-opacity: 1;
     background-color: rgb(182 169 217 / var(--tw-bg-opacity, 1));
+  }
+
+  .max-lg\:p-1\.5 {
+    padding: 0.375rem;
+  }
+
+  .max-lg\:pb-16 {
+    padding-bottom: 4rem;
+  }
+
+  .max-lg\:pt-24 {
+    padding-top: 6rem;
   }
 }
 
@@ -7485,6 +7476,10 @@ body {
     width: 66.666667%;
   }
 
+  .lg\:w-\[270px\] {
+    width: 270px;
+  }
+
   .lg\:-translate-x-\[50\%\] {
     --tw-translate-x: -50%;
     -webkit-transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
@@ -7496,6 +7491,16 @@ body {
     -webkit-box-direction: normal;
         -ms-flex-direction: row;
             flex-direction: row;
+  }
+
+  .lg\:items-center {
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+
+  .lg\:gap-10 {
+    gap: 2.5rem;
   }
 
   .lg\:bg-purple {
