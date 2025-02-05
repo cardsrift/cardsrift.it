@@ -23,7 +23,7 @@
 					<!-- <span class="toggleMenu block w-full h-7 shadow-md shadow-black rounded-md pt-2 lg:hidden">&#43;</span> -->
 
 
-					<ul class="main_menu__list hidden max-lg:mt-5 hover_arrow_state flex flex-wrap max-lg:h-fit max-lg:w-full lg:h-[300px] lg:bg-purple lg:fixed lg:right:0 lg:left:0 w-full lg:top-[90px] lg:left-[50%] lg:-translate-x-[50%]">
+					<ul class="main_menu__list hidden max-lg:mt-5 hover_arrow_state flex flex-wrap max-lg:h-fit max-lg:w-full lg:h-[400px] lg:bg-purple-light lg:fixed lg:right:0 lg:left:0 w-full lg:top-[90px] lg:left-[50%] lg:-translate-x-[50%] lg:justify-center">
 						<?php foreach ($item_hamburger['children'] as $submenu_hamburger) :
 							if (!isset($submenu_hamburger['children'])) :
 						?>
@@ -34,23 +34,25 @@
 								</li>
 							<?php else : ?>
 								<?php $menu_image = get_field('category_image', $submenu_hamburger['ID'])['url']; ?>
-								<li class="menuItemWChild flex flex-col justify-center items-center mx-auto relative max-lg:h-full lg:h-full max-lg:w-1/2 <?= $class ?'text-purple': 'text-black'; ?> px-3">
-									<a class="bg-white rounded-[7px] mb-6 py-1 px-2 shadow-black shadow-md w-full flex justify-center items-center" href="<?= $submenu_hamburger['url']; ?>">
-									<?php if ($menu_image) : ?>
-											<img src="<?php echo $menu_image ?>" class="block !h-[80px] object-contain" alt="<?= $submenu_hamburger['title']; ?>">
+									<li class="menuItemWChild flex flex-col justify-center items-center max-lg:mx-auto lg:px-10 relative max-lg:h-full lg:h-full max-lg:w-1/2 lg:w-2/6 <?= $class ?'text-purple': 'text-black'; ?> px-3">
+										
+									<a class="bg-white rounded-[7px] lg:rounded-[16px] max-lg:mb-6 py-1 px-2 lg:px-8 shadow-black shadow-md w-full lg:h-full flex justify-center items-center lg:border-[6px] border-black border-solid hithere"  href="<?= $submenu_hamburger['url']; ?>">
+										
+										<?php if ($menu_image) : ?>
+												<img src="<?php echo $menu_image ?>" class="block max-lg:!h-[80px] lg:w-full object-contain" alt="<?= $submenu_hamburger['title']; ?>">
 										<?php endif; ?>
 									</a>
-									<!-- <span class="toggleMenu block w-full h-7 border border-b border-black pt-2 lg:hidden">&#43;</span> -->
-										
-									<!-- <ul class="main_menu__list hidden hover_arrow_state flex-col lg:flex lg:h-[300px] lg:bg-purple lg:fixed lg:right:0 lg:left:0 w-full lg:top-[90px] lg:left-[50%] lg:-translate-x-[50%]">
-										<?php foreach ($submenu_hamburger['children'] as $sub_item_hamburger) : ?>
-											<li class="menuItemWChild flex-col justify-center items-center mx-auto relative lg:h-full max-lg:w-full <?= $class ?'text-purple': 'text-black'; ?> ">
-												<a class="" href="<?= $sub_item_hamburger['url']; ?>"><?= $sub_item_hamburger['title']; ?></a>
-											</li>
-										<?php endforeach; ?>
-									</ul> -->
+										<!-- <span class="toggleMenu block w-full h-7 border border-b border-black pt-2 lg:hidden">&#43;</span> -->
+											
+										<!-- <ul class="main_menu__list hidden hover_arrow_state flex-col lg:flex lg:h-[300px] lg:bg-purple lg:fixed lg:right:0 lg:left:0 w-full lg:top-[90px] lg:left-[50%] lg:-translate-x-[50%]">
+											<?php foreach ($submenu_hamburger['children'] as $sub_item_hamburger) : ?>
+												<li class="menuItemWChild flex-col justify-center items-center mx-auto relative lg:h-full max-lg:w-full <?= $class ?'text-purple': 'text-black'; ?> ">
+													<a class="" href="<?= $sub_item_hamburger['url']; ?>"><?= $sub_item_hamburger['title']; ?></a>
+												</li>
+											<?php endforeach; ?>
+										</ul> -->
 
-								</li>
+									</li>
 							<?php endif; ?>
 						<?php endforeach; ?>
 					</ul>

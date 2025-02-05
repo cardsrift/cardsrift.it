@@ -21,7 +21,7 @@
 <body <?= body_class();?>>
 
 	<header class="v1 z-50 flex bg-white fixed top-0 jleft-0 w-full transition-all h-[var(--header-h-mobile)] lg:h-[var(--header-h-desktop)] z-">
-		<div class="tw-container tw-section relative mx-auto w-full flex justify-between ">
+		<div class="tw-section relative mx-auto w-full flex justify-between ">
 			<!-- LOGO -->
 			<a class="flex w-[180px] lg:w-[270px] relative z-10" href="<?php echo get_home_url(); ?>">
 				<img class="logo-original" src="<?php echo get_field('logo', 'option')['sizes']['medium']; ?>" alt="Cardsrift logo">

@@ -1360,8 +1360,8 @@ Theme Name: Wp Zero
   right: 0px;
 }
 
-.right-5 {
-  right: 1.25rem;
+.right-6 {
+  right: 1.5rem;
 }
 
 .top-0 {
@@ -1370,10 +1370,6 @@ Theme Name: Wp Zero
 
 .top-1\/2 {
   top: 50%;
-}
-
-.right-6 {
-  right: 1.5rem;
 }
 
 .\!z-\[6\] {
@@ -1417,10 +1413,6 @@ Theme Name: Wp Zero
   margin-bottom: 1rem;
 }
 
-.mb-6 {
-  margin-bottom: 1.5rem;
-}
-
 .mt-14 {
   margin-top: 3.5rem;
 }
@@ -1445,10 +1437,6 @@ Theme Name: Wp Zero
 
 .\!h-\[350px\] {
   height: 350px !important;
-}
-
-.\!h-\[80px\] {
-  height: 80px !important;
 }
 
 .h-0 {
@@ -2897,6 +2885,79 @@ body {
   strong {
     font-weight: bold;
   }
+}
+
+.hithere:hover {
+  -webkit-animation: 6s hithere ease infinite;
+          animation: 6s hithere ease infinite;
+}
+
+@-webkit-keyframes hithere {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+
+  1% {
+    -webkit-transform: scale(1.05);
+            transform: scale(1.05);
+  }
+
+  5%, 10% {
+    -webkit-transform: rotate(-5deg) scale(1.05);
+            transform: rotate(-5deg) scale(1.05);
+  }
+
+  7%, 15% {
+    -webkit-transform: rotate(5deg) scale(1.05);
+            transform: rotate(5deg) scale(1.05);
+  }
+
+  18% {
+    -webkit-transform: rotate(0deg) scale(1.05);
+            transform: rotate(0deg) scale(1.05);
+  }
+
+  20%, 100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+
+  /* Rimane fermo per 5 secondi */
+}
+
+@keyframes hithere {
+  0% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+
+  1% {
+    -webkit-transform: scale(1.05);
+            transform: scale(1.05);
+  }
+
+  5%, 10% {
+    -webkit-transform: rotate(-5deg) scale(1.05);
+            transform: rotate(-5deg) scale(1.05);
+  }
+
+  7%, 15% {
+    -webkit-transform: rotate(5deg) scale(1.05);
+            transform: rotate(5deg) scale(1.05);
+  }
+
+  18% {
+    -webkit-transform: rotate(0deg) scale(1.05);
+            transform: rotate(0deg) scale(1.05);
+  }
+
+  20%, 100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+
+  /* Rimane fermo per 5 secondi */
 }
 
 /* 
@@ -7321,6 +7382,15 @@ body {
     margin-bottom: 1rem;
   }
 
+  .max-lg\:mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .max-lg\:mb-6 {
+    margin-bottom: 1.5rem;
+  }
+
   .max-lg\:mt-5 {
     margin-top: 1.25rem;
   }
@@ -7331,6 +7401,10 @@ body {
 
   .max-lg\:hidden {
     display: none;
+  }
+
+  .max-lg\:\!h-\[80px\] {
+    height: 80px !important;
   }
 
   .max-lg\:h-\[400px\] {
@@ -7438,6 +7512,11 @@ body {
     top: 90px;
   }
 
+  .lg\:mx-10 {
+    margin-left: 2.5rem;
+    margin-right: 2.5rem;
+  }
+
   .lg\:block {
     display: block;
   }
@@ -7456,6 +7535,10 @@ body {
     height: 300px;
   }
 
+  .lg\:h-\[400px\] {
+    height: 400px;
+  }
+
   .lg\:h-\[450px\] {
     height: 450px;
   }
@@ -7472,12 +7555,28 @@ body {
     width: 33.333333%;
   }
 
+  .lg\:w-1\/4 {
+    width: 25%;
+  }
+
   .lg\:w-2\/3 {
     width: 66.666667%;
   }
 
   .lg\:w-\[270px\] {
     width: 270px;
+  }
+
+  .lg\:w-full {
+    width: 100%;
+  }
+
+  .lg\:w-1\/6 {
+    width: 16.666667%;
+  }
+
+  .lg\:w-2\/6 {
+    width: 33.333333%;
   }
 
   .lg\:-translate-x-\[50\%\] {
@@ -7499,8 +7598,22 @@ body {
             align-items: center;
   }
 
+  .lg\:justify-center {
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+  }
+
   .lg\:gap-10 {
     gap: 2.5rem;
+  }
+
+  .lg\:rounded-\[16px\] {
+    border-radius: 16px;
+  }
+
+  .lg\:border-\[6px\] {
+    border-width: 6px;
   }
 
   .lg\:bg-purple {
@@ -7508,8 +7621,23 @@ body {
     background-color: rgb(136 119 178 / var(--tw-bg-opacity, 1));
   }
 
+  .lg\:bg-purple-light {
+    --tw-bg-opacity: 1;
+    background-color: rgb(182 169 217 / var(--tw-bg-opacity, 1));
+  }
+
   .lg\:bg-white-70 {
     background-color: rgba(255, 255, 255, 0.7);
+  }
+
+  .lg\:px-10 {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+  }
+
+  .lg\:px-8 {
+    padding-left: 2rem;
+    padding-right: 2rem;
   }
 
   .lg\:pt-0 {
