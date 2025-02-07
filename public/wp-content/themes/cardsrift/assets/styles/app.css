@@ -1,7 +1,6 @@
 /*!**********************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/postcss-loader/dist/cjs.js!./src/scss/main_global.scss ***!
   \**********************************************************************************************************************************************************************************************************************/
-@charset "UTF-8";
 html, body, div, span, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 abbr, address, cite, code,
@@ -197,27 +196,6 @@ header .logo-black {
 .overflow-y-hidden header .logo-black {
   display: block;
 }
-
-.big-active-slider {
-  /* Dimensioni di base delle slide */
-  /* Quando una slide è attiva */
-  /* Slide non attive si rimpiccioliscono */
-}
-.big-active-slider .swiper-slide {
-  transition: transform 0.3s ease;
-  /* Transizione fluida */
-  flex-grow: 1;
-  transform: scale(1);
-  /* Scala normale (100%) */
-}
-.big-active-slider .swiper-slide.active {
-  transform: scale(1.2);
-  /* Ingrandisci la slide attiva */
-}
-.big-active-slider .swiper-slide.inactive {
-  transform: scale(0.8);
-  /* Rimpicciolisci le slide non attive */
-}
 /*!*********************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/postcss-loader/dist/cjs.js!./src/tailwind/build/main_tailwind.css ***!
   \*********************************************************************************************************************************************************************************************************************************/
@@ -261,6 +239,25 @@ header .logo-black {
   display: -ms-flexbox;
   display: flex;
   justify-content: center;
+}
+
+.checkbox {
+  -ms-flex-negative: 0;
+  --chkbg:var(--bc);
+  --chkfg:var(--b1);
+  --tw-border-opacity:0.2;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-color: rgba(31, 41, 55, 0.2);
+  border-color: hsl(var(--bc)/var(--tw-border-opacity));
+  border-radius: 0.5rem;
+  border-radius: var(--rounded-btn, 0.5rem);
+  border-width: 1px;
+  cursor: pointer;
+  flex-shrink: 0;
+  height: 1.5rem;
+  width: 1.5rem;
 }
 
 .collapse-content, .collapse-title, .collapse > input[type=checkbox], .collapse > input[type=radio] {
@@ -575,25 +572,46 @@ details.dropdown summary::-webkit-details-marker {
   -ms-flex-negative: 0;
   --chkbg:var(--bc);
   --tw-border-opacity:0.2;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   border-color: rgba(31, 41, 55, 0.2);
   border-color: hsl(var(--bc)/var(--tw-border-opacity));
   border-radius: 9999px;
   border-width: 1px;
+  cursor: pointer;
   flex-shrink: 0;
   height: 1.5rem;
   width: 1.5rem;
 }
 
-.radio, .select {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
+.rating {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  position: relative;
+}
+
+.rating :where(input) {
+  --tw-bg-opacity:1;
+  -webkit-animation: rating-pop 0.2s ease-out;
+  -webkit-animation: rating-pop var(--animation-input, 0.25s) ease-out;
+  animation: rating-pop 0.2s ease-out;
+  animation: rating-pop var(--animation-input, 0.25s) ease-out;
+  background-color: #1f2937;
+  background-color: hsl(var(--bc)/var(--tw-bg-opacity));
+  border-radius: 0;
   cursor: pointer;
+  height: 1.5rem;
+  width: 1.5rem;
 }
 
 .select {
   --tw-border-opacity:0;
   --tw-bg-opacity:1;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
   background-color: #fff;
   background-color: hsl(var(--b1)/var(--tw-bg-opacity));
   background-image: linear-gradient(45deg, transparent 50%, currentColor 0), linear-gradient(135deg, currentColor 50%, transparent 0);
@@ -605,6 +623,7 @@ details.dropdown summary::-webkit-details-marker {
   border-radius: 0.5rem;
   border-radius: var(--rounded-btn, 0.5rem);
   border-width: 1px;
+  cursor: pointer;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -623,6 +642,91 @@ details.dropdown summary::-webkit-details-marker {
 
 .select[multiple] {
   height: auto;
+}
+
+.tabs {
+  -webkit-box-align: end;
+  -ms-flex-align: end;
+  align-items: flex-end;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+}
+
+.tab {
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  --tab-padding:1rem;
+  --tw-text-opacity:0.5;
+  --tab-color:hsl(var(--bc)/var(--tw-text-opacity,1));
+  --tab-bg:hsl(var(--b1)/var(--tw-bg-opacity,1));
+  --tab-border-color:hsl(var(--b3)/var(--tw-bg-opacity,1));
+  align-items: center;
+  color: rgba(31, 41, 55, 0.5);
+  color: var(--tab-color);
+  cursor: pointer;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  height: 2rem;
+  justify-content: center;
+  line-height: 1.25rem;
+  line-height: 2;
+  padding-left: 1rem;
+  padding-left: var(--tab-padding, 1rem);
+  padding-right: 1rem;
+  padding-right: var(--tab-padding, 1rem);
+  text-align: center;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.tab, .table {
+  font-size: 0.875rem;
+  position: relative;
+}
+
+.table {
+  border-radius: 1rem;
+  border-radius: var(--rounded-box, 1rem);
+  line-height: 1.25rem;
+  text-align: left;
+  width: 100%;
+}
+
+.table :where(.table-pin-rows thead tr) {
+  --tw-bg-opacity:1;
+  background-color: #fff;
+  background-color: hsl(var(--b1)/var(--tw-bg-opacity));
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.table :where(.table-pin-rows tfoot tr) {
+  --tw-bg-opacity:1;
+  background-color: #fff;
+  background-color: hsl(var(--b1)/var(--tw-bg-opacity));
+  bottom: 0;
+  position: sticky;
+  z-index: 1;
+}
+
+.table :where(.table-pin-cols tr th) {
+  --tw-bg-opacity:1;
+  background-color: #fff;
+  background-color: hsl(var(--b1)/var(--tw-bg-opacity));
+  left: 0;
+  position: sticky;
+  right: 0;
 }
 
 .textarea {
@@ -735,6 +839,48 @@ details.dropdown summary::-webkit-details-marker {
     transform: scale(1);
   }
 }
+.checkbox:focus-visible {
+  outline-color: #1f2937;
+  outline-color: hsl(var(--bc)/1);
+  outline-offset: 2px;
+  outline-style: solid;
+  outline-width: 2px;
+}
+
+.checkbox:checked, .checkbox[aria-checked=true], .checkbox[checked=true] {
+  --tw-bg-opacity:1;
+  -webkit-animation: checkmark 0.2s ease-out;
+  -webkit-animation: checkmark var(--animation-input, 0.2s) ease-out;
+  animation: checkmark 0.2s ease-out;
+  animation: checkmark var(--animation-input, 0.2s) ease-out;
+  background-color: #1f2937;
+  background-color: hsl(var(--bc)/var(--tw-bg-opacity));
+  background-image: linear-gradient(-45deg, transparent 65%, hsl(var(--chkbg)) 65.99%), linear-gradient(45deg, transparent 75%, hsl(var(--chkbg)) 75.99%), linear-gradient(-45deg, hsl(var(--chkbg)) 40%, transparent 40.99%), linear-gradient(45deg, hsl(var(--chkbg)) 30%, hsl(var(--chkfg)) 30.99%, hsl(var(--chkfg)) 40%, transparent 40.99%), linear-gradient(-45deg, hsl(var(--chkfg)) 50%, hsl(var(--chkbg)) 50.99%);
+  background-repeat: no-repeat;
+}
+
+.checkbox:indeterminate {
+  --tw-bg-opacity:1;
+  -webkit-animation: checkmark 0.2s ease-out;
+  -webkit-animation: checkmark var(--animation-input, 0.2s) ease-out;
+  animation: checkmark 0.2s ease-out;
+  animation: checkmark var(--animation-input, 0.2s) ease-out;
+  background-color: #1f2937;
+  background-color: hsl(var(--bc)/var(--tw-bg-opacity));
+  background-image: -webkit-gradient(linear, left top, right top, color-stop(80%, transparent), color-stop(80%, hsl(var(--chkbg)))), -webkit-gradient(linear, right top, left top, color-stop(80%, transparent), color-stop(80%, hsl(var(--chkbg)))), -webkit-gradient(linear, left bottom, left top, color-stop(43%, hsl(var(--chkbg))), color-stop(43%, hsl(var(--chkfg))), color-stop(57%, hsl(var(--chkfg))), color-stop(57%, hsl(var(--chkbg))));
+  background-image: linear-gradient(90deg, transparent 80%, hsl(var(--chkbg)) 80%), linear-gradient(-90deg, transparent 80%, hsl(var(--chkbg)) 80%), linear-gradient(0deg, hsl(var(--chkbg)) 43%, hsl(var(--chkfg)) 43%, hsl(var(--chkfg)) 57%, hsl(var(--chkbg)) 57%);
+  background-repeat: no-repeat;
+}
+
+.checkbox:disabled {
+  --tw-bg-opacity:1;
+  background-color: #1f2937;
+  background-color: hsl(var(--bc)/var(--tw-bg-opacity));
+  border-color: transparent;
+  cursor: not-allowed;
+  opacity: 0.2;
+}
+
 @-webkit-keyframes checkmark {
   0% {
     background-position-y: 5px;
@@ -757,6 +903,10 @@ details.dropdown summary::-webkit-details-marker {
     background-position-y: 0;
   }
 }
+[dir=rtl] .checkbox:checked, [dir=rtl] .checkbox[aria-checked=true], [dir=rtl] .checkbox[checked=true] {
+  background-image: linear-gradient(45deg, transparent 65%, hsl(var(--chkbg)) 65.99%), linear-gradient(-45deg, transparent 75%, hsl(var(--chkbg)) 75.99%), linear-gradient(45deg, hsl(var(--chkbg)) 40%, transparent 40.99%), linear-gradient(-45deg, hsl(var(--chkbg)) 30%, hsl(var(--chkfg)) 30.99%, hsl(var(--chkfg)) 40%, transparent 40.99%), linear-gradient(45deg, hsl(var(--chkfg)) 50%, hsl(var(--chkbg)) 50.99%);
+}
+
 .collapse-open > :where(.collapse-content), .collapse:focus:not(.collapse-close) > :where(.collapse-content), .collapse:not(.collapse-close) > :where(input[type=checkbox]:checked ~ .collapse-content), .collapse:not(.collapse-close) > :where(input[type=radio]:checked ~ .collapse-content), .collapse[open] > :where(.collapse-content) {
   padding-bottom: 1rem;
   -webkit-transition: padding 0.2s ease-out, background-color 0.2s ease-out;
@@ -1150,6 +1300,44 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
     box-shadow: 0 0 0 4px hsl(var(--b1)) inset, 0 0 0 4px hsl(var(--b1)) inset;
   }
 }
+.rating input {
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.rating .rating-hidden {
+  background-color: transparent;
+  width: 0.5rem;
+}
+
+.rating input:checked ~ input, .rating input[aria-checked=true] ~ input {
+  --tw-bg-opacity:0.2;
+}
+
+.rating input:focus-visible {
+  -webkit-transform: translateY(-0.125em);
+  transform: translateY(-0.125em);
+  -webkit-transition-duration: 0.3s;
+  transition-duration: 0.3s;
+  -webkit-transition-property: -webkit-transform;
+  transition-property: -webkit-transform;
+  transition-property: transform;
+  transition-property: transform, -webkit-transform;
+  transition-property: transform, -webkit-transform;
+  -webkit-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+}
+
+.rating input:active:focus {
+  -webkit-animation: none;
+  animation: none;
+  -webkit-transform: translateY(-0.125em);
+  transform: translateY(-0.125em);
+}
+
 @-webkit-keyframes rating-pop {
   0% {
     -webkit-transform: translateY(-0.125em);
@@ -1260,6 +1448,47 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
   background-position: 12px calc(1px + 50%), 16px calc(1px + 50%);
 }
 
+.tab.tab-active:not(.tab-disabled):not([disabled]) {
+  --tw-border-opacity:1;
+  --tw-text-opacity:1;
+  border-color: #1f2937;
+  border-color: hsl(var(--bc)/var(--tw-border-opacity));
+}
+
+.tab:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.tab:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: -3px;
+}
+
+.tab:focus-visible.tab-lifted {
+  border-bottom-left-radius: 0.5rem;
+  border-bottom-left-radius: var(--tab-radius, 0.5rem);
+  border-bottom-right-radius: 0.5rem;
+  border-bottom-right-radius: var(--tab-radius, 0.5rem);
+}
+
+.tab-disabled, .tab[disabled] {
+  --tw-text-opacity:0.2;
+  color: rgba(31, 41, 55, 0.2);
+  color: hsl(var(--bc)/var(--tw-text-opacity));
+  cursor: not-allowed;
+}
+
+.tabs-boxed .tab {
+  border-radius: 0.5rem;
+  border-radius: var(--rounded-btn, 0.5rem);
+}
+
+.table :where(th, td) {
+  padding: 0.75rem 1rem;
+  vertical-align: middle;
+}
+
 .table tr.active, .table tr.active:nth-child(2n), .table-zebra tbody tr:nth-child(2n) {
   --tw-bg-opacity:1;
   background-color: #f2f2f2;
@@ -1270,6 +1499,22 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
   --tw-bg-opacity:1;
   background-color: #e5e6e6;
   background-color: hsl(var(--b3)/var(--tw-bg-opacity));
+}
+
+.table :where(thead, tbody) :where(tr:first-child:last-child), .table :where(thead, tbody) :where(tr:not(:last-child)) {
+  --tw-border-opacity:1;
+  border-bottom-color: #f2f2f2;
+  border-bottom-color: hsl(var(--b2)/var(--tw-border-opacity));
+  border-bottom-width: 1px;
+}
+
+.table :where(thead, tfoot) {
+  color: rgba(31, 41, 55, 0.6);
+  color: hsl(var(--bc)/0.6);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1rem;
+  white-space: nowrap;
 }
 
 .textarea:focus {
@@ -1629,6 +1874,10 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+}
+
+.table {
+  display: table;
 }
 
 .hidden {
@@ -2005,6 +2254,17 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
   transition-duration: 0.4s;
   -webkit-transition-property: all;
   transition-property: all;
+  -webkit-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition {
+  -webkit-transition-duration: 0.4s;
+  transition-duration: 0.4s;
+  -webkit-transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, -webkit-box-shadow, -webkit-transform, -webkit-filter, -webkit-backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, -webkit-box-shadow, -webkit-transform, -webkit-filter, -webkit-backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-box-shadow, -webkit-transform, -webkit-filter, -webkit-backdrop-filter;
   -webkit-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -2760,6 +3020,14 @@ body strong {
     color: #d8dde4;
     color: hsl(var(--nc)/var(--tw-text-opacity));
   }
+  .tab:hover {
+    --tw-text-opacity:1;
+  }
+  .table tr.hover:hover, .table tr.hover:nth-child(2n):hover {
+    --tw-bg-opacity:1;
+    background-color: #f2f2f2;
+    background-color: hsl(var(--b2)/var(--tw-bg-opacity));
+  }
   .dropdown.dropdown-hover:hover .dropdown-content {
     opacity: 1;
     visibility: visible;
@@ -2793,6 +3061,12 @@ body strong {
     cursor: pointer;
     outline: 2px solid transparent;
     outline-offset: 2px;
+  }
+  .tab[disabled], .tab[disabled]:hover {
+    --tw-text-opacity:0.2;
+    color: rgba(31, 41, 55, 0.2);
+    color: hsl(var(--bc)/var(--tw-text-opacity));
+    cursor: not-allowed;
   }
 }
 @media (min-width: 48rem) {
@@ -2873,10 +3147,6 @@ body strong {
   .lg\:top-\[90px\] {
     top: 90px;
   }
-  .lg\:mx-10 {
-    margin-left: 2.5rem;
-    margin-right: 2.5rem;
-  }
   .lg\:block {
     display: block;
   }
@@ -2907,23 +3177,17 @@ body strong {
   .lg\:w-1\/3 {
     width: 33.333333%;
   }
-  .lg\:w-1\/4 {
-    width: 25%;
-  }
   .lg\:w-2\/3 {
     width: 66.666667%;
+  }
+  .lg\:w-2\/6 {
+    width: 33.333333%;
   }
   .lg\:w-\[270px\] {
     width: 270px;
   }
   .lg\:w-full {
     width: 100%;
-  }
-  .lg\:w-1\/6 {
-    width: 16.666667%;
-  }
-  .lg\:w-2\/6 {
-    width: 33.333333%;
   }
   .lg\:-translate-x-\[50\%\] {
     --tw-translate-x:-50%;
@@ -3202,13 +3466,13 @@ body strong {
   }
 }
 @media not all and (min-width: 1024px) {
-  .max-lg\:my-4 {
-    margin-bottom: 1rem;
-    margin-top: 1rem;
-  }
   .max-lg\:mx-auto {
     margin-left: auto;
     margin-right: auto;
+  }
+  .max-lg\:my-4 {
+    margin-bottom: 1rem;
+    margin-top: 1rem;
   }
   .max-lg\:mb-6 {
     margin-bottom: 1.5rem;

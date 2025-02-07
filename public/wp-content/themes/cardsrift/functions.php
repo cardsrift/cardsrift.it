@@ -39,3 +39,11 @@ function remove_my_account_tabs($items) {
     
 	return $items;
 }
+
+add_filter( 'woocommerce_product_tabs', 'remove_woocommerce_product_tabs', 98 );
+function remove_woocommerce_product_tabs( $tabs ) {
+    unset( $tabs['description'] );    // Rimuove la scheda "Descrizione"
+    unset( $tabs['reviews'] );        // Rimuove la scheda "Recensioni"
+    unset( $tabs['additional_information'] ); // Rimuove "Informazioni aggiuntive"
+    return $tabs;
+}

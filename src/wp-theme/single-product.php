@@ -1,34 +1,62 @@
-<?php get_header(); ?>
+<?php
+/**
+ * The Template for displaying all single products
+ *
+ * This template can be overridden by copying it to yourtheme/woocommerce/single-product.php.
+ *
+ * HOWEVER, on occasion WooCommerce will need to update template files and you
+ * (the theme developer) will need to copy the new files to your theme to
+ * maintain compatibility. We try to do this as little as possible, but it does
+ * happen. When this occurs the version of the template file will be bumped and
+ * the readme will list any important changes.
+ *
+ * @see         https://woocommerce.com/document/template-structure/
+ * @package     WooCommerce\Templates
+ * @version     1.6.4
+ */
 
-<?php 
-$post = get_post();
-$post_id = $post->ID;
-$product = wc_get_product( $post_id );
-$product_data = $product->get_data();
-$title = $product_data['name'];
-$description = $product_data['description'];
-$excerpt = $product_data['short_description'];
-$price = $product_data['price'];
-$image = wp_get_attachment_image_url(get_post_thumbnail_id($post_id), 'full');
-//debug($product->get_data());
-?>
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly
+}
 
-<section class="product-main-infos">
-    <div class="tw-container">
-        <div class="product-main-infos-wrapper lg:flex ">
-            <div class="product-main-infos-image lg:w-1/3">
-                <img src="<?php echo $image ?>" alt="<?php echo $title ?>">
-            </div>
-            <div class="product-main-infos-content lg:w-2/3">
-                <h1 class="tw-h1"><?php echo $title ?></h1>
-                <p class="tw-p"><?php echo $description ?></p>
-                <p class="tw-p"><?php echo $price ?></p>
-                <button class="tw-button">Add to cart</button>
-            </div>
-        </div>
-    </div>
-</section>
+get_header( 'shop' ); ?>
 
+	<?php
+		/**
+		 * woocommerce_before_main_content hook.
+		 *
+		 * @hooked woocommerce_output_content_wrapper - 10 (outputs opening divs for the content)
+		 * @hooked woocommerce_breadcrumb - 20
+		 */
+		do_action( 'woocommerce_before_main_content' );
+	?>
 
+		<?php while ( have_posts() ) : ?>
+			<?php the_post(); ?>
 
-<?php get_footer(); ?>
+			<?php wc_get_template_part( 'content', 'single-product' ); ?>
+
+		<?php endwhile; // end of the loop. ?>
+
+	<!-- <?php
+		/**
+		 * woocommerce_after_main_content hook.
+		 *
+		 * @hooked woocommerce_output_content_wrapper_end - 10 (outputs closing divs for the content)
+		 */
+		do_action( 'woocommerce_after_main_content' );
+	?> -->
+
+	<!-- <?php
+		/**
+		 * woocommerce_sidebar hook.
+		 *
+		 * @hooked woocommerce_get_sidebar - 10
+		 */
+		do_action( 'woocommerce_sidebar' );
+	?> -->
+
+<?php
+get_footer( 'shop' );
+
+/* Omit closing PHP tag at the end of PHP files to avoid "headers already sent" issues. */
