@@ -1,0 +1,10 @@
+.base {
+    max-width: $container_full;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+
+    .woocommerce-breadcrumb {
+
+        margin: 2rem 0;
+    }
+}

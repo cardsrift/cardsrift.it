@@ -1,0 +1,57 @@
+/* FONTS */
+$font_bylon: "Bylon", "sans-serif";
+$font_adelle: "adelle-sans", "sans-serif";
+$font_metropolis: "metropolis", "sans-serif";
+
+/* FONT SIZES */
+$font_size_xxs: 10px;
+$font_size_xs: 12px;
+$font_size_sm: 14px;
+$font_size_base: 16px;
+$font_size_md: 18px;
+$font_size_lg: 20px;
+$font_size_xl: 24px;
+$font_size_2xl: 30px;
+$font_size_3xl: 32px;
+$font_size_4xl: 36px;
+$font_size_5xl: 48px;
+$font_size_6xl: 56px;
+$font_size_7xl: 60px;
+$font_size_8xl: 64px;
+$font_size_9xl: 80px;
+
+
+/* LINE HEIGHTS */
+
+$line_height_sm: 1.1;
+$line_height_base: 1.2;
+$line_height_lg: 1.3;
+
+
+/* COLORS */
+$transparent: transparent;
+$white: #F3F4F5;
+$black: #1d2125;
+
+$purple: #8877b2;
+$purple_light: #b6a9d9;
+
+/* LAYOUT */
+$height_footer: 40rem;
+$height_header: 8rem;
+$height_header_mob: 6rem;
+$page_width: 157rem;
+
+/* BREAKPOINTS */
+$xs: 375px;
+$sm: 640px;
+$md: 768px;
+$lg: 1024px;
+$xl: 1280px;
+$xl2: 1600px;
+
+/* CONTAINERS */
+$default_container: 1920px;
+$container_sm: 940px;
+$container_md: 1020px;
+$container_full: 100%;

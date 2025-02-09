@@ -1784,6 +1784,10 @@ Theme Name: Wp Zero
   height: 100%;
 }
 
+.\!h-12 {
+  height: 3rem !important;
+}
+
 .w-10 {
   width: 2.5rem;
 }
@@ -1918,7 +1922,7 @@ Theme Name: Wp Zero
 
 .border-white {
   --tw-border-opacity: 1;
-  border-color: rgb(255 255 255 / var(--tw-border-opacity, 1));
+  border-color: rgb(243 244 245 / var(--tw-border-opacity, 1));
 }
 
 .bg-base-200 {
@@ -1933,15 +1937,15 @@ Theme Name: Wp Zero
 
 .bg-white {
   --tw-bg-opacity: 1;
-  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
+  background-color: rgb(243 244 245 / var(--tw-bg-opacity, 1));
 }
 
 .bg-white-70 {
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgba(#F3F4F5, 0.7);
 }
 
 .fill-white {
-  fill: #ffffff;
+  fill: #F3F4F5;
 }
 
 .object-contain {
@@ -2030,7 +2034,7 @@ Theme Name: Wp Zero
 }
 
 .text-xxs {
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .font-medium {
@@ -2058,7 +2062,7 @@ Theme Name: Wp Zero
 
 .text-white {
   --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+  color: rgb(243 244 245 / var(--tw-text-opacity, 1));
 }
 
 .shadow-md {
@@ -2084,15 +2088,6 @@ Theme Name: Wp Zero
           filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
-.transition-all {
-  -webkit-transition-property: all;
-  transition-property: all;
-  -webkit-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  -webkit-transition-duration: 400ms;
-          transition-duration: 400ms;
-}
-
 .transition {
   -webkit-transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, -webkit-box-shadow, -webkit-transform, -webkit-filter, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, -webkit-box-shadow, -webkit-transform, -webkit-filter, -webkit-backdrop-filter;
@@ -2104,8 +2099,17 @@ Theme Name: Wp Zero
           transition-duration: 400ms;
 }
 
+.transition-all {
+  -webkit-transition-property: all;
+  transition-property: all;
+  -webkit-transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+          transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  -webkit-transition-duration: 400ms;
+          transition-duration: 400ms;
+}
+
 .tw-h1, h1 {
-  font-family: Bylon, sans-serif;
+  font-family: metropolis, sans-serif;
   font-size: 32px;
 }
 
@@ -2122,7 +2126,7 @@ Theme Name: Wp Zero
 }
 
 .tw-h2, h2 {
-  font-family: Bylon, sans-serif;
+  font-family: metropolis, sans-serif;
   font-size: 30px;
 }
 
@@ -2139,7 +2143,7 @@ Theme Name: Wp Zero
 }
 
 .tw-h3, h3 {
-  font-family: Bylon, sans-serif;
+  font-family: metropolis, sans-serif;
   font-size: 24px;
 }
 
@@ -2156,7 +2160,7 @@ Theme Name: Wp Zero
 }
 
 .tw-h4, h4 {
-  font-family: Bylon, sans-serif;
+  font-family: metropolis, sans-serif;
   font-size: 20px;
 }
 
@@ -2173,7 +2177,7 @@ Theme Name: Wp Zero
 }
 
 .tw-h5, h5 {
-  font-family: Bylon, sans-serif;
+  font-family: metropolis, sans-serif;
   font-size: 18px;
 }
 
@@ -2190,7 +2194,7 @@ Theme Name: Wp Zero
 }
 
 .tw-h6, h6 {
-  font-family: Bylon, sans-serif;
+  font-family: metropolis, sans-serif;
   font-size: 16px;
 }
 
@@ -7930,7 +7934,7 @@ body {
   }
 
   .lg\:bg-white-70 {
-    background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(#F3F4F5, 0.7);
   }
 
   .lg\:px-10 {

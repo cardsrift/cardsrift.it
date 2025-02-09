@@ -1,10 +1,9 @@
 /** @type {import('tailwindcss').Config} */
 
 const themeFontSize = {
-  'xxs': '12px',
-  'xs': '13px',
+  'xxs': '10px',
+  'xs': '12px',
   'sm': '14px',
-  'tiny': '15px',
   'base': '16px',
   'md': '18px',
   'lg': '20px',
@@ -30,37 +29,37 @@ const themeTypography = {
     DEFAULT: themeFontSize["3xl"],
     tb: themeFontSize["6xl"],
     xl: themeFontSize["8xl"],
-    fontFamily: themeFontFamily.bylon,
+    fontFamily: themeFontFamily.metropolis,
   },
   h2: {
     DEFAULT: themeFontSize["2xl"],
     tb: themeFontSize["4xl"],
     xl: themeFontSize["6xl"],
-    fontFamily: themeFontFamily.bylon,
+    fontFamily: themeFontFamily.metropolis,
   },
   h3: {
     DEFAULT: themeFontSize.xl,
     tb: themeFontSize["2xl"],
     xl: themeFontSize["4xl"],
-    fontFamily: themeFontFamily.bylon,
+    fontFamily: themeFontFamily.metropolis,
   },
   h4: {
     DEFAULT: themeFontSize.lg,
     tb: themeFontSize.xl,
     xl: themeFontSize["3xl"],
-    fontFamily: themeFontFamily.bylon,
+    fontFamily: themeFontFamily.metropolis,
   },
   h5: {
     DEFAULT: themeFontSize.md,
     tb: themeFontSize.lg,
     xl: themeFontSize.xl,
-    fontFamily: themeFontFamily.bylon,
+    fontFamily: themeFontFamily.metropolis,
   },
   h6: {
     DEFAULT: themeFontSize.base,
     tb: themeFontSize.md,
     xl: themeFontSize.md,
-    fontFamily: themeFontFamily.bylon,
+    fontFamily: themeFontFamily.metropolis,
   },
   pmenu: {
     DEFAULT: themeFontSize.xl,
@@ -104,23 +103,12 @@ module.exports = {
       transparent: "transparent",
       black: '#1d2125',
       white: {
-        DEFAULT: "#ffffff",
-        70: "rgba(255, 255, 255, 0.7)",
+        DEFAULT: "#F3F4F5",
+        70: "rgba(#F3F4F5, 0.7)",
       },
       purple: {
         DEFAULT: '#8877b2',
         light: '#b6a9d9',
-      },
-      yellow: '#feb601',
-      grey: {
-        DEFAULT: '#808284',
-        light: '#8F8F8F',
-        dark: '#7690B0',
-        silver: '#B0C4DE',
-
-        light2: '#E5E9ED', // accordion servizi chiaro
-        dark2: '#CFD1D5', // accordion esg scuro
-        light3: '#E5E6E8', // accordion esg chiaro
       },
     },
 
