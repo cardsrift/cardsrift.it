@@ -36,10 +36,10 @@
 								<?php $menu_image = get_field('category_image', $submenu_hamburger['ID'])['url']; ?>
 									<li class="menuItemWChild flex flex-col justify-center items-center max-lg:mx-auto lg:px-10 relative max-lg:h-full lg:h-full max-lg:w-1/2 lg:w-2/6 <?= $class ?'text-purple': 'text-black'; ?> px-3">
 										
-									<a class="bg-white rounded-[7px] lg:rounded-[16px] max-lg:mb-6 py-1 px-2 lg:px-8 shadow-black shadow-md w-full lg:h-full flex justify-center items-center lg:border-[6px] border-black border-solid hithere"  href="<?= $submenu_hamburger['url']; ?>">
+									<a class="bg-white rounded-[7px] lg:rounded-[16px] max-lg:mb-6 py-1 px-2 tb:!py-16 tb:!px-9 lg:px-8 shadow-black shadow-md w-full lg:h-full flex justify-center items-center lg:border-[6px] border-black border-solid hithere"  href="<?= $submenu_hamburger['url']; ?>">
 										
 										<?php if ($menu_image) : ?>
-												<img src="<?php echo $menu_image ?>" class="block max-lg:!h-[80px] lg:w-full object-contain" alt="<?= $submenu_hamburger['title']; ?>">
+												<img src="<?php echo $menu_image ?>" class="block max-tb:!h-[80px] max-lg:!h-[120px] lg:w-full object-contain" alt="<?= $submenu_hamburger['title']; ?>">
 										<?php endif; ?>
 									</a>
 										<!-- <span class="toggleMenu block w-full h-7 border border-b border-black pt-2 lg:hidden">&#43;</span> -->

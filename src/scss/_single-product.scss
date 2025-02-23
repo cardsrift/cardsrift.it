@@ -1,8 +1,26 @@
 @import 'variables';
 
 .single-product {
+    .base {
+        max-width: 1440px;
+        margin: 0 auto;
+    }
 
     .product {
+        padding-top: 40px;
+
+        .woocommerce-product-gallery {
+            @media screen and (min-width: $lg) {
+                max-height: 450px;
+                padding-bottom: 120px;
+
+                img {
+                    max-height: 450px;
+                    object-fit: contain;
+                }
+            }
+        }
+
         .summary {
 
             .product_title {
@@ -15,12 +33,16 @@
             .price {
                 color: $black;
                 font-weight: 500;
-                margin-bottom: 1rem;
+                margin: 1rem 0 !important;
+                font-size: 24px !important;
+
             }
 
             .woocommerce-product-details__short-description {
                 margin: 2rem 0;
             }
+
+
 
             form.cart {
                 display: flex;
@@ -30,19 +52,51 @@
                     font-size: $font_size_xl;
                 }
 
-                .button {
-                    font-family: $font_metropolis;
-                    text-transform: uppercase;
-                    background: $purple;
-                    padding: 12px 20px 11px;
-                    height: fit-content
+                .single_add_to_cart_button {
+                    font-family: $font_metropolis !important;
+                    text-transform: uppercase !important;
+                    background: $purple !important;
+                    padding: 10px 20px 10px !important;
+                    height: 48px !important;
+                    font-size: 16px !important;
+                    border-radius: 8px !important;
+                    color: $white !important;
+                    display: flex !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+
+                    transition: .3s ease !important;
+
+                    &:hover {
+                        background: $purple_light !important;
+
+                    }
                 }
             }
         }
 
         .products.related {
             clear: both;
+
+            @media screen and (min-width: $lg) {
+                padding-top: 80px;
+
+            }
+
+            h2 {
+                margin-bottom: 40px;
+            }
+
+
         }
 
     }
+}
+
+.pswp__item {
+    background-color: white;
+}
+
+.woocommerce div.product div.images .woocommerce-product-gallery__trigger {
+    display: none !important;
 }

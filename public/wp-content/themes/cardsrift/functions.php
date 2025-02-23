@@ -47,3 +47,20 @@ function remove_woocommerce_product_tabs( $tabs ) {
     unset( $tabs['additional_information'] ); // Rimuove "Informazioni aggiuntive"
     return $tabs;
 }
+
+// rewmove lightbox
+function remove_image_zoom_support() {
+    remove_theme_support( 'wc-product-gallery-zoom' );
+    remove_theme_support( 'wc-product-gallery-lightbox' );
+}
+add_action( 'wp', 'remove_image_zoom_support', 100 );
+
+
+add_filter( 'product_cat_class', 'filter_product_cat_class', 10, 3 );
+function filter_product_cat_class( $classes, $class, $category ){
+    // Only on shop page
+    if( is_shop() )
+        $classes[] = 'custom_cat';
+
+    return $classes;
+}

@@ -19,9 +19,9 @@ $slides =  $component_data['highlights'];
         <?php endif; ?>
 
         <?php if ($slides) : ?>
-            <div class="swiper highlight-slider-slides !pt-6 !pb-8">
+            <div class="swiper highlight-slider-slides !pt-6 !pb-8 h-fit">
                 <div class="highlight-slider-swiper swiper-container max-sm:!mr-10">
-                    <div class="swiper-wrapper !h-[350px]">
+                    <div class="swiper-wrapper">
                         <?php foreach ($slides as $key => $slide) : ?>
 
                             <?php 
@@ -34,23 +34,27 @@ $slides =  $component_data['highlights'];
                                 //debug($terms)
                             ?>
 
-                            <div class="flex flex-col swiper-slide h-full">
+                            <div class="flex flex-col swiper-slide h-full product p-4">
                                 
                                 <a href="<?php echo get_permalink($product_id); ?>" class="highlight-slider-link">
                                     <picture class=" flex justify-center items-center">
                                         <source srcset="<?php echo $product_image; ?>" media="(max-width: 768px)">
-                                        <img class="h-[200px]" src="<?php echo $product_image; ?>">
+                                        <img class="h-[250px]" src="<?php echo $product_image; ?>">
                                     </picture>
                                 </a>
                                 <div class="py-10 xl:py-12 px-8 flex flex-col justify-between text-center font-adelle">
                                         <a href="<?php echo get_permalink($product_id); ?>" class="highlight-slider-link">
-                                        <h4 class="text-xxs">
+                                        <h4 class="text-sm lg:text-md h-28 font-adelle
+                                        ">
                                             <?php echo $product_title; ?>
                                         </h4>
                                     </a>
-                                    <?php echo '€'.$price  ?>
+                                    <div class="text-base lg:text-lg font-500">
+                                        <?php echo '€'.$price  ?>
+
+                                    </div>
                                 </div>
-                                <a href="?add-to-cart=<?php echo $product_id ?>" class="highlight-slider-link text-center block w-full">
+                                <a href="?add-to-cart=<?php echo $product_id ?>" class="highlight-slider-link text-center block add_to_cart_button w-fit mx-auto !font-700">
                                     <?php echo __('Aggiungi al carrello', 'cardsrift'); ?>
                                 </a>
                             </div>

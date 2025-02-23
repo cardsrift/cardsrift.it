@@ -1,17 +1,66 @@
 /*!**********************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/postcss-loader/dist/cjs.js!./src/scss/main_global.scss ***!
   \**********************************************************************************************************************************************************************************************************************/
-html, body, div, span, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-abbr, address, cite, code,
-del, dfn, em, img, ins, kbd, q, samp,
-small, strong, var,
-b, i,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-article, aside, canvas, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section, summary,
-time, mark, audio, video, button {
+html,
+body,
+div,
+span,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+abbr,
+address,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+samp,
+small,
+strong,
+var,
+b,
+i,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+article,
+aside,
+canvas,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+summary,
+time,
+mark,
+audio,
+video,
+button {
   margin: 0;
   padding: 0;
   border: 0;
@@ -21,27 +70,125 @@ time, mark, audio, video, button {
   background: transparent;
   box-sizing: border-box;
 }
-html:before, html:after, body:before, body:after, div:before, div:after, span:before, span:after, object:before, object:after, iframe:before, iframe:after,
+html:before, html:after,
+body:before,
+body:after,
+div:before,
+div:after,
+span:before,
+span:after,
+object:before,
+object:after,
+iframe:before,
+iframe:after,
 h1:before,
-h1:after, h2:before, h2:after, h3:before, h3:after, h4:before, h4:after, h5:before, h5:after, h6:before, h6:after, p:before, p:after, blockquote:before, blockquote:after, pre:before, pre:after,
+h1:after,
+h2:before,
+h2:after,
+h3:before,
+h3:after,
+h4:before,
+h4:after,
+h5:before,
+h5:after,
+h6:before,
+h6:after,
+p:before,
+p:after,
+blockquote:before,
+blockquote:after,
+pre:before,
+pre:after,
 abbr:before,
-abbr:after, address:before, address:after, cite:before, cite:after, code:before, code:after,
+abbr:after,
+address:before,
+address:after,
+cite:before,
+cite:after,
+code:before,
+code:after,
 del:before,
-del:after, dfn:before, dfn:after, em:before, em:after, img:before, img:after, ins:before, ins:after, kbd:before, kbd:after, q:before, q:after, samp:before, samp:after,
+del:after,
+dfn:before,
+dfn:after,
+em:before,
+em:after,
+img:before,
+img:after,
+ins:before,
+ins:after,
+kbd:before,
+kbd:after,
+q:before,
+q:after,
+samp:before,
+samp:after,
 small:before,
-small:after, strong:before, strong:after, var:before, var:after,
+small:after,
+strong:before,
+strong:after,
+var:before,
+var:after,
 b:before,
-b:after, i:before, i:after,
+b:after,
+i:before,
+i:after,
 dl:before,
-dl:after, dt:before, dt:after, dd:before, dd:after, ol:before, ol:after, ul:before, ul:after, li:before, li:after,
+dl:after,
+dt:before,
+dt:after,
+dd:before,
+dd:after,
+ol:before,
+ol:after,
+ul:before,
+ul:after,
+li:before,
+li:after,
 fieldset:before,
-fieldset:after, form:before, form:after, label:before, label:after, legend:before, legend:after,
+fieldset:after,
+form:before,
+form:after,
+label:before,
+label:after,
+legend:before,
+legend:after,
 article:before,
-article:after, aside:before, aside:after, canvas:before, canvas:after, details:before, details:after, figcaption:before, figcaption:after, figure:before, figure:after,
+article:after,
+aside:before,
+aside:after,
+canvas:before,
+canvas:after,
+details:before,
+details:after,
+figcaption:before,
+figcaption:after,
+figure:before,
+figure:after,
 footer:before,
-footer:after, header:before, header:after, hgroup:before, hgroup:after, menu:before, menu:after, nav:before, nav:after, section:before, section:after, summary:before, summary:after,
+footer:after,
+header:before,
+header:after,
+hgroup:before,
+hgroup:after,
+menu:before,
+menu:after,
+nav:before,
+nav:after,
+section:before,
+section:after,
+summary:before,
+summary:after,
 time:before,
-time:after, mark:before, mark:after, audio:before, audio:after, video:before, video:after, button:before, button:after {
+time:after,
+mark:before,
+mark:after,
+audio:before,
+audio:after,
+video:before,
+video:after,
+button:before,
+button:after {
   box-sizing: border-box;
 }
 
@@ -65,7 +212,14 @@ a:before, a:after {
   box-sizing: border-box;
 }
 
-table, caption, tbody, tfoot, thead, tr, th, td {
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td {
   margin: 0;
   padding: 0;
   border: 0;
@@ -74,16 +228,28 @@ table, caption, tbody, tfoot, thead, tr, th, td {
   background: transparent;
 }
 
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
   display: block;
 }
 
-ol, ul, li {
+ol,
+ul,
+li {
   list-style: none;
 }
 
-blockquote, q {
+blockquote,
+q {
   quotes: none;
 }
 
@@ -99,10 +265,12 @@ q:before, q:after {
   outline: 0;
 }
 
-input[type=text], textarea {
+input[type=text],
+textarea {
   -webkit-appearance: none;
 }
-input[type=text]::-ms-clear, textarea::-ms-clear {
+input[type=text]::-ms-clear,
+textarea::-ms-clear {
   display: none;
 }
 
@@ -144,6 +312,10 @@ table {
 * {
   box-sizing: border-box;
   word-wrap: break-word;
+}
+
+.base {
+  min-height: calc(100vh - 90px - 200px);
 }
 
 /* FONTS */
@@ -193,9 +365,9 @@ header .menuOpen .main-menu::before {
 }
 @media screen and (min-width: 481px) {
   header .menuOpen .main-menu::before {
-    top: -177%;
-    left: -112%;
-    bottom: -66%;
+    top: -245%;
+    left: -225%;
+    bottom: -46%;
   }
 }
 @media screen and (min-width: 1024px) {
@@ -220,6 +392,23 @@ header .logo-black {
 /* LAYOUT */
 /* BREAKPOINTS */
 /* CONTAINERS */
+.single-product .base {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+.single-product .product {
+  padding-top: 40px;
+}
+@media screen and (min-width: 1024px) {
+  .single-product .product .woocommerce-product-gallery {
+    max-height: 450px;
+    padding-bottom: 120px;
+  }
+  .single-product .product .woocommerce-product-gallery img {
+    max-height: 450px;
+    object-fit: contain;
+  }
+}
 .single-product .product .summary .product_title {
   font-size: 36px;
   line-height: 1.1;
@@ -229,7 +418,8 @@ header .logo-black {
 .single-product .product .summary .price {
   color: #1d2125;
   font-weight: 500;
-  margin-bottom: 1rem;
+  margin: 1rem 0 !important;
+  font-size: 24px !important;
 }
 .single-product .product .summary .woocommerce-product-details__short-description {
   margin: 2rem 0;
@@ -241,15 +431,96 @@ header .logo-black {
 .single-product .product .summary form.cart .qty {
   font-size: 24px;
 }
-.single-product .product .summary form.cart .button {
-  font-family: "metropolis", "sans-serif";
-  text-transform: uppercase;
-  background: #8877b2;
-  padding: 12px 20px 11px;
-  height: fit-content;
+.single-product .product .summary form.cart .single_add_to_cart_button {
+  font-family: "metropolis", "sans-serif" !important;
+  text-transform: uppercase !important;
+  background: #8877b2 !important;
+  padding: 10px 20px 10px !important;
+  height: 48px !important;
+  font-size: 16px !important;
+  border-radius: 8px !important;
+  color: #F3F4F5 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: 0.3s ease !important;
+}
+.single-product .product .summary form.cart .single_add_to_cart_button:hover {
+  background: #b6a9d9 !important;
 }
 .single-product .product .products.related {
   clear: both;
+}
+@media screen and (min-width: 1024px) {
+  .single-product .product .products.related {
+    padding-top: 80px;
+  }
+}
+.single-product .product .products.related h2 {
+  margin-bottom: 40px;
+}
+
+.pswp__item {
+  background-color: white;
+}
+
+.woocommerce div.product div.images .woocommerce-product-gallery__trigger {
+  display: none !important;
+}
+
+.woocommerce.columns-4 {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-top: 40px;
+}
+.woocommerce.columns-4 .products {
+  padding-top: 40px;
+}
+.woocommerce.columns-4 .woocommerce-result-count {
+  display: none;
+}
+
+.product .woocommerce-loop-product__title {
+  font-size: 14px !important;
+  line-height: 20px !important;
+  text-align: center !important;
+  font-family: "adelle-sans", "sans-serif" !important;
+}
+@media screen and (min-width: 768px) {
+  .product .woocommerce-loop-product__title {
+    height: 115px;
+    font-size: 18px !important;
+    line-height: 24px !important;
+    font-family: "adelle-sans", "sans-serif" !important;
+  }
+}
+.product .price {
+  font-size: 20px !important;
+  color: #1d2125 !important;
+  font-weight: 500 !important;
+  margin: 0 auto !important;
+  width: fit-content !important;
+}
+.product .add_to_cart_button {
+  font-family: "metropolis", "sans-serif" !important;
+  text-transform: uppercase !important;
+  background: #8877b2 !important;
+  padding: 10px 20px 10px !important;
+  height: 48px !important;
+  font-size: 16px !important;
+  border-radius: 8px !important;
+  color: #F3F4F5 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-weight: 700;
+  transition: 0.3s ease !important;
+  width: fit-content !important;
+  margin: 16px auto !important;
+  font-family: "adelle-sans", "sans-serif" !important;
+}
+.product .add_to_cart_button:hover {
+  background: #b6a9d9 !important;
 }
 /*!*********************************************************************************************************************************************************************************************************************************!*\
   !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[4].use[1]!./node_modules/sass-loader/dist/cjs.js??ruleSet[1].rules[4].use[2]!./node_modules/postcss-loader/dist/cjs.js!./src/tailwind/build/main_tailwind.css ***!
@@ -1939,6 +2210,10 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
   display: none;
 }
 
+.\!h-12 {
+  height: 3rem !important;
+}
+
 .\!h-\[350px\] {
   height: 350px !important;
 }
@@ -1953,10 +2228,6 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
 
 .h-10 {
   height: 2.5rem;
-}
-
-.h-24 {
-  height: 6rem;
 }
 
 .h-4 {
@@ -1984,8 +2255,18 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
   height: 100%;
 }
 
-.\!h-12 {
-  height: 3rem !important;
+.h-fit {
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+
+.h-\[250px\] {
+  height: 250px;
+}
+
+.h-28 {
+  height: 7rem;
 }
 
 .w-10 {
@@ -2006,6 +2287,12 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
 
 .w-full {
   width: 100%;
+}
+
+.w-fit {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
 }
 
 .-translate-y-1\/2 {
@@ -2182,6 +2469,10 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
   padding: 0.5rem;
 }
 
+.p-4 {
+  padding: 1rem;
+}
+
 .px-2 {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
@@ -2247,6 +2538,14 @@ summary:where(.menu li:not(.menu-title):not(.disabled) > details > summary:not(.
 
 .text-xxs {
   font-size: 10px;
+}
+
+.text-sm {
+  font-size: 14px;
+}
+
+.text-base {
+  font-size: 16px;
 }
 
 .font-medium {
@@ -3158,6 +3457,14 @@ body strong {
   .tw-pmenu, pmenu {
     font-size: 24px;
   }
+  .tb\:\!px-9 {
+    padding-left: 2.25rem !important;
+    padding-right: 2.25rem !important;
+  }
+  .tb\:\!py-16 {
+    padding-bottom: 4rem !important;
+    padding-top: 4rem !important;
+  }
 }
 @media (min-width: 1280px) {
   .tw-h1, h1 {
@@ -3307,6 +3614,15 @@ body strong {
   .lg\:pt-\[var\(--header-h-desktop\)\] {
     padding-top: 90px;
     padding-top: var(--header-h-desktop);
+  }
+  .lg\:text-xl {
+    font-size: 24px;
+  }
+  .lg\:text-lg {
+    font-size: 20px;
+  }
+  .lg\:text-md {
+    font-size: 18px;
   }
 }
 @media not all and (min-width: 960px) {
@@ -3545,8 +3861,8 @@ body strong {
   .max-lg\:hidden {
     display: none;
   }
-  .max-lg\:\!h-\[80px\] {
-    height: 80px !important;
+  .max-lg\:\!h-\[120px\] {
+    height: 120px !important;
   }
   .max-lg\:h-\[400px\] {
     height: 400px;
@@ -3592,6 +3908,11 @@ body strong {
   }
   .max-lg\:pt-24 {
     padding-top: 6rem;
+  }
+}
+@media not all and (min-width: 768px) {
+  .max-tb\:\!h-\[80px\] {
+    height: 80px !important;
   }
 }
 @media not all and (min-width: 640px) {

@@ -9,7 +9,7 @@ header {
 			transform: translateX(-120%);
 
 			&.menuOpen {
-				transform: translateX(0)
+				transform: translateX(0);
 			}
 		}
 	}
@@ -38,10 +38,9 @@ header {
 				background-repeat: no-repeat;
 
 				@media screen and (min-width: 481px) {
-					top: -177%;
-					left: -112%;
-					bottom: -66%;
-
+					top: -245%;
+					left: -225%;
+					bottom: -46%;
 				}
 
 				@media screen and (min-width: 1024px) {

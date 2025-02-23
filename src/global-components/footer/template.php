@@ -1,5 +1,5 @@
 
-<footer class="footer bg-base-200 text-base-content p-10">
+<footer class="footer bg-base-200 text-base-content p-10 h-[200px]">
   <div>
       <img class="!h-12" src="<?php echo get_field('logo', 'options')['url'] ?>" alt="">
       <address>

@@ -1,14 +1,63 @@
-html, body, div, span, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-abbr, address, cite, code,
-del, dfn, em, img, ins, kbd, q, samp,
-small, strong, var,
-b, i,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-article, aside, canvas, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section, summary,
-time, mark, audio, video, button {
+html,
+body,
+div,
+span,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+abbr,
+address,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+samp,
+small,
+strong,
+var,
+b,
+i,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+article,
+aside,
+canvas,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+summary,
+time,
+mark,
+audio,
+video,
+button {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -41,13 +90,21 @@ sup {
 }
 
 a {
+
 	&:before,
 	&:after {
 		box-sizing: border-box;
 	}
 }
 
-table, caption, tbody, tfoot, thead, tr, th, td {
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td {
 	margin: 0;
 	padding: 0;
 	border: 0;
@@ -56,27 +113,43 @@ table, caption, tbody, tfoot, thead, tr, th, td {
 	background: transparent;
 }
 
-article, aside, details, figcaption, figure,
-footer, header, hgroup, menu, nav, section {
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
 	display: block;
 }
 
-ol, ul, li {
+ol,
+ul,
+li {
 	list-style: none;
 }
 
-blockquote, q {
+blockquote,
+q {
 	quotes: none;
 }
 
 blockquote {
-	&:before, &:after {
+
+	&:before,
+	&:after {
 		content: none;
 	}
 }
 
 q {
-	&:before, &:after {
+
+	&:before,
+	&:after {
 		content: none;
 	}
 }
@@ -85,7 +158,8 @@ q {
 	outline: 0;
 }
 
-input[type="text"], textarea {
+input[type="text"],
+textarea {
 	-webkit-appearance: none;
 
 	&::-ms-clear {
@@ -98,16 +172,11 @@ textarea {
 	border-radius: 0;
 	box-sizing: border-box;
 
-	&::-webkit-input-placeholder {
-		
-	}
+	&::-webkit-input-placeholder {}
 
-	&::-moz-placeholder {
-		
-	}
-	&:-ms-input-placeholder {
-		
-	}
+	&::-moz-placeholder {}
+
+	&:-ms-input-placeholder {}
 
 	&:focus {
 		&::-webkit-input-placeholder {
@@ -117,6 +186,7 @@ textarea {
 		&::-moz-placeholder {
 			color: transparent;
 		}
+
 		&:-ms-input-placeholder {
 			color: transparent;
 		}
@@ -144,4 +214,10 @@ table {
 	box-sizing: border-box;
 	word-wrap: break-word;
 }
+
 //-------------------------------------------------reset*/
+
+
+.base {
+	min-height: calc(100vh - 90px - 200px);
+}

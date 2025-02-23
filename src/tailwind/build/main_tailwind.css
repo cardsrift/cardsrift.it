@@ -1740,6 +1740,10 @@ Theme Name: Wp Zero
   display: none;
 }
 
+.\!h-12 {
+  height: 3rem !important;
+}
+
 .\!h-\[350px\] {
   height: 350px !important;
 }
@@ -1754,10 +1758,6 @@ Theme Name: Wp Zero
 
 .h-10 {
   height: 2.5rem;
-}
-
-.h-24 {
-  height: 6rem;
 }
 
 .h-4 {
@@ -1784,8 +1784,18 @@ Theme Name: Wp Zero
   height: 100%;
 }
 
-.\!h-12 {
-  height: 3rem !important;
+.h-fit {
+  height: -webkit-fit-content;
+  height: -moz-fit-content;
+  height: fit-content;
+}
+
+.h-\[250px\] {
+  height: 250px;
+}
+
+.h-28 {
+  height: 7rem;
 }
 
 .w-10 {
@@ -1806,6 +1816,12 @@ Theme Name: Wp Zero
 
 .w-full {
   width: 100%;
+}
+
+.w-fit {
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
 }
 
 .-translate-y-1\/2 {
@@ -1971,6 +1987,10 @@ Theme Name: Wp Zero
   padding: 0.5rem;
 }
 
+.p-4 {
+  padding: 1rem;
+}
+
 .px-2 {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
@@ -2035,6 +2055,14 @@ Theme Name: Wp Zero
 
 .text-xxs {
   font-size: 10px;
+}
+
+.text-sm {
+  font-size: 14px;
+}
+
+.text-base {
+  font-size: 16px;
 }
 
 .font-medium {
@@ -7723,8 +7751,8 @@ body {
     display: none;
   }
 
-  .max-lg\:\!h-\[80px\] {
-    height: 80px !important;
+  .max-lg\:\!h-\[120px\] {
+    height: 120px !important;
   }
 
   .max-lg\:h-\[400px\] {
@@ -7794,6 +7822,12 @@ body {
   }
 }
 
+@media not all and (min-width: 768px) {
+  .max-tb\:\!h-\[80px\] {
+    height: 80px !important;
+  }
+}
+
 @media not all and (min-width: 640px) {
   .max-sm\:\!mr-10 {
     margin-right: 2.5rem !important;
@@ -7802,6 +7836,18 @@ body {
   .max-sm\:px-5 {
     padding-left: 1.25rem;
     padding-right: 1.25rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .tb\:\!px-9 {
+    padding-left: 2.25rem !important;
+    padding-right: 2.25rem !important;
+  }
+
+  .tb\:\!py-16 {
+    padding-top: 4rem !important;
+    padding-bottom: 4rem !important;
   }
 }
 
@@ -7953,6 +7999,18 @@ body {
 
   .lg\:pt-\[var\(--header-h-desktop\)\] {
     padding-top: var(--header-h-desktop);
+  }
+
+  .lg\:text-xl {
+    font-size: 24px;
+  }
+
+  .lg\:text-lg {
+    font-size: 20px;
+  }
+
+  .lg\:text-md {
+    font-size: 18px;
   }
 }
 
