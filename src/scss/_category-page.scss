@@ -44,7 +44,7 @@
         text-transform: uppercase !important;
         background: $purple !important;
         padding: 10px 20px 10px !important;
-        height: 48px !important;
+        height: 56px !important;
         font-size: 16px !important;
         border-radius: 8px !important;
         color: $white !important;
@@ -55,12 +55,18 @@
         transition: .3s ease !important;
         width: fit-content !important;
         margin: 16px auto !important;
+        text-align: center;
+        line-height: 20px !important;
 
         font-family: $font_adelle !important;
 
         &:hover {
             background: $purple_light !important;
 
+        }
+
+        @media screen and (min-width: $lg) {
+            height: 48px !important;
         }
     }
 }

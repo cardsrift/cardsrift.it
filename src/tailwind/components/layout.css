@@ -41,6 +41,6 @@ body {
 	}
 
 	.itemActive>ul {
-		@apply flex lg:p-9
+		@apply flex lg:p-5
 	}
 }

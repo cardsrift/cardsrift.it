@@ -1,6 +1,6 @@
-.hithere:hover {
+/* .hithere:hover {
     animation: 6s hithere ease infinite;
-}
+} */
 
 @keyframes hithere {
     0% { transform: scale(1); }
