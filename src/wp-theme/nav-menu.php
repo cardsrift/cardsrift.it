@@ -15,7 +15,7 @@
 					</a>
 				</li>
 			<?php else : ?>
-				<li class="itemActive menuItemWChild tw-pmenu uppercase max-lg:my-4 lg:flex lg:items-center text-center mx-auto maxl-lg:relative max-lg:h-fit lg:h-full max-lg:w-full <?= $class ?'text-purple': 'text-black'; ?> ">
+				<li class="menuItemWChild tw-pmenu uppercase max-lg:my-4 lg:flex lg:items-center text-center mx-auto maxl-lg:relative max-lg:h-fit lg:h-full max-lg:w-full <?= $class ?'text-purple': 'text-black'; ?> ">
 					<a class="toggleMenu" href="<?= $item_hamburger['url']; ?>">
 						<?= $item_hamburger['title']; ?>
 					</a>

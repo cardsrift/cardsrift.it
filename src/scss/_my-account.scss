@@ -1,0 +1,110 @@
+@import 'variables';
+
+.page-template-my-account {
+    .woocommerce {
+        padding: 40px 0;
+
+        .woocommerce-MyAccount-content {
+            a {
+                color: $purple;
+                transition: all .3s ease;
+
+                &:hover {
+                    text-decoration: none;
+                }
+            }
+        }
+
+        .password-input {
+            .show-password-input {
+                top: 0 !important;
+            }
+        }
+
+        .woocommerce-MyAccount-navigation {
+            width: fit-content;
+
+            li.woocommerce-MyAccount-navigation-link {
+                border-bottom: 1px solid $purple_light;
+                font-size: 18px;
+                height: 40px;
+                display: flex;
+                align-items: center;
+                width: 100%;
+
+                transition: color .3s ease;
+
+                &:hover {
+                    color: $purple_light;
+                }
+
+                &.is-active {
+                    color: $purple;
+                }
+            }
+        }
+
+        .woocommerce-Addresses {
+            display: flex;
+            flex-direction: column;
+            gap: 3rem;
+
+            .woocommerce-Address {
+                width: 100%;
+
+
+                .woocommerce-Address-title {
+                    &::before {
+                        content: none;
+                    }
+
+                    &::after {
+                        content: none;
+                    }
+
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    a {
+                        text-decoration: underline;
+                        color: $purple;
+                        transition: all .3s ease;
+
+                        &:hover {
+                            text-decoration: none;
+                        }
+                    }
+
+                    h2 {
+                        font-size: 24px;
+                    }
+                }
+            }
+
+
+        }
+
+        .woocommerce-EditAccountForm {
+
+            .woocommerce-Input {
+                border: 1px solid rgba($black, 0.7);
+                font-size: 16px;
+                height: 40px;
+                padding: 0 10px;
+                margin-bottom: 10px;
+                width: 100%;
+                transition: all .3s ease;
+
+            }
+
+            .show-password-input {
+                top: .7em !important;
+            }
+        }
+    }
+
+    h2 {
+        font-size: 36px !important;
+    }
+}
