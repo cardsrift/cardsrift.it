@@ -1527,6 +1527,10 @@ Theme Name: Wp Zero
   padding-right: 1.5rem;
 }
 
+.pointer-events-none {
+  pointer-events: none;
+}
+
 .visible {
   visibility: visible;
 }
@@ -1597,6 +1601,11 @@ Theme Name: Wp Zero
 
 .z-\[1\] {
   z-index: 1;
+}
+
+.-mx-6 {
+  margin-left: -1.5rem;
+  margin-right: -1.5rem;
 }
 
 .mx-auto {
@@ -1704,6 +1713,10 @@ Theme Name: Wp Zero
 
 .h-\[250px\] {
   height: 250px;
+}
+
+.h-\[600px\] {
+  height: 600px;
 }
 
 .h-\[var\(--header-h-mobile\)\] {
@@ -3460,10 +3473,6 @@ body {
     height: 300px;
   }
 
-  .lg\:h-\[450px\] {
-    height: 450px;
-  }
-
   .lg\:h-\[var\(--header-h-desktop\)\] {
     height: var(--header-h-desktop);
   }
@@ -3589,5 +3598,11 @@ body {
   .xl\:py-12 {
     padding-top: 3rem;
     padding-bottom: 3rem;
+  }
+}
+
+@media (min-width: 1600px) {
+  .\32xl\:h-\[800px\] {
+    height: 800px;
   }
 }

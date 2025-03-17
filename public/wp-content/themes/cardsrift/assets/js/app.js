@@ -148,13 +148,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+console.log('swiper');
 var hero = function hero() {
+  // Register the Autoplay module
+  swiper__WEBPACK_IMPORTED_MODULE_0__["default"].use([swiper__WEBPACK_IMPORTED_MODULE_0__.Autoplay]);
   var swiper = new swiper__WEBPACK_IMPORTED_MODULE_0__["default"]('.hero-slider', {
-    // Optional parameters
     direction: 'horizontal',
     loop: true,
-    navigation: false,
-    slidesPerView: 1
+    slidesPerView: 1,
+    autoplay: {
+      delay: 14000
+    }
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (hero);
