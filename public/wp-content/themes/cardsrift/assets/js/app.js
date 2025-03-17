@@ -184,7 +184,22 @@ var highlightSlider = function highlightSlider() {
   var sliders = document.querySelectorAll('.highlight-slider-swiper');
   sliders.forEach(function (slider) {
     var swiper = new swiper__WEBPACK_IMPORTED_MODULE_0__["default"](slider, {
-      slidesPerView: 4
+      slidesPerView: 4,
+      breakpoints: {
+        0: {
+          slidesPerView: 1
+        },
+        640: {
+          slidesPerView: 2
+        },
+        768: {
+          slidesPerView: 3
+        },
+        1024: {
+          slidesPerView: 4
+        }
+      },
+      spaceBetween: 20
     });
   });
 };
