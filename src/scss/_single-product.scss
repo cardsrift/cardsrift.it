@@ -58,7 +58,8 @@
                     background: $purple !important;
                     padding: 10px 20px 10px !important;
                     height: 56px !important;
-                    font-size: 16px !important;
+                    font-size: 14px !important;
+                    line-height: 18px !important;
                     border-radius: 8px !important;
                     color: $white !important;
                     display: flex !important;
@@ -66,7 +67,7 @@
                     justify-content: center !important;
                     text-align: center;
                     transition: .3s ease !important;
-                    line-height: 20px !important;
+
 
                     &:hover {
                         background: $purple_light !important;
@@ -75,6 +76,8 @@
 
                     @media screen and (min-width: $lg) {
                         height: 48px !important;
+                        font-size: 16px !important;
+                        line-height: 20px !important;
                     }
 
                 }
