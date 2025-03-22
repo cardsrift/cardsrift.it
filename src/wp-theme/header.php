@@ -15,6 +15,14 @@
 	
 	<!-- adelle font -->
 	<link rel="stylesheet" href="https://use.typekit.net/lma6wbr.css"> 
+
+	<!-- IUBENDA -->
+	<script type="text/javascript">
+		var _iub = _iub || [];
+		_iub.csConfiguration = {"siteId":3973116,"cookiePolicyId":20607045,"lang":"it","storage":{"useSiteId":true}};
+	</script>
+	<script type="text/javascript" src="https://cs.iubenda.com/autoblocking/3973116.js"></script>
+	<script type="text/javascript" src="//cdn.iubenda.com/cs/iubenda_cs.js" charset="UTF-8" async></script>
 </head>
 
 
