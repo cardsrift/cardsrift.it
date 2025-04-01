@@ -1733,6 +1733,10 @@ Theme Name: Wp Zero
   height: 100%;
 }
 
+.h-\[600px\] {
+  height: 600px;
+}
+
 .\!w-8 {
   width: 2rem !important;
 }
@@ -3294,6 +3298,10 @@ body {
     margin-top: auto;
   }
 
+  .max-lg\:block {
+    display: block;
+  }
+
   .max-lg\:flex {
     display: -webkit-box;
     display: -ms-flexbox;
@@ -3320,6 +3328,10 @@ body {
 
   .max-lg\:h-full {
     height: 100%;
+  }
+
+  .max-lg\:h-\[600px\] {
+    height: 600px;
   }
 
   .max-lg\:w-1\/2 {

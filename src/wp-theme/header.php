@@ -48,4 +48,4 @@
 
 
 	<div class="wrapper pt-[var(--header-h-mobile)] lg:pt-[var(--header-h-desktop)]">
-		<div class="base tw-container">
+		<div class="base container">

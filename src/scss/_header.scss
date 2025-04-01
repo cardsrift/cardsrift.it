@@ -65,3 +65,13 @@ header {
 		}
 	}
 }
+
+.woocommerce {
+
+	.base {
+		&.container {
+			max-width: $default_container;
+			margin: 0 auto;
+		}
+	}
+}
