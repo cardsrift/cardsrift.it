@@ -1715,8 +1715,8 @@ Theme Name: Wp Zero
   height: 250px;
 }
 
-.h-\[600px\] {
-  height: 600px;
+.h-\[440px\] {
+  height: 440px;
 }
 
 .h-\[var\(--header-h-mobile\)\] {
@@ -3471,6 +3471,10 @@ body {
 
   .lg\:h-\[300px\] {
     height: 300px;
+  }
+
+  .lg\:h-\[600px\] {
+    height: 600px;
   }
 
   .lg\:h-\[var\(--header-h-desktop\)\] {

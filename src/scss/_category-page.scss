@@ -5,6 +5,13 @@
 
     .products {
         padding-top: 40px;
+
+        .product {
+            @media screen and (max-width: 768px) {
+                width: 100% !important;
+
+            }
+        }
     }
 
     .woocommerce-result-count {

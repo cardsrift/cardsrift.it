@@ -3,7 +3,7 @@
 ?>
 
 <?php if($hero_slides) : ?>
-	<section class="homepage-hero relative z-[0] -mx-6 h-[600px] 2xl:h-[800px]">
+	<section class="homepage-hero relative z-[0] -mx-6 h-[440px] lg:h-[600px] 2xl:h-[800px]">
 
 
 			<div class="swiper hero-slider !z-[6] max-lg:h-[400px] lg:h-full">

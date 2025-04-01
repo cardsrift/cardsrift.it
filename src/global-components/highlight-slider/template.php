@@ -20,7 +20,7 @@ $slides =  $component_data['highlights'];
 
         <?php if ($slides) : ?>
             <div class="swiper highlight-slider-slides !pt-6 !pb-8 h-fit">
-                <div class="highlight-slider-swiper swiper-container max-sm:!mr-10">
+                <div class="highlight-slider-swiper swiper-container max-sm:!mr-10 max-lg:w-full">
                     <div class="swiper-wrapper">
                         <?php foreach ($slides as $key => $slide) : ?>
 
@@ -54,8 +54,8 @@ $slides =  $component_data['highlights'];
 
                                     </div>
                                 </div>
-                                <a href="?add-to-cart=<?php echo $product_id ?>" class="highlight-slider-link text-center block add_to_cart_button w-fit mx-auto !font-700">
-                                    <?php echo __('Aggiungi al carrello', 'cardsrift'); ?>
+                                <a href="<?php echo get_permalink($product_id) ?>" class="highlight-slider-link text-center block add_to_cart_button w-fit mx-auto !font-700">
+                                    <?php echo __('Vedi prodotto', 'cardsrift'); ?>
                                 </a>
                             </div>
 

@@ -55,7 +55,6 @@ function remove_image_zoom_support() {
 }
 add_action( 'wp', 'remove_image_zoom_support', 100 );
 
-
 add_filter( 'product_cat_class', 'filter_product_cat_class', 10, 3 );
 function filter_product_cat_class( $classes, $class, $category ){
     // Only on shop page

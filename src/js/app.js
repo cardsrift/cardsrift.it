@@ -7,6 +7,7 @@ import {
 	onWindowScroll, onWindowResize, calcViewportHeight, documentReady, pageLoad,
 } from './utils';
 // ------------------- imports###
+
 import Test from './components/test';
 import Header from './components/header';
 import inputInit from './components/inputInit';

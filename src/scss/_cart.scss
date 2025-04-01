@@ -1,0 +1,26 @@
+.woocommerce-cart {
+
+    .with-empty-cart-icon {
+        margin: 40px 0;
+    }
+
+    .wp-block-heading {
+        display: none;
+
+        &.with-empty-cart-icon {
+            display: block;
+        }
+    }
+
+    .wp-block-separator {
+        display: none;
+    }
+
+    .wc-block-grid__product-title {
+        height: 120px;
+    }
+
+    .wp-block-product-new {
+        display: none;
+    }
+}
