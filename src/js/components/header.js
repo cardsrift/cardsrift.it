@@ -50,9 +50,12 @@ const Header = () => {
 	menuItemWChild.forEach((element) => {
 		if (windowWidth > lg) {
 			element.addEventListener('mouseover', () => {
+				mainMenu.classList.add('menuOpen');
 				element.classList.add('itemActive');
 			});
 			element.addEventListener('mouseout', () => {
+				mainMenu.classList.remove('menuOpen');
+
 				element.classList.remove('itemActive');
 			});
 		}
