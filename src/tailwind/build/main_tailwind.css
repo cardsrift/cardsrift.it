@@ -3360,6 +3360,10 @@ body {
             justify-content: center;
   }
 
+  .max-lg\:overflow-hidden {
+    overflow: hidden;
+  }
+
   .max-lg\:rounded-\[20px\] {
     border-radius: 20px;
   }
