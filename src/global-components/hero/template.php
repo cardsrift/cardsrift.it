@@ -35,7 +35,7 @@
 								<?php if (!empty($slide['video']['url'])): ?>
 									<div class="swiper-slide overflow-hidden h-full flex items-center justify-center bg-black">
 
-										<video class="heroVideo object-cover object-center pointer-events-none h-full w-full max-lg:hidden lg:block" autoplay muted loop>
+										<video class="heroVideo object-cover object-center pointer-events-none h-full w-full max-lg:hidden lg:block" autoplay muted loop playsinline>
 											<source src="<?= $slide['video']['url']; ?>">
 										</video>
 
