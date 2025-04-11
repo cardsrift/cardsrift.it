@@ -29,13 +29,13 @@
               <div class="flex flex-col md:flex-row justify-end lg:items-start max-lg:items-center mb-10 ">
                   <!-- Social -->
                   <div class="flex space-x-4 max-lg:justify-center">
-                    <a href="https://instagram.com" target="_blank" class="inline-block !h-8 !w-8">
+                    <a href="https://www.instagram.com/cardsrift/" target="_blank" class="inline-block !h-8 !w-8">
                       <img src="<?php echo get_template_directory_uri().'/assets/images/instagram.png' ?>" alt="Instagram" class="!h-full !w-full">
                     </a>
-                    <a href="https://tiktok.com" target="_blank" class="!h-8 !w-8">
+                    <!-- <a href="https://tiktok.com" target="_blank" class="!h-8 !w-8">
                       <img src="<?php echo get_template_directory_uri().'/assets/images/tiktok.svg' ?>" alt="tiktok" class="!h-full !w-full">
-                    </a>
-                    <a href="https://telegram.com" target="_blank" class="!h-8 !w-8">
+                    </a> -->
+                    <a href="https://t.me/+4XSpVIOPA3FjMmFk" target="_blank" class="!h-8 !w-8">
                       <img src="<?php echo get_template_directory_uri().'/assets/images/telegram.svg' ?> " alt="Gruppo Telegram" class="!h-full !w-full">
                     </a>
                   </div>           
