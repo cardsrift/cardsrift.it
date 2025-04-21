@@ -37,6 +37,8 @@
 
 										<video class="heroVideo object-cover object-center pointer-events-none h-full w-full max-lg:hidden lg:block" autoplay muted loop playsinline>
 											<source src="<?= $slide['video']['url']; ?>">
+											<!-- <source src="path-to-my-video.mp4" type="video/mp4" />
+											<source src="path-to-my-video.webm" type="video/webm" /> -->
 										</video>
 
 										<video class="heroVideo object-cover object-center pointer-events-none h-full w-full max-lg:block lg:hidden" autoplay muted loop>
