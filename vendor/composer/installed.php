@@ -1,94 +1,92 @@
-<?php return array (
-  'root' => 
-  array (
-    'pretty_version' => 'dev-main',
-    'version' => 'dev-main',
-    'aliases' => 
-    array (
+<?php return array(
+    'root' => array(
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'type' => 'library',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'reference' => '0ef77d17a5534e316a0c9350ab5424d706f9a438',
+        'name' => 'acme/brilliant-wordpress-site',
+        'dev' => true,
     ),
-    'reference' => 'd4726a7751da3639eea5080928af3ead0b93a893',
-    'name' => 'acme/brilliant-wordpress-site',
-  ),
-  'versions' => 
-  array (
-    'acme/brilliant-wordpress-site' => 
-    array (
-      'pretty_version' => 'dev-main',
-      'version' => 'dev-main',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'd4726a7751da3639eea5080928af3ead0b93a893',
+    'versions' => array(
+        'acme/brilliant-wordpress-site' => array(
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'reference' => '0ef77d17a5534e316a0c9350ab5424d706f9a438',
+            'dev_requirement' => false,
+        ),
+        'composer/installers' => array(
+            'pretty_version' => 'v2.3.0',
+            'version' => '2.3.0.0',
+            'type' => 'composer-plugin',
+            'install_path' => __DIR__ . '/./installers',
+            'aliases' => array(),
+            'reference' => '12fb2dfe5e16183de69e784a7b84046c43d97e8e',
+            'dev_requirement' => false,
+        ),
+        'johnpbloch/wordpress' => array(
+            'pretty_version' => '6.6.2',
+            'version' => '6.6.2.0',
+            'type' => 'package',
+            'install_path' => __DIR__ . '/../johnpbloch/wordpress',
+            'aliases' => array(),
+            'reference' => '1bd4fb6bbee375a3428e2aa3593ee2549974b0c1',
+            'dev_requirement' => false,
+        ),
+        'johnpbloch/wordpress-core' => array(
+            'pretty_version' => '6.6.2',
+            'version' => '6.6.2.0',
+            'type' => 'wordpress-core',
+            'install_path' => __DIR__ . '/../../public',
+            'aliases' => array(),
+            'reference' => 'dbb5f96e78905e26cbfb4c4796d9d5b92c451a81',
+            'dev_requirement' => false,
+        ),
+        'johnpbloch/wordpress-core-installer' => array(
+            'pretty_version' => '2.0.0',
+            'version' => '2.0.0.0',
+            'type' => 'composer-plugin',
+            'install_path' => __DIR__ . '/../johnpbloch/wordpress-core-installer',
+            'aliases' => array(),
+            'reference' => '237faae9a60a4a2e1d45dce1a5836ffa616de63e',
+            'dev_requirement' => false,
+        ),
+        'myplugins/advanced-custom-fields-pro' => array(
+            'pretty_version' => '6.4.0.1',
+            'version' => '6.4.0.1',
+            'type' => 'wordpress-plugin',
+            'install_path' => __DIR__ . '/../../public/wp-content/plugins/advanced-custom-fields-pro',
+            'aliases' => array(),
+            'reference' => NULL,
+            'dev_requirement' => false,
+        ),
+        'myplugins/woocommerce' => array(
+            'pretty_version' => '9.4.3',
+            'version' => '9.4.3.0',
+            'type' => 'wordpress-plugin',
+            'install_path' => __DIR__ . '/../../public/wp-content/plugins/woocommerce',
+            'aliases' => array(),
+            'reference' => NULL,
+            'dev_requirement' => false,
+        ),
+        'wordpress/core-implementation' => array(
+            'dev_requirement' => false,
+            'provided' => array(
+                0 => '6.6.2',
+            ),
+        ),
+        'wpackagist-plugin/svg-support' => array(
+            'pretty_version' => '2.3.18',
+            'version' => '2.3.18.0',
+            'type' => 'wordpress-plugin',
+            'install_path' => __DIR__ . '/../../public/wp-content/plugins/svg-support',
+            'aliases' => array(),
+            'reference' => 'tags/2.3.18',
+            'dev_requirement' => false,
+        ),
     ),
-    'composer/installers' => 
-    array (
-      'pretty_version' => 'v2.3.0',
-      'version' => '2.3.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '12fb2dfe5e16183de69e784a7b84046c43d97e8e',
-    ),
-    'johnpbloch/wordpress' => 
-    array (
-      'pretty_version' => '6.6.2',
-      'version' => '6.6.2.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '1bd4fb6bbee375a3428e2aa3593ee2549974b0c1',
-    ),
-    'johnpbloch/wordpress-core' => 
-    array (
-      'pretty_version' => '6.6.2',
-      'version' => '6.6.2.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'dbb5f96e78905e26cbfb4c4796d9d5b92c451a81',
-    ),
-    'johnpbloch/wordpress-core-installer' => 
-    array (
-      'pretty_version' => '2.0.0',
-      'version' => '2.0.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '237faae9a60a4a2e1d45dce1a5836ffa616de63e',
-    ),
-    'myplugins/advanced-custom-fields-pro' => 
-    array (
-      'pretty_version' => '6.3.11',
-      'version' => '6.3.11.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => NULL,
-    ),
-    'myplugins/woocommerce' => 
-    array (
-      'pretty_version' => '9.4.3',
-      'version' => '9.4.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => NULL,
-    ),
-    'wordpress/core-implementation' => 
-    array (
-      'provided' => 
-      array (
-        0 => '6.6.2',
-      ),
-    ),
-    'wpackagist-plugin/svg-support' => 
-    array (
-      'pretty_version' => '2.3.18',
-      'version' => '2.3.18.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'tags/2.3.18',
-    ),
-  ),
 );
