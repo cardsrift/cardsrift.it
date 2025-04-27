@@ -15,7 +15,7 @@
 			"package": {
 				"type": "wordpress-plugin",
 				"name": "myplugins/advanced-custom-fields-pro",
-				"version": "6.3.11",
+				"version": "6.4.0.1",
 				"dist": {
 					"type": "zip",
 					"url": "wordpress-plugins/advanced-custom-fields-pro.zip"
@@ -46,7 +46,7 @@
 	"require": {
 		"johnpbloch/wordpress": "6.6.2",
 		"wpackagist-plugin/svg-support": "2.3.18",
-		"myplugins/advanced-custom-fields-pro": "6.3.11",
+		"myplugins/advanced-custom-fields-pro": "6.4.0.1",
 		"myplugins/woocommerce": "9.4.3"
 	},
 	"autoload": {
