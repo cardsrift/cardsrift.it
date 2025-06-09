@@ -39,7 +39,7 @@ $slides =  $component_data['highlights'];
                                 <a href="<?php echo get_permalink($product_id); ?>" class="highlight-slider-link">
                                     <picture class=" flex justify-center items-center">
                                         <source srcset="<?php echo $product_image; ?>" media="(max-width: 768px)">
-                                        <img class="h-[250px]" src="<?php echo $product_image; ?>">
+                                        <img class=" object-contain" src="<?php echo $product_image; ?>">
                                     </picture>
                                 </a>
                                 <div class="py-10 xl:py-12 px-8 flex flex-col justify-between text-center font-adelle">

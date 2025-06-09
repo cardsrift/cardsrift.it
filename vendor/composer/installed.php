@@ -5,7 +5,7 @@
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '0ef77d17a5534e316a0c9350ab5424d706f9a438',
+        'reference' => 'adbd8190842e9690fe3c67db2c111a74b156a5a5',
         'name' => 'acme/brilliant-wordpress-site',
         'dev' => true,
     ),
@@ -16,7 +16,7 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '0ef77d17a5534e316a0c9350ab5424d706f9a438',
+            'reference' => 'adbd8190842e9690fe3c67db2c111a74b156a5a5',
             'dev_requirement' => false,
         ),
         'composer/installers' => array(
@@ -56,8 +56,8 @@
             'dev_requirement' => false,
         ),
         'myplugins/advanced-custom-fields-pro' => array(
-            'pretty_version' => '6.4.0.1',
-            'version' => '6.4.0.1',
+            'pretty_version' => '6.4.2',
+            'version' => '6.4.2.0',
             'type' => 'wordpress-plugin',
             'install_path' => __DIR__ . '/../../public/wp-content/plugins/advanced-custom-fields-pro',
             'aliases' => array(),
