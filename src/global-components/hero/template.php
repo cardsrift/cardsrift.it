@@ -11,8 +11,7 @@
 				<div class="swiper-wrapper h-full">
 					<?php foreach($hero_slides as $key => $slide) : ?>
 						<?php 
-						//debug($slide['slide']);
-							$image_mobile_url = $slide['slide_mobile'] ?? $slide['slide_mobile']['url'];
+							$image_mobile_url = $slide['slide_mobile'] ? $slide['slide_mobile']['url'] : '';
 							$image_title = $slide['slide']['title'];
 							$image_alt = $slide['slide']['alt'];
 							$image_url = $slide['slide']['url'];
@@ -23,7 +22,7 @@
 								
 								<a class="swiper-slide overflow-hidden block h-full" href="<?= $slide['slide']['url']; ?>">
 									<picture class="block h-full w-full relative ">
-											<source media="(max-width: 767px)" srcset="<?php echo $image_mobile_url; ?>">
+											<source media="(max-width: 1200px)" srcset="<?php echo $image_mobile_url; ?>">
 											<img class=" block h-full w-full object-cover transition-all object-center" 
 												src="<?php echo $image_url; ?>" 
 												alt="<?php echo $image_alt; ?>" 
