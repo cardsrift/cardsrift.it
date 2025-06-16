@@ -1733,6 +1733,14 @@ Theme Name: Wp Zero
   height: 100%;
 }
 
+.h-\[400px\] {
+  height: 400px;
+}
+
+.max-h-\[400px\] {
+  max-height: 400px;
+}
+
 .\!w-8 {
   width: 2rem !important;
 }

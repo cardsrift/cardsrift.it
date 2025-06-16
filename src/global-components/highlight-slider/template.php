@@ -37,7 +37,7 @@ $slides =  $component_data['highlights'];
                             <div class="flex flex-col swiper-slide h-full product p-4">
                                 
                                 <a href="<?php echo get_permalink($product_id); ?>" class="highlight-slider-link">
-                                    <picture class=" flex justify-center items-center">
+                                    <picture class=" flex justify-center items-center w-full h-[400px]">
                                         <source srcset="<?php echo $product_image; ?>" media="(max-width: 768px)">
                                         <img class=" object-contain" src="<?php echo $product_image; ?>">
                                     </picture>
