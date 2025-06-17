@@ -20,7 +20,7 @@
 							<?php if ($type === 'img') : ?>
 							
 								
-								<a class="swiper-slide overflow-hidden block h-full" href="<?= $slide['slide']['url']; ?>">
+								<a class="swiper-slide overflow-hidden block h-full" href="">
 									<picture class="block h-full w-full relative ">
 											<source media="(max-width: 1200px)" srcset="<?php echo $image_mobile_url; ?>">
 											<img class=" block h-full w-full object-cover transition-all object-center" 

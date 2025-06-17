@@ -1715,6 +1715,10 @@ Theme Name: Wp Zero
   height: 24rem;
 }
 
+.h-\[400px\] {
+  height: 400px;
+}
+
 .h-\[600px\] {
   height: 600px;
 }
@@ -1731,14 +1735,6 @@ Theme Name: Wp Zero
 
 .h-full {
   height: 100%;
-}
-
-.h-\[400px\] {
-  height: 400px;
-}
-
-.max-h-\[400px\] {
-  max-height: 400px;
 }
 
 .\!w-8 {
