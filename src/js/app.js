@@ -1,14 +1,13 @@
 // ------------------- imports
 import $ from 'jquery';
 
-import { GLOBAL_VARS, filterData } from './utils/constants';
+import { GLOBAL_VARS } from './utils/constants';
 // import pageWidgetInit from './dev_vendors/dev_widget';
 import {
 	onWindowScroll, onWindowResize, calcViewportHeight, documentReady, pageLoad,
 } from './utils';
 // ------------------- imports###
 
-import Test from './components/test';
 import Header from './components/header';
 import inputInit from './components/inputInit';
 import selectInit from './components/selectInit';
@@ -18,8 +17,6 @@ window.jQuery = $;
 window.$ = $;
 
 const readyFunc = () => {
-	const $body = document.querySelector('body');
-	Test();
 	Header();
 };
 

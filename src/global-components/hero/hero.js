@@ -3,7 +3,6 @@ import 'swiper/swiper-bundle.css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-console.log('swiper');
 const hero = () => {
 	// Register the Autoplay module
 	Swiper.use([Autoplay]);

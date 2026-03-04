@@ -26,8 +26,8 @@
 		<div class="tw-section relative mx-auto w-full flex justify-between ">
 			<!-- LOGO -->
 			<a class="flex w-[180px] lg:w-[270px] relative z-10" href="<?php echo get_home_url(); ?>">
-				<img class="logo-original" src="<?php echo get_field('logo', 'option')['url']; ?>" alt="Cardsrift logo">
-				<img class="logo-black" src="<?php echo get_field('logo_black', 'option')['url']; ?>" alt="Cardsrift logo">
+				<img class="logo-original" src="<?php echo esc_url(get_field('logo', 'option')['url']); ?>" alt="Cardsrift logo">
+				<img class="logo-black" src="<?php echo esc_url(get_field('logo_black', 'option')['url']); ?>" alt="Cardsrift logo">
 			</a>
 
 			<!-- MENU DESKTOP -->

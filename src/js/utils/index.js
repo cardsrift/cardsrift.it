@@ -86,7 +86,7 @@ export function getWindowSize() {
 }
 
 export const onWindowResize = cb => {
-	if (!cb && !isFunction(cb)) return;
+	if (!cb || !isFunction(cb)) return;
 
 	const handleResize = () => {
 		cb();
@@ -98,7 +98,7 @@ export const onWindowResize = cb => {
 };
 
 export const onWindowScroll = cb => {
-	if (!cb && !isFunction(cb)) return;
+	if (!cb || !isFunction(cb)) return;
 
 	const handleScroll = () => {
 		cb(window.pageYOffset);

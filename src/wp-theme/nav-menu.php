@@ -4,7 +4,8 @@
 	<ul class="flex justify-center align-center flex-col lg:flex-row h-full w-full max-lg:border-solid max-lg:border-8 max-lg:rounded-[20px] max-lg:border-black max-lg:pt-24 max-lg:pb-16 lg:gap-10 ">
 		<?php
 		foreach ($menu_hamburger as $item_hamburger) :
-			$class = ( $item_hamburger['url'] == 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] ) ? 'current-menu-item' : '';
+			$current_url = home_url( $_SERVER['REQUEST_URI'] );
+		$class = ( $item_hamburger['url'] === $current_url ) ? 'current-menu-item' : '';
 			if (!isset($item_hamburger['children'])) :
 		?>
 		

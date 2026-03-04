@@ -104,7 +104,7 @@ module.exports = {
       black: '#1d2125',
       white: {
         DEFAULT: "#F3F4F5",
-        70: "rgba(#F3F4F5, 0.7)",
+        70: "rgba(243, 244, 245, 0.7)",
       },
       purple: {
         DEFAULT: '#8877b2',
