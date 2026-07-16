@@ -76,7 +76,7 @@ jQuery (WordPress's copy — webpack `externals` maps `jquery` to the global `jQ
 
 Never commit, push, or create PRs — the user handles all git operations. Code review happens in VS Code.
 
-Never run `npm run deploy` (or `scripts/deploy.sh`) unless the user explicitly asks — it publishes to production. The `/deploy-theme` skill wraps it with a dry-run-first flow.
+**Never write to production, ever, without an explicit go-ahead in the user's own words** — no `npm run deploy`, `scripts/deploy.sh`, or any FTP write (`mirror`, `put`, `rm`) toward the Aruba server. This holds even during incidents: if production is broken, diagnose read-only, propose the exact command, and WAIT for the user to approve or run it themselves. Read-only FTP operations (`cls`, listings) are fine. The `/deploy-theme` skill wraps deploys with a dry-run-first flow.
 
 ## Config Files
 
