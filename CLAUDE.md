@@ -38,9 +38,7 @@ npm run deploy        # wp-build + FTP upload of the whole theme to Aruba (creds
 
 ### Component wiring is manual
 
-Webpack copies only the **PHP** from `global-components/`. For a component's JS and SCSS to ship:
-- register its JS in `src/js/global-components.js`
-- `@import` its SCSS in `src/scss/main_global.scss`
+Webpack copies only the **PHP** from `global-components/`. For a component's JS to ship, register it in `src/js/global-components.js`. Styles: **Tailwind-first** — utilities nel template + primitive condivise in `src/tailwind/components/design-system.css`; SCSS (`src/scss/`) è SOLO legacy (skin WooCommerce + header, fino a Fase 2) — non aggiungere SCSS nuovi.
 
 ### Styling
 
@@ -53,9 +51,16 @@ Hybrid system: **Tailwind CSS** (with DaisyUI, `themes: false`) for utilities/la
 - Fonts: Bylon (accent) and Metropolis (headings) self-hosted in `src/fonts/`; Adelle Sans (body) loads from a hardcoded Typekit link in `header.php`
 - Custom Tailwind plugins: `.tw-container` (+ `-sm/-md/-full`), `.tw-section`, and `.tw-h1`–`.tw-h6` typography utilities that **also style bare `h1`–`h6` tags**
 
+### Design system (rework 2026) — BASE OBBLIGATORIA per ogni lavorazione
+
+- **Regole e principi: `docs/design-system.md` · variabili: `docs/design-system-tokens.md` · roadmap/stato: `docs/rework-fase-1.md`.** Leggili prima di costruire o modificare componenti.
+- 4 temi per sezione via `data-th="dark|light|lilla|lilla2"` (campo ACF radio `tema`, letto da `cr_theme()`); token in `src/tailwind/components/themes.css`, primitive `.cr-*` in `design-system.css`, colori Tailwind `th-*` in config. **Mai colori hardcoded nei template**: solo `th-*`/`cr-*`.
+- Card prodotto SOLO via `cr_product_card()` (`includes/rework.php`). Page builder: flexible content `components` — loop in `template_homepage.php` e `page.php` (componenti riutilizzabili su ogni pagina).
+- Pagina vivente dei primitivi: template **“Design System”** (`template_styleguide.php`) — ogni componente nuovo si verifica lì.
+
 ### JS Libraries
 
-jQuery (WordPress's copy — webpack `externals` maps `jquery` to the global `jQuery`; the `jquery` dep is declared in `wp_register_script`), Swiper 9.4 (import `swiper/css` core only, not `swiper-bundle.css`), ismobilejs. GSAP, Lottie, Plyr, Fancybox, and Select2 are **not** installed — don't import them.
+jQuery (WordPress's copy — webpack `externals` maps `jquery` to the global `jQuery`; the `jquery` dep is declared in `wp_register_script`), Swiper 9.4 (installato ma al momento senza import — riservato agli slider futuri; importare `swiper/css` core only, mai `swiper-bundle.css`), ismobilejs. GSAP, Lottie, Plyr, Fancybox, and Select2 are **not** installed — don't import them. Effetti: solo il modulo `src/js/utils/effects.js` (vedi docs/rework-fase-1.md §3d), niente librerie di animazione.
 
 ### WordPress/WooCommerce
 
@@ -69,7 +74,7 @@ jQuery (WordPress's copy — webpack `externals` maps `jquery` to the global `jQ
 | Type | Convention | Example |
 |------|-----------|---------|
 | JS files (components) | camelCase | `inputInit.js` |
-| Global components | folder per component, dash-named | `global-components/highlight-slider/` |
+| Global components | folder per component, dash-named | `global-components/griglia-prodotti/` |
 | PHP templates | mixed — match nearby files | `template_homepage.php`, `single-product.php` |
 
 ## Git Workflow

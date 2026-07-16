@@ -1,3 +1,9 @@
+/*
+	SCSS LEGACY — solo skin delle pagine WooCommerce vanilla + header.
+	Verrà sostituito pezzo per pezzo in Fase 2 (PLP/PDP custom).
+	TUTTO IL NUOVO va scritto in Tailwind: token in tailwind/components/themes.css,
+	primitive in tailwind/components/design-system.css (vedi docs/design-system.md).
+*/
 @import "reset";
 @import "variables";
 @import "utils";
@@ -6,8 +12,3 @@
 @import "category-page";
 @import "my-account";
 @import "cart";
-
-
-/* Components */
-@import "../global-components/hero/hero";
-@import "../global-components/footer/footer";

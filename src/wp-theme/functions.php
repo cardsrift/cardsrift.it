@@ -3,8 +3,8 @@
 add_theme_support('post-thumbnails');
 
 // INCLUDES
-include('includes/image_size.php');
 include('includes/helpers.php');
+include('includes/rework.php');
 include('includes/script_and_style.php');
 include('includes/acf.php');
 
@@ -55,11 +55,3 @@ function remove_image_zoom_support() {
 }
 add_action( 'wp', 'remove_image_zoom_support', 100 );
 
-add_filter( 'product_cat_class', 'filter_product_cat_class', 10, 3 );
-function filter_product_cat_class( $classes, $class, $category ){
-    // Only on shop page
-    if( is_shop() )
-        $classes[] = 'custom_cat';
-
-    return $classes;
-}

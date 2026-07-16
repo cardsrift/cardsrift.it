@@ -1,0 +1,126 @@
+/*
+	TEMI REWORK — unico punto di verità per i token di tema.
+	Ogni sezione del page builder stampa data-th="dark|light|lilla|lilla2"
+	(campo ACF radio "tema" presente su ogni layout del flexible content).
+	Le utility Tailwind consumano questi token via i colori `th-*`
+	definiti in tailwind.config.js (es. bg-th-pg, text-th-ink, border-th-line).
+	Documentazione completa: docs/rework-fase-1.md
+*/
+
+@layer base {
+
+	:root {
+		/* icone brand per i pattern di sfondo (inline: nessun problema di path in build) */
+		--cr-icon-colored: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0idXVpZC1kNzQyYmU2Yy1lM2VmLTQ3MzktOTI5Mi00MDAyYjEwMmVmMzYiIGRhdGEtbmFtZT0iTGl2ZWxsbyAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MjMuNjUgNDMxLjQ3Ij4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLnV1aWQtMjU1YjllYTgtNGE1Mi00YzFiLWE1MmUtODRhZmMxYTFiYjM0IHsKICAgICAgICBmaWxsOiAjODg3N2IyOwogICAgICB9CiAgICA8L3N0eWxlPgogIDwvZGVmcz4KICA8cGF0aCBjbGFzcz0idXVpZC0yNTViOWVhOC00YTUyLTRjMWItYTUyZS04NGFmYzFhMWJiMzQiIGQ9Ik00MTIuMDUsMy40M2MtNzQuMjMsMC0xNDIuODUsMjAuMzYtMjAyLjI1LDQ4LjQ2bDY4LjM5LDY4LjM5aDBzNTQuMjIsNTQuMjIsNTQuMjIsNTQuMjJjMTcuNjksMTcuNjksMjMuNDgsNDQuNDUsMTMuNiw2Ny40My0uMzMuNzYtLjY3LDEuNTItMS4wMywyLjI3bC0zMC4xNiw2My40OWMtMS41NiwzLjI3LDEuODYsNi42OSw1LjEzLDUuMTNsNjMuNDktMzAuMTZjLjc1LS4zNiwxLjUxLS43LDIuMjctMS4wMywyMi45OC05Ljg4LDQ5Ljc0LTQuMSw2Ny40MywxMy42bDU0LjIxLDU0LjIxYy0yNy44NywxOS44OC02Mi4xOSwzMS4yOS05OS4yMywzMC40My04NS45MS0yLTE1Ni4zNi03MC44OC0xNjAuMjItMTU2LjczLS40Ny0xMC4zNC4wMy0yMC40OCwxLjQxLTMwLjM0LDEuODgtMTMuNS0yLjc0LTI3LjA4LTEyLjM4LTM2LjcybC01Mi45MS01Mi45MWMtMTQuNjUtMTQuNjUtMzcuNjEtMTcuMDEtNTQuODktNS41OC00Ny4wNywzMS4xNC04NC4xMSw2My42OC0xMDcuOTMsODYuNjgtMTcuNzcsMTcuMTUtMTcuNjcsNDUuNjIuMSw2Mi43Nyw2MS4xOSw1OS4wNywyMDkuMjcsMTgwLjc0LDM5MC43NSwxODAuNzQsNzQuMjMsMCwxNDIuODUtMjAuMzYsMjAyLjI1LTQ4LjQ2bC0zOC40NS0zOC40NWgwcy04NC4xNy04NC4xNy04NC4xNy04NC4xN2MtMTcuNjktMTcuNjktMjMuNDgtNDQuNDUtMTMuNi02Ny40My4zMy0uNzYuNjctMS41MiwxLjAzLTIuMjdsMzAuMTYtNjMuNDljMS41Ni0zLjI3LTEuODYtNi42OS01LjEzLTUuMTNsLTYzLjQ5LDMwLjE2Yy0uNzUuMzYtMS41MS43LTIuMjcsMS4wMy0yMi45OCw5Ljg4LTQ5Ljc0LDQuMS02Ny40My0xMy41OWwtNTQuMjEtNTQuMjFjMjcuODctMTkuODgsNjIuMTktMzEuMjksOTkuMjMtMzAuNDMsODUuOTEsMi4wMSwxNTYuMzYsNzAuODksMTYwLjIyLDE1Ni43My40NywxMC4zNC0uMDMsMjAuNDgtMS40MSwzMC4zNC0xLjg4LDEzLjUsMi43NCwyNy4wOCwxMi4zOCwzNi43Mmw1Mi45MSw1Mi45MWMxNC42NSwxNC42NSwzNy42MSwxNy4wMSw1NC44OSw1LjU4LDQ3LjA3LTMxLjE0LDg0LjExLTYzLjY4LDEwNy45My04Ni42OCwxNy43Ny0xNy4xNSwxNy42Ny00NS42Mi0uMS02Mi43N0M3NDEuNiwxMjUuMSw1OTMuNTMsMy40Myw0MTIuMDUsMy40M1oiLz4KPC9zdmc+");
+		--cr-icon-white: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyBpZD0idXVpZC1kMmNiNGVhYi1kYTkxLTRhODUtOGRkOC1mOWM1MjQ5OTczNTciIGRhdGEtbmFtZT0iTGl2ZWxsbyAxIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA4MjEuNDcgNDI5LjYzIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLnV1aWQtNGUwMTk4ZTAtNzFiYi00ZjdiLTk3MGUtYTNiODg4ZmI5MWJhIHsKICAgICAgICBmaWxsOiAjZjRmN2ZjOwogICAgICB9CiAgICA8L3N0eWxlPgogIDwvZGVmcz4KICA8cGF0aCBjbGFzcz0idXVpZC00ZTAxOThlMC03MWJiLTRmN2ItOTcwZS1hM2I4ODhmYjkxYmEiIGQ9Ik00MTAuNzQsMy40M2MtNzQuMjMsMC0xNDIuODUsMjAuMzYtMjAyLjI1LDQ4LjQ2bDY4LjM5LDY4LjM5aDBzNTQuMjIsNTQuMjIsNTQuMjIsNTQuMjJjMTcuNjksMTcuNjksMjMuNDgsNDQuNDUsMTMuNiw2Ny40My0uMzMuNzYtLjY3LDEuNTItMS4wMywyLjI3bC0zMC4xNiw2My40OWMtMS41NiwzLjI3LDEuODYsNi42OSw1LjEzLDUuMTNsNjMuNDktMzAuMTZjLjc1LS4zNiwxLjUxLS43LDIuMjctMS4wMywyMi45OC05Ljg4LDQ5Ljc0LTQuMSw2Ny40MywxMy42bDU0LjIxLDU0LjIxYy0yNy44NywxOS44OC02Mi4xOSwzMS4yOS05OS4yMywzMC40My04NS45MS0yLTE1Ni4zNi03MC44OC0xNjAuMjItMTU2LjczLS40Ny0xMC4zNC4wMy0yMC40OCwxLjQxLTMwLjM0LDEuODgtMTMuNS0yLjc0LTI3LjA4LTEyLjM4LTM2LjcybC01Mi45MS01Mi45MWMtMTQuNjUtMTQuNjUtMzcuNjEtMTcuMDEtNTQuODktNS41OC00Ny4wNywzMS4xNC04NC4xMSw2My42OC0xMDcuOTMsODYuNjgtMTcuNzcsMTcuMTUtMTcuNjcsNDUuNjIuMSw2Mi43Nyw2MS4xOSw1OS4wNywyMDkuMjcsMTgwLjc0LDM5MC43NSwxODAuNzQsNzQuMjMsMCwxNDIuODUtMjAuMzYsMjAyLjI1LTQ4LjQ2bC0zOC40NS0zOC40NWgwcy04NC4xNy04NC4xNy04NC4xNy04NC4xN2MtMTcuNjktMTcuNjktMjMuNDgtNDQuNDUtMTMuNi02Ny40My4zMy0uNzYuNjctMS41MiwxLjAzLTIuMjdsMzAuMTYtNjMuNDljMS41Ni0zLjI3LTEuODYtNi42OS01LjEzLTUuMTNsLTYzLjQ5LDMwLjE2Yy0uNzUuMzYtMS41MS43LTIuMjcsMS4wMy0yMi45OCw5Ljg4LTQ5Ljc0LDQuMS02Ny40My0xMy41OWwtNTQuMjEtNTQuMjFjMjcuODctMTkuODgsNjIuMTktMzEuMjksOTkuMjMtMzAuNDMsODUuOTEsMi4wMSwxNTYuMzYsNzAuODksMTYwLjIyLDE1Ni43My40NywxMC4zNC0uMDMsMjAuNDgtMS40MSwzMC4zNC0xLjg4LDEzLjUsMi43NCwyNy4wOCwxMi4zOCwzNi43Mmw1Mi45MSw1Mi45MWMxNC42NSwxNC42NSwzNy42MSwxNy4wMSw1NC44OSw1LjU4LDQ3LjA3LTMxLjE0LDg0LjExLTYzLjY4LDEwNy45My04Ni42OCwxNy43Ny0xNy4xNSwxNy42Ny00NS42Mi0uMS02Mi43N0M3NDAuMjksMTI1LjEsNTkyLjIyLDMuNDMsNDEwLjc0LDMuNDNaIi8+Cjwvc3ZnPg==");
+	}
+
+	/* FIX trasversale: Adelle Sans era caricata ma mai applicata al body (cadeva sul font di sistema) */
+	body {
+		font-family: 'adelle-sans', 'Helvetica Neue', sans-serif;
+	}
+
+	/* ---- TEMA SCURO (base del sito) ---- */
+	[data-th="dark"] {
+		--cr-pg: #1d2125;
+		--cr-ink: #F3F4F5;
+		--cr-muted: #a6a3b2;
+		--cr-soft: rgba(243, 244, 245, .45);
+		--cr-surface: #262b32;
+		--cr-sur2: #2b3138;
+		--cr-line: rgba(243, 244, 245, .10);
+		--cr-line-s: rgba(243, 244, 245, .20);
+		--cr-acc: #b6a9d9;
+		--cr-acc2: #8877b2;
+		--cr-accsoft: rgba(136, 119, 178, .18);
+		--cr-glass: rgba(38, 43, 50, .55);
+		--cr-glass-line: rgba(243, 244, 245, .15);
+		--cr-btn: #b6a9d9;
+		--cr-btn-fg: #1d2125;
+		--cr-btn-h: #cabfe6;
+		--cr-ghost: #b6a9d9;
+		--cr-shadow: 0 16px 40px rgba(0, 0, 0, .45);
+		--cr-ok: #5cc491;
+		--cr-warn: #e0a04f;
+		--cr-patt: var(--cr-icon-colored);
+		--cr-patt-op: .055;
+	}
+
+	/* ---- TEMA CHIARO ---- */
+	[data-th="light"] {
+		--cr-pg: #F3F4F5;
+		--cr-ink: #1d2125;
+		--cr-muted: #5d5a68;
+		--cr-soft: rgba(29, 33, 37, .45);
+		--cr-surface: #ffffff;
+		--cr-sur2: #eceaf2;
+		--cr-line: rgba(29, 33, 37, .10);
+		--cr-line-s: rgba(29, 33, 37, .20);
+		--cr-acc: #6b5a99;
+		--cr-acc2: #8877b2;
+		--cr-accsoft: rgba(136, 119, 178, .13);
+		--cr-glass: rgba(255, 255, 255, .6);
+		--cr-glass-line: rgba(29, 33, 37, .13);
+		--cr-btn: #6b5a99;
+		--cr-btn-fg: #ffffff;
+		--cr-btn-h: #5c4d87;
+		--cr-ghost: #6b5a99;
+		--cr-shadow: 0 14px 34px rgba(29, 33, 37, .12);
+		--cr-ok: #2f8a5d;
+		--cr-warn: #b3701c;
+		--cr-patt: var(--cr-icon-colored);
+		--cr-patt-op: .05;
+	}
+
+	/* ---- TEMA LILLA (viola pieno #8877b2 — da usare come "momento", 1-2 sezioni per pagina) ---- */
+	[data-th="lilla"] {
+		--cr-pg: #8877b2;
+		--cr-ink: #ffffff;
+		--cr-muted: rgba(255, 255, 255, .82);
+		--cr-soft: rgba(255, 255, 255, .6);
+		--cr-surface: rgba(255, 255, 255, .13);
+		--cr-sur2: rgba(255, 255, 255, .2);
+		--cr-line: rgba(255, 255, 255, .2);
+		--cr-line-s: rgba(255, 255, 255, .34);
+		--cr-acc: #ffffff;
+		--cr-acc2: #d8cfee;
+		--cr-accsoft: rgba(255, 255, 255, .16);
+		--cr-glass: rgba(255, 255, 255, .15);
+		--cr-glass-line: rgba(255, 255, 255, .32);
+		--cr-btn: #1d2125;
+		--cr-btn-fg: #F3F4F5;
+		--cr-btn-h: #2b3138;
+		--cr-ghost: #ffffff;
+		--cr-shadow: 0 16px 40px rgba(61, 48, 94, .4);
+		--cr-ok: #c4f0d8;
+		--cr-warn: #ffdcab;
+		--cr-patt: var(--cr-icon-white);
+		--cr-patt-op: .09;
+	}
+
+	/* ---- TEMA LILLA CHIARO (#b6a9d9) ---- */
+	[data-th="lilla2"] {
+		--cr-pg: #b6a9d9;
+		--cr-ink: #1d2125;
+		--cr-muted: #463d5c;
+		--cr-soft: rgba(29, 33, 37, .5);
+		--cr-surface: rgba(255, 255, 255, .5);
+		--cr-sur2: rgba(255, 255, 255, .68);
+		--cr-line: rgba(29, 33, 37, .14);
+		--cr-line-s: rgba(29, 33, 37, .26);
+		--cr-acc: #4d3f73;
+		--cr-acc2: #6b5a99;
+		--cr-accsoft: rgba(255, 255, 255, .38);
+		--cr-glass: rgba(255, 255, 255, .44);
+		--cr-glass-line: rgba(255, 255, 255, .62);
+		--cr-btn: #1d2125;
+		--cr-btn-fg: #F3F4F5;
+		--cr-btn-h: #2b3138;
+		--cr-ghost: #4d3f73;
+		--cr-shadow: 0 14px 34px rgba(61, 48, 94, .26);
+		--cr-ok: #1f6b45;
+		--cr-warn: #8a5514;
+		--cr-patt: var(--cr-icon-white);
+		--cr-patt-op: .3;
+	}
+}

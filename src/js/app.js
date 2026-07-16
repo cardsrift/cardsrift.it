@@ -5,7 +5,6 @@ import { calcViewportHeight, documentReady, pageLoad } from './utils';
 // ------------------- imports###
 
 import Header from './components/header';
-import selectInit from './components/selectInit';
 import globalComponents from './global-components';
 
 window.jQuery = $;
@@ -17,7 +16,6 @@ const readyFunc = () => {
 
 const loadFunc = () => {
 	// All js after page load
-	selectInit();
 	globalComponents();
 };
 

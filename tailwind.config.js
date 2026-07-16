@@ -105,10 +105,30 @@ module.exports = {
       white: {
         DEFAULT: "#F3F4F5",
         70: "rgba(243, 244, 245, 0.7)",
+        pure: "#ffffff", // well foto prodotto: sempre bianco puro, su ogni tema
       },
       purple: {
         DEFAULT: '#8877b2',
         light: '#b6a9d9',
+        deep: '#6b5a99', // accent/CTA su fondi chiari (contrasto AA)
+      },
+      // Token di tema (rework): i valori vivono in src/tailwind/components/themes.css
+      // e cambiano con data-th="dark|light|lilla|lilla2" stampato dal campo ACF "tema".
+      // Uso: bg-th-pg, text-th-ink, text-th-muted, bg-th-surface, border-th-line, text-th-acc...
+      th: {
+        pg: 'var(--cr-pg)',
+        ink: 'var(--cr-ink)',
+        muted: 'var(--cr-muted)',
+        soft: 'var(--cr-soft)',
+        surface: 'var(--cr-surface)',
+        sur2: 'var(--cr-sur2)',
+        line: 'var(--cr-line)',
+        lines: 'var(--cr-line-s)',
+        acc: 'var(--cr-acc)',
+        acc2: 'var(--cr-acc2)',
+        accsoft: 'var(--cr-accsoft)',
+        ok: 'var(--cr-ok)',
+        warn: 'var(--cr-warn)',
       },
     },
 
@@ -121,6 +141,9 @@ module.exports = {
     extend: {
       transitionDuration: {
         DEFAULT: "400ms",
+      },
+      boxShadow: {
+        th: "var(--cr-shadow)", // ombra coerente col tema di sezione
       },
     },
   },

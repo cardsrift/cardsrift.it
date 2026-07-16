@@ -1,0 +1,349 @@
+/*
+	DESIGN SYSTEM — primitive CSS riutilizzabili (.cr-*).
+	Solo ciò che si ripete tra più componenti o non è esprimibile con utility:
+	bottoni, card prodotto, badge, glass, pattern, ticker, form.
+	Tutto il resto va scritto come utility Tailwind nei template.
+	I colori vengono dai token di tema (themes.css) via classi th-* o var(--cr-*).
+	Documentazione: docs/design-system.md · variabili: docs/design-system-tokens.md
+*/
+
+@layer components {
+
+	/* ---- sezione del page builder: indossa il tema ---- */
+	.cr-sec {
+		background-color: var(--cr-pg);
+		color: var(--cr-ink);
+		position: relative;
+	}
+
+	/* pattern logo ripetuto sullo sfondo (hero, fiducia, newsletter) */
+	.cr-patt {
+		overflow: hidden;
+	}
+	.cr-patt::before {
+		content: "";
+		position: absolute;
+		inset: -12%;
+		background: var(--cr-patt) 0 0/92px repeat;
+		opacity: var(--cr-patt-op);
+		transform: rotate(-11deg);
+		pointer-events: none;
+		z-index: 0;
+	}
+	.cr-patt > * {
+		position: relative;
+		z-index: 1;
+	}
+
+	/* ---- eyebrow (Bylon, il font accent del brand) ---- */
+	.cr-eyebrow {
+		font-family: 'Bylon', sans-serif;
+		font-size: 12.5px;
+		letter-spacing: .24em;
+		text-transform: uppercase;
+		color: var(--cr-acc);
+	}
+
+	/* ---- bottoni: 3 stili × 4 temi ---- */
+	.cr-btn {
+		@apply font-metropolis font-semibold text-sm inline-flex items-center gap-2 rounded-[10px] no-underline transition-all;
+		letter-spacing: .04em;
+		padding: 14px 28px;
+	}
+	.cr-btn-solid {
+		background-color: var(--cr-btn);
+		color: var(--cr-btn-fg);
+	}
+	.cr-btn-solid:hover {
+		background-color: var(--cr-btn-h);
+	}
+	.cr-btn-ghost {
+		background: transparent;
+		border: 1.5px solid var(--cr-ghost);
+		color: var(--cr-ghost);
+		padding: 12.5px 26.5px;
+	}
+	.cr-btn-ghost:hover {
+		background-color: var(--cr-accsoft);
+	}
+	.cr-btn-glass {
+		background-color: var(--cr-glass);
+		backdrop-filter: blur(12px);
+		border: 1px solid var(--cr-glass-line);
+		color: var(--cr-ink);
+	}
+	.cr-btn-glass:hover {
+		border-color: var(--cr-acc2);
+	}
+
+	/* ---- superficie glass generica (card, box form, tabella tassi) ---- */
+	.cr-glass {
+		background-color: var(--cr-glass);
+		backdrop-filter: blur(14px);
+		border: 1px solid var(--cr-glass-line);
+	}
+
+	/* ---- card prodotto (stati WooCommerce inclusi) ---- */
+	.cr-card {
+		@apply relative flex flex-col overflow-hidden rounded-2xl no-underline transition-all;
+		background-color: var(--cr-surface);
+		border: 1px solid var(--cr-line);
+	}
+	.cr-card:hover {
+		transform: translateY(-4px);
+		box-shadow: var(--cr-shadow);
+		border-color: var(--cr-acc2);
+	}
+	.cr-card--glass {
+		background-color: var(--cr-glass);
+		backdrop-filter: blur(14px);
+		border-color: var(--cr-glass-line);
+	}
+	/* well foto: SEMPRE bianco puro, su ogni tema */
+	.cr-well {
+		@apply relative grid place-items-center overflow-hidden rounded-[10px] bg-white-pure;
+		margin: 10px 10px 0;
+		aspect-ratio: 1/.94;
+		padding: 14px;
+	}
+	.cr-well img {
+		max-height: 100%;
+		object-fit: contain;
+	}
+	.cr-card--soldout .cr-well img {
+		filter: grayscale(.55);
+		opacity: .75;
+	}
+	/* quick add: appare su hover (solo prodotti semplici; i variabili portano alla PDP) */
+	.cr-qadd {
+		@apply absolute flex items-center justify-center gap-2 rounded-[9px] font-metropolis font-semibold text-xs;
+		left: 10px;
+		right: 10px;
+		bottom: 10px;
+		padding: 11px;
+		background: #1d2125;
+		color: #F3F4F5;
+		opacity: 0;
+		transform: translateY(6px);
+		transition: opacity .22s, transform .22s, background-color .22s;
+		z-index: 2;
+	}
+	.cr-card:hover .cr-qadd {
+		opacity: 1;
+		transform: none;
+	}
+	.cr-qadd:hover {
+		background: #6b5a99;
+	}
+	/* la card "top deal": una sola per griglia */
+	.cr-card--deal {
+		border-color: rgba(217, 180, 91, .55);
+		animation: cr-deal-pulse 2.6s ease-in-out infinite;
+	}
+	@keyframes cr-deal-pulse {
+		50% { box-shadow: 0 0 32px rgba(217, 180, 91, .26); }
+	}
+
+	/* ---- chip (gioco · lingua) e badge semantici (fissi su tutti i temi) ---- */
+	.cr-chip {
+		@apply font-metropolis font-bold uppercase rounded-full w-fit;
+		font-size: 10.5px;
+		letter-spacing: .08em;
+		padding: 4px 10px;
+		color: var(--cr-acc);
+		background-color: var(--cr-accsoft);
+	}
+	.cr-badge {
+		@apply absolute uppercase rounded-lg z-[3];
+		font-family: 'Bylon', sans-serif;
+		font-size: 10.5px;
+		letter-spacing: .13em;
+		padding: 5px 11px;
+		top: 20px;
+		left: 20px;
+	}
+	.cr-badge--sale { background: #d9536f; color: #fff; }
+	.cr-badge--pre { background: #6b5a99; color: #fff; }
+	.cr-badge--out { background: #1d2125; color: #F3F4F5; }
+	.cr-badge--top { background: #d9b45b; color: #1d2125; }
+
+	/* ---- stato scorte ---- */
+	.cr-stock {
+		@apply flex items-center gap-1.5 font-metropolis font-semibold whitespace-nowrap;
+		font-size: 12px;
+	}
+	.cr-stock::before {
+		content: "";
+		width: 7px;
+		height: 7px;
+		border-radius: 50%;
+		background: currentColor;
+	}
+	.cr-stock--ok { color: var(--cr-ok); }
+	.cr-stock--low { color: var(--cr-warn); }
+
+	/* ---- prezzo (WooCommerce stampa <del>/<ins> quando in offerta) ---- */
+	.cr-price {
+		@apply font-metropolis font-bold;
+		font-size: 17px;
+		color: var(--cr-acc);
+		font-variant-numeric: tabular-nums;
+	}
+	.cr-price del {
+		color: var(--cr-soft);
+		font-weight: 500;
+		font-size: 13px;
+		margin-right: 7px;
+	}
+	.cr-price ins {
+		text-decoration: none;
+	}
+
+	/* ---- ticker (si ferma su hover; spento con reduced-motion) ---- */
+	.cr-ticker {
+		overflow: hidden;
+		border-top: 1px solid var(--cr-glass-line);
+		border-bottom: 1px solid var(--cr-glass-line);
+		background-color: var(--cr-glass);
+		backdrop-filter: blur(10px);
+	}
+	.cr-ticker__track {
+		display: flex;
+		width: max-content;
+		animation: cr-ticker 26s linear infinite;
+		padding-block: 11px;
+	}
+	.cr-ticker:hover .cr-ticker__track {
+		animation-play-state: paused;
+	}
+	@keyframes cr-ticker {
+		to { transform: translateX(-50%); }
+	}
+
+	/* ---- tasca del raccoglitore (carte singole, proporzione carta 63:88) ---- */
+	.cr-pocket {
+		@apply relative overflow-hidden rounded-[14px] no-underline transition-all;
+		background-color: var(--cr-surface);
+		border: 1px solid var(--cr-line-s);
+		padding: 9px;
+	}
+	.cr-pocket::before {
+		/* riflesso "plastica" della tasca */
+		content: "";
+		position: absolute;
+		inset: 0 0 auto 0;
+		height: 40%;
+		background: linear-gradient(180deg, rgba(255, 255, 255, .14), transparent);
+		pointer-events: none;
+		border-radius: 14px 14px 0 0;
+		z-index: 2;
+	}
+	.cr-pocket:hover {
+		transform: translateY(-3px);
+		border-color: var(--cr-acc2);
+	}
+	.cr-pocket__well {
+		@apply grid place-items-center rounded-lg bg-white-pure;
+		aspect-ratio: 63/88;
+		padding: 7px;
+	}
+	.cr-pocket__well img {
+		max-height: 100%;
+		object-fit: contain;
+	}
+	.cr-pocket__pick {
+		@apply absolute rounded-lg font-metropolis font-semibold text-center;
+		left: 9px;
+		right: 9px;
+		bottom: 9px;
+		font-size: 11.5px;
+		padding: 9px;
+		background: #1d2125;
+		color: #F3F4F5;
+		opacity: 0;
+		transform: translateY(6px);
+		transition: opacity .22s, transform .22s;
+		z-index: 3;
+	}
+	.cr-pocket:hover .cr-pocket__pick {
+		opacity: 1;
+		transform: none;
+	}
+	.cr-cchip {
+		@apply font-metropolis font-bold uppercase rounded-[5px];
+		font-size: 9.5px;
+		letter-spacing: .06em;
+		padding: 2.5px 7px;
+		background-color: var(--cr-accsoft);
+		color: var(--cr-acc);
+	}
+	.cr-cchip--cond {
+		background: rgba(47, 138, 93, .16);
+		color: var(--cr-ok);
+	}
+
+	/* ---- chip drop live (hero drop) ---- */
+	.cr-dropchip {
+		@apply inline-flex items-center gap-2.5 rounded-full font-metropolis font-semibold;
+		font-size: 12.5px;
+		letter-spacing: .06em;
+		padding: 9px 18px;
+		background-color: var(--cr-glass);
+		backdrop-filter: blur(10px);
+		border: 1px solid var(--cr-glass-line);
+		color: var(--cr-muted);
+	}
+	.cr-dropchip::before {
+		content: "";
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: #ff5470;
+		box-shadow: 0 0 10px #ff5470;
+		animation: cr-blink 1.6s ease-in-out infinite;
+		flex: none;
+	}
+	@keyframes cr-blink {
+		50% { opacity: .35; }
+	}
+
+	/* ---- form (newsletter, bulk, contatti) ---- */
+	.cr-label {
+		@apply block font-metropolis font-semibold uppercase;
+		font-size: 11px;
+		letter-spacing: .1em;
+		color: var(--cr-muted);
+		margin-bottom: 6px;
+	}
+	.cr-input,
+	.cr-select,
+	.cr-textarea {
+		@apply w-full rounded-[10px] text-sm;
+		border: 1px solid var(--cr-line-s);
+		background-color: var(--cr-surface);
+		color: var(--cr-ink);
+		padding: 12px 14px;
+	}
+	.cr-input::placeholder,
+	.cr-textarea::placeholder {
+		color: var(--cr-soft);
+	}
+	.cr-input:focus-visible,
+	.cr-select:focus-visible,
+	.cr-textarea:focus-visible {
+		outline: 2px solid var(--cr-acc2);
+		outline-offset: 1px;
+	}
+	.cr-textarea {
+		resize: vertical;
+		min-height: 90px;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.cr-ticker__track,
+		.cr-dropchip::before,
+		.cr-card--deal {
+			animation: none !important;
+		}
+	}
+}

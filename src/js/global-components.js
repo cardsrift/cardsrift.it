@@ -1,9 +1,7 @@
-import hero from '../global-components/hero/hero';
-import highlightSlider from '../global-components/highlight-slider/highlightSlider';
+import heroDrop from '../global-components/hero-drop/heroDrop';
 
 const globalComponents = () => {
-	hero();
-	highlightSlider();
+	heroDrop();
 };
 
 export default globalComponents;

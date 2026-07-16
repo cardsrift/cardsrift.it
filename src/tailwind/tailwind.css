@@ -1,13 +1,20 @@
 /*!
 Theme Name: Wp Zero
 */
+/*
+	PIPELINE CSS PRINCIPALE (standard: Tailwind)
+	base.css          → direttive @tailwind
+	fonts.css         → @font-face (Bylon, Metropolis; Adelle via Typekit)
+	themes.css        → token del design system (4 temi, --cr-*)
+	layout.css        → utilities legacy layout/menu
+	design-system.css → primitive .cr-* (bottoni, card, badge, form…)
+	Gli SCSS in src/scss/ sono SOLO skin legacy WooCommerce + header (fino a Fase 2).
+*/
 @import "./components/base.css";
 @import "./components/fonts.css";
-@import "./components/typography.css";
+@import "./components/themes.css";
 @import "./components/layout.css";
-@import "./components/buttons.css";
-@import "./components/header.css";
-@import "./components/animations.css";
+@import "./components/design-system.css";
 
 
 
