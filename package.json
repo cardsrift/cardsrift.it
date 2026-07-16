@@ -1,14 +1,14 @@
 {
-  "author": "Beaverlab-team",
-  "name": "beaverlab-webpack-template",
+  "author": "Beaverlab",
+  "name": "cardsrift",
   "version": "1.0.0",
-  "description": "Webpack 5, scss, svg sprite template",
+  "description": "CardsRift WordPress/WooCommerce theme — Webpack 5, Tailwind CSS + SCSS",
   "scripts": {
-    "stats": "webpack --config settings/webpack.prod.config.js --mode=production --json > dist/stats.json && webpack-bundle-analyzer dist/stats.json",
     "dev": "cross-env NODE_ENV=wp webpack --config settings/webpack.wp_dev.config.js --watch",
     "dev-tailwind": "npx tailwind -i ./src/tailwind/tailwind.css -o ./src/tailwind/build/main_tailwind.css --watch",
     "wp-build": "npx tailwind -i ./src/tailwind/tailwind.css -o ./src/tailwind/build/main_tailwind.css --minify && cross-env NODE_ENV=wp webpack --config settings/webpack.wp_prod.config.js",
-    "wp-dev": "concurrently --kill-others \"npm run dev-tailwind\" \"npm run dev\""
+    "wp-dev": "concurrently --kill-others \"npm run dev-tailwind\" \"npm run dev\"",
+    "deploy": "npm run wp-build && bash scripts/deploy.sh"
   },
   "devDependencies": {
     "@babel/core": "^7.16.0",
@@ -17,8 +17,6 @@
     "@tailwindcss/typography": "^0.5.15",
     "autoprefixer": "^10.4.0",
     "babel-loader": "^8.2.3",
-    "babel-plugin-transform-regenerator": "^6.26.0",
-    "babel-polyfill": "^6.26.0",
     "clean-webpack-plugin": "^4.0.0",
     "concurrently": "^8.2.0",
     "copy-webpack-plugin": "^10.2.0",
@@ -38,14 +36,12 @@
     "postcss-loader": "^6.2.0",
     "postcss-preset-env": "^8.4.2",
     "sass": "^1.43.4",
-    "sass-lint": "^1.13.1",
     "sass-loader": "^12.3.0",
     "svg-sprite-loader": "^6.0.11",
     "svgo-loader": "^3.0.0",
     "tailwindcss": "^3.3.2",
     "terser-webpack-plugin": "^5.2.5",
     "webpack": "^5.64.0",
-    "webpack-bundle-analyzer": "^4.5.0",
     "webpack-cli": "^4.9.1",
     "webpack-merge": "^5.8.0"
   },
@@ -63,18 +59,15 @@
     "> 5%"
   ],
   "engines": {
-    "node": "^12 || >=14"
+    "node": ">=18"
   },
   "keywords": [
-    "webpack",
-    "boilerplate",
-    "template",
-    "setup",
-    "scss",
-    "svg sprite "
+    "wordpress",
+    "woocommerce",
+    "theme"
   ],
   "target": "web",
   "volta": {
-    "node": "14.21.1"
+    "node": "20.19.4"
   }
 }

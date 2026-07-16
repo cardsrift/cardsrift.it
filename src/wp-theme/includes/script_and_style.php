@@ -3,18 +3,19 @@
 function wp_enqueue_styles_and_scripts()
 {
 
-    if (strpos($_SERVER['REMOTE_ADDR'], 'localhost') !== false) {
-        $assets_version = time();
-    } else {
-        $assets_version = '1.1';
-    }
+    //  Cache-busting: versione = data di modifica del file, si aggiorna da sola ad ogni build/deploy
+    $css_path = get_template_directory() . '/assets/styles/app.css';
+    $js_path  = get_template_directory() . '/assets/js/app.js';
+    $css_version = file_exists($css_path) ? (string) filemtime($css_path) : '1.1';
+    $js_version  = file_exists($js_path) ? (string) filemtime($js_path) : '1.1';
 
 
-    wp_register_style('custom_styles', get_template_directory_uri() . '/assets/styles/app.css', null, $assets_version, 'screen');
+    wp_register_style('custom_styles', get_template_directory_uri() . '/assets/styles/app.css', null, $css_version, 'screen');
     wp_enqueue_style('custom_styles');
 
 
-    wp_register_script('custom_scripts', get_template_directory_uri() . '/assets/js/app.js', array(), $assets_version, true);
+    //  Dipendenza 'jquery': il bundle usa la jQuery di WordPress (webpack externals), non una copia propria
+    wp_register_script('custom_scripts', get_template_directory_uri() . '/assets/js/app.js', array('jquery'), $js_version, true);
     wp_enqueue_script('custom_scripts');
 
     //  Variabili da passare agli script JS

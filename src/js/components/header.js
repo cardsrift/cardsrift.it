@@ -1,5 +1,4 @@
 import { GLOBAL_VARS } from '../utils/constants';
-import { getWindowSize } from '../utils/index';
 
 const Header = () => {
 	const hamburgerMenu = document.querySelector('.hamburgerMenu');
@@ -9,7 +8,8 @@ const Header = () => {
 	const menuItemWChild = document.querySelectorAll('.menuItemWChild');
 
 	const { lg } = GLOBAL_VARS;
-	const { windowWidth } = getWindowSize();
+	// Valutata a runtime negli handler: resta corretta anche dopo resize/rotazione
+	const desktopMq = window.matchMedia(`(min-width: ${lg}px)`);
 
 	// header scroll
 	let lastScrollTop = 0;
@@ -40,25 +40,24 @@ const Header = () => {
 		body.classList.toggle('overflow-y-hidden');
 	});
 	toggleMenu.forEach((element) => {
-		if (windowWidth <= lg) {
-			element.addEventListener('click', () => {
-				element.classList.toggle('menuActive');
-			});
-		}
+		element.addEventListener('click', () => {
+			if (desktopMq.matches) return;
+			element.classList.toggle('menuActive');
+		});
 	});
 
 	menuItemWChild.forEach((element) => {
-		if (windowWidth > lg) {
-			element.addEventListener('mouseover', () => {
-				mainMenu.classList.add('menuOpen');
-				element.classList.add('itemActive');
-			});
-			element.addEventListener('mouseout', () => {
-				mainMenu.classList.remove('menuOpen');
-
-				element.classList.remove('itemActive');
-			});
-		}
+		// mouseenter/mouseleave (non bubblano): niente flicker attraversando il dropdown
+		element.addEventListener('mouseenter', () => {
+			if (!desktopMq.matches) return;
+			mainMenu.classList.add('menuOpen');
+			element.classList.add('itemActive');
+		});
+		element.addEventListener('mouseleave', () => {
+			if (!desktopMq.matches) return;
+			mainMenu.classList.remove('menuOpen');
+			element.classList.remove('itemActive');
+		});
 	});
 };
 export default Header;

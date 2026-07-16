@@ -1,7 +1,5 @@
 import Swiper, { Autoplay } from 'swiper';
-import 'swiper/swiper-bundle.css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import 'swiper/css';
 
 const hero = () => {
 	// Register the Autoplay module

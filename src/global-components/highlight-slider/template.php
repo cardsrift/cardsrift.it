@@ -12,7 +12,7 @@ $slides =  $component_data['highlights'];
             <div class="highlight-slider-title max-sm:px-5">
                 <div class="">
                     <h1 class="tw-h4 font-500">
-                        <?php echo $title; ?>
+                        <?php echo esc_html($title); ?>
                     </h1>
                 </div>
             </div>
@@ -24,11 +24,18 @@ $slides =  $component_data['highlights'];
                     <div class="swiper-wrapper">
                         <?php foreach ($slides as $key => $slide) : ?>
 
-                            <?php 
+                            <?php
+                                // Salta la slide se il prodotto non è selezionato o è stato eliminato/cestinato
+                                if (empty($slide['product']) || !is_object($slide['product'])) {
+                                    continue;
+                                }
                                 $product_id = $slide['product']->ID;
                                 $product_title = $slide['product']->post_title;
                                 $product_image = wp_get_attachment_image_url(get_post_thumbnail_id($product_id), 'full');
                                 $product = wc_get_product( $product_id );
+                                if (!$product) {
+                                    continue;
+                                }
                                 $price = number_format((float)$product->get_regular_price(), 2, ',', '');
                                 $terms = get_the_terms($product_id, 'product_cat');
                                 //debug($terms)
@@ -36,17 +43,17 @@ $slides =  $component_data['highlights'];
 
                             <div class="flex flex-col swiper-slide h-full product p-4">
                                 
-                                <a href="<?php echo get_permalink($product_id); ?>" class="highlight-slider-link">
+                                <a href="<?php echo esc_url(get_permalink($product_id)); ?>" class="highlight-slider-link">
                                     <picture class=" flex justify-center items-center w-full h-[400px]">
-                                        <source srcset="<?php echo $product_image; ?>" media="(max-width: 768px)">
-                                        <img class=" object-contain" src="<?php echo $product_image; ?>">
+                                        <source srcset="<?php echo esc_url($product_image); ?>" media="(max-width: 768px)">
+                                        <img class=" object-contain" src="<?php echo esc_url($product_image); ?>" alt="<?php echo esc_attr($product_title); ?>">
                                     </picture>
                                 </a>
                                 <div class="py-10 xl:py-12 px-8 flex flex-col justify-between text-center font-adelle">
-                                        <a href="<?php echo get_permalink($product_id); ?>" class="highlight-slider-link">
+                                        <a href="<?php echo esc_url(get_permalink($product_id)); ?>" class="highlight-slider-link">
                                         <h4 class="text-sm lg:text-md h-28 font-adelle
                                         ">
-                                            <?php echo $product_title; ?>
+                                            <?php echo esc_html($product_title); ?>
                                         </h4>
                                     </a>
                                     <div class="text-base lg:text-lg font-500">
@@ -54,7 +61,7 @@ $slides =  $component_data['highlights'];
 
                                     </div>
                                 </div>
-                                <a href="<?php echo get_permalink($product_id) ?>" class="highlight-slider-link text-center block add_to_cart_button w-fit mx-auto !font-700">
+                                <a href="<?php echo esc_url(get_permalink($product_id)) ?>" class="highlight-slider-link text-center block add_to_cart_button w-fit mx-auto !font-700">
                                     <?php echo __('Vedi prodotto', 'cardsrift'); ?>
                                 </a>
                             </div>

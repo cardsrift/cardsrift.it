@@ -2,11 +2,9 @@
 	"extends": "airbnb",
 	"env": {
 		"node": true,
-		"jasmine": true,
 		"jquery": true,
 		"es2021": true
 	},
-	"ignorePatterns": ["srs/js/libs/*.js", "srs/js/dev_vendors/*.js"],
 	"rules": {
 		"indent": [
 			2,
@@ -52,7 +50,6 @@
 		"window": true,
 		"document": true,
 		"PAGES": true,
-		"Blotter": true,
 		"navigator": true,
 		"Image": true,
 	},

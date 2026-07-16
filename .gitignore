@@ -1,8 +1,7 @@
 node_modules
 public
-vendor
-dist
 .env
+.env.deploy
 .DS_Store
 src/tailwind/build
 *.log

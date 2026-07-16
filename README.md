@@ -1,67 +1,50 @@
-# Welcome to Beaverlab webpack Setup
-## Get started
+# CardsRift
 
-1. Install [node.js](https://nodejs.org/)
+Custom WordPress/WooCommerce theme for a trading card e-commerce site. Webpack 5, Tailwind CSS 3 (+ DaisyUI) + SCSS, vanilla JS.
 
-2. If Windows
+## Requirements
 
-Install cross-env global
+- Node.js 18+
+- A local PHP/MySQL stack (developed on MAMP, served from `public/`)
+- A copy of the WordPress install (files + database) from production in `public/` — the repo contains only the theme source
 
-`npm i cross-env -g` (required one time)
+## Setup
 
-3. Install npm packages
-
-`npm i` or `npm ci` or `npm install`
-
-4. Change name output folder
-
-If necessary in `settings/environment.js` change the wpOutput's path with the name of your project. Remember to change `src/custom/style.css` to modify `Theme Name` etc.
-
-5. Let's code!
-
-* `npm run wp-dev` - Copies the files (static) to wp_theme directory and watch
-* `npm run wp-build` - Copies the files (static) to wp_theme directory
-
-
-## Template structure
-
-```
-public                       # Wordpress directory installation
-settings                     # Webpack configs
-src                          # Sources
-├── custom                   # Directory *.php files
-│   ├── includes             # Helpers functions wordpress
-├── fonts                    # Fonts template
-│   ├── icons                # Iconfont template
-├── images                   # Images template
-│   ├── icons                # Icons template
-│   |   ├── other_icons      # Icons unused in sprite
-│   |   ├── sprite_icons     # Icons used in sprite
-├── js                       # Scripts template
-│   ├── components           # Functions for components
-│   ├── libs                 # Libriaries, plugins template
-│   ├── utils                # Constants, helpers functions
-├── scss                     # Styles template
-│   ├── helpers              # Style extends, mixins and variables
-│   ├── plugins              # Styles for plugins
-.babelrc                     # Babel configuration
-.env                         # Environment configuration
-.eslintrc                    # Eslint rules
-.gitignore                   # List of excluded files from Git
-.sasslintrc                  # Sasslint rules
-composer.json				 # Composer configuration
-package.json                 # List of modules and other information
-postcss.config.js            # Configuration of CSS post-processing
-readme.md                    # Documentation template
-webpack.config.js            # Configuration for launching webpack tasks
+```bash
+npm install
+npm run wp-dev     # compiles src/ into public/wp-content/themes/cardsrift/ and watches
 ```
 
-## Rules:
+Note: `src/tailwind/build/` is gitignored — always start with `wp-dev` (or `wp-build`) on a fresh clone, not `npm run dev` alone.
 
-**File naming:**
+## Commands
 
-| Type                          | Naming                | Exuals to           |
-| ----------------------------  | :--------------------:| -------------------:|
-| Sass files                    | _your_file.scss       |                     |
-| JS component (js/components)  | nameOfYourFunction.js | *name of function*  |
+| Command | Description |
+|---------|-------------|
+| `npm run wp-dev` | Dev mode: Tailwind + webpack watch, copies to theme directory |
+| `npm run wp-build` | Production build |
+| `npm run dev-tailwind` | Compile Tailwind CSS only (watch) |
 
+## Structure
+
+```
+public/                  # WordPress install (gitignored — managed via wp-admin, not the repo)
+settings/                # Webpack env configs + source/output paths (environment.js)
+acf/                     # Manual ACF field-group exports
+src/
+├── wp-theme/            # PHP theme templates (includes/ = WP helpers, woocommerce/ = overrides)
+├── global-components/   # Reusable components: PHP template + JS + SCSS per folder
+├── js/                  # app.js entry, components/, utils/
+├── scss/                # main_global.scss entry + partials
+├── tailwind/            # Tailwind entry CSS; compiled output in build/ (gitignored)
+├── fonts/               # Self-hosted Bylon & Metropolis (Adelle Sans via Typekit)
+└── images/icons/sprite_icons/   # SVGs compiled into a sprite
+```
+
+Homepage pages are assembled from ACF flexible-content layouts rendered via `global-components/` — see `CLAUDE.md` for the full pattern and component-wiring steps.
+
+## Updating WordPress, plugins & deploying
+
+- **Core/plugin updates**: via wp-admin — update **local first** (MAMP), verify the theme still works, then update **production**. ACF Pro updates require the license key registered on the site. Before major core updates in production, export the DB from Aruba's phpMyAdmin as a backup.
+- **Theme deploy**: production is on Aruba (FTP only). Deploy ships only `public/wp-content/themes/cardsrift/` — run `npm run deploy` (builds, then FTP mirror via lftp; credentials in the gitignored `.env.deploy`, see `.env.deploy.example`). Note: the build renews every file's timestamp, so each deploy re-uploads the whole theme (~95 files, a few MB).
+- The theme travels **only from the repo to production**, never the other way — git is the source of truth for the theme.

@@ -1,7 +1,5 @@
 import Swiper from 'swiper';
-import 'swiper/swiper-bundle.css';
-import 'swiper/css/navigation';
-import 'swiper/css/pagination';
+import 'swiper/css';
 
 const highlightSlider = () => {
 	const sliders = document.querySelectorAll('.highlight-slider-swiper');

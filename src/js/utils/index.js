@@ -110,12 +110,12 @@ export const onWindowScroll = cb => {
 };
 
 export const documentReady = cb => {
-	if (!cb && !isFunction(cb)) return;
+	if (!cb || !isFunction(cb)) return;
 	document.addEventListener('DOMContentLoaded', cb);
 };
 
 export const pageLoad = cb => {
-	if (!cb && !isFunction(cb)) return;
+	if (!cb || !isFunction(cb)) return;
 	window.addEventListener('load', cb);
 };
 

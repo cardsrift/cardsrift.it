@@ -7,17 +7,12 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const SpriteLoaderPlugin = require('svg-sprite-loader/plugin');
 const ESLintPlugin = require('eslint-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-require('babel-polyfill');
 
-const isProduction = process.env.NODE_ENV === 'production';
 const environment = require('./settings/environment');
 var currentOutput = environment.paths.wpOutput;
 
 module.exports = {
 	entry: {
-		// 'es6-promise': ['core-js/modules/es6.promise'],
-		// 'es6-array-iterator': ['core-js/modules/es6.array.iterator'],
-		// 'babel-polyfill': ['babel-polyfill'],
 		app: path.resolve(environment.paths.source, 'index.js'),
 	},
 	output: {
@@ -142,5 +137,10 @@ module.exports = {
 		}),
 		new ESLintPlugin(),
 	],
+	// jQuery non viene impacchettata: si usa quella di WordPress
+	// (dipendenza 'jquery' dichiarata in wp_register_script)
+	externals: {
+		jquery: 'jQuery',
+	},
 	target: 'web',
 };
