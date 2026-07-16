@@ -4,10 +4,11 @@
   "version": "1.0.0",
   "description": "CardsRift WordPress/WooCommerce theme — Webpack 5, Tailwind CSS + SCSS",
   "scripts": {
-    "dev": "cross-env NODE_ENV=wp webpack --config settings/webpack.wp_dev.config.js --watch",
-    "dev-tailwind": "npx tailwind -i ./src/tailwind/tailwind.css -o ./src/tailwind/build/main_tailwind.css --watch",
-    "wp-build": "npx tailwind -i ./src/tailwind/tailwind.css -o ./src/tailwind/build/main_tailwind.css --minify && cross-env NODE_ENV=wp webpack --config settings/webpack.wp_prod.config.js",
-    "wp-dev": "concurrently --kill-others \"npm run dev-tailwind\" \"npm run dev\"",
+    "dev": "npm run tailwind:once && concurrently --kill-others -n tailwind,webpack \"npm run tailwind:watch\" \"npm run webpack:watch\"",
+    "tailwind:once": "tailwind -i ./src/tailwind/tailwind.css -o ./src/tailwind/build/main_tailwind.css",
+    "tailwind:watch": "tailwind -i ./src/tailwind/tailwind.css -o ./src/tailwind/build/main_tailwind.css --watch",
+    "webpack:watch": "cross-env NODE_ENV=wp webpack --config settings/webpack.wp_dev.config.js --watch",
+    "wp-build": "tailwind -i ./src/tailwind/tailwind.css -o ./src/tailwind/build/main_tailwind.css --minify && cross-env NODE_ENV=wp webpack --config settings/webpack.wp_prod.config.js",
     "deploy": "npm run wp-build && bash scripts/deploy.sh"
   },
   "devDependencies": {

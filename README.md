@@ -12,18 +12,16 @@ Custom WordPress/WooCommerce theme for a trading card e-commerce site. Webpack 5
 
 ```bash
 npm install
-npm run wp-dev     # compiles src/ into public/wp-content/themes/cardsrift/ and watches
+npm run dev        # compiles src/ into public/wp-content/themes/cardsrift/ and watches
 ```
-
-Note: `src/tailwind/build/` is gitignored — always start with `wp-dev` (or `wp-build`) on a fresh clone, not `npm run dev` alone.
 
 ## Commands
 
 | Command | Description |
 |---------|-------------|
-| `npm run wp-dev` | Dev mode: Tailwind + webpack watch, copies to theme directory |
-| `npm run wp-build` | Production build |
-| `npm run dev-tailwind` | Compile Tailwind CSS only (watch) |
+| `npm run dev` | Dev mode: compiles Tailwind, then Tailwind + webpack watch, copies to theme directory |
+| `npm run wp-build` | Production build (Tailwind minified + webpack) |
+| `npm run deploy` | Production build + FTP deploy of the theme to Aruba |
 
 ## Structure
 

@@ -11,13 +11,12 @@ The repo contains only the theme source. The WordPress install lives in `public/
 ## Build Commands
 
 ```bash
-npm run wp-dev        # Dev mode: copies files to theme directory + watch (use this)
-npm run wp-build      # Production build
-npm run dev-tailwind  # Compile Tailwind CSS only
+npm run dev           # Dev mode: compiles Tailwind first, then watches Tailwind + webpack together
+npm run wp-build      # Production build (Tailwind minified + webpack)
 npm run deploy        # wp-build + FTP upload of the whole theme to Aruba (creds in gitignored .env.deploy)
 ```
 
-- Fresh-clone gotcha: `src/tailwind/build/` is gitignored, so `npm run dev` (webpack watch alone) fails until Tailwind compiles. Use `wp-dev`, which runs both.
+- `dev` pre-compiles Tailwind before starting the watchers, so it's safe on a fresh clone (`src/tailwind/build/` is gitignored). `tailwind:*`/`webpack:watch` are internal helpers — don't run them directly.
 - ESLint runs inside webpack builds via `eslint-webpack-plugin`; there is no standalone `npm run lint`.
 
 ## Architecture
