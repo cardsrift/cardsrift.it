@@ -32,9 +32,15 @@ npm run deploy        # wp-build + FTP upload of the whole theme to Aruba (creds
 - `tailwind/` — Tailwind entry CSS and component files; compiled output in `tailwind/build/` (gitignored)
 - `images/icons/sprite_icons/` — SVGs compiled into an SVG sprite; consumed in PHP via `<use xlink:href="...assets/images/sprite/sprite.svg#icon-name">`
 
-### Homepage / component rendering pattern
+### Homepage / component rendering pattern (manifest in codice — dal 17/07/2026)
 
-`template_homepage.php` loops the ACF flexible-content field `components`: each layout's `acf_fc_layout` name has underscores converted to dashes, then renders `get_template_part("global-components/$name/template")` with data passed via the `component_data` query var (read by each component's `variables.php`). ACF layout names (after underscore→dash conversion) must map to component folder names, so name folders with dashes (`highlight-slider`).
+**Struttura + copy = codice; backend ACF = solo dati DB, generato dal codice.** Ogni pagina ha un *manifest* PHP in `src/wp-theme/content/{slug}.php` che `return`a un array ordinato di sezioni; ciascuna ha `comp` (cartella in `global-components/`), `tema`, il copy in `__()` (traducibile), e opzionalmente `edit` (i pochi campi legati al DB: prodotti/immagini).
+
+L'engine è `includes/page-builder.php`:
+- `cr_render_page($slug)` — carica il manifest, per ogni sezione fonde il copy (dal codice) con i valori dei campi `edit` (letti da ACF sulla pagina), poi `set_query_var('component_data', $data)` → `get_template_part("global-components/$comp/template")`. I template leggono `$component_data` direttamente (NON esiste `variables.php`).
+- `cr_register_builder_fields()` (hook `acf/init`) — genera i field group ACF **dal manifest** (solo sezioni con `edit`), così wp-admin mostra la pagina "già apparecchiata" e i campi sono versionati nel repo. Registra anche `data_uscita` (date_picker) sui prodotti.
+
+`template_homepage.php` = `cr_render_page('home')`. `page.php` cerca `content/{slug}.php` (fallback su `the_content()`). Le sezioni dinamiche si auto-alimentano da helper in `rework.php` (`cr_grid_products`, `cr_preorder_products`, `cr_singole_products`, `cr_ticker_voci`) — niente selezione a mano. Valori scalari a bassa frequenza (%, numeri, URL) in `includes/config.php`. **Copy sempre in `__()/esc_html__()` con text domain `cardsrift`** (`.pot` in `languages/`, vedi setup i18n in `functions.php`).
 
 ### Component wiring is manual
 
@@ -55,7 +61,7 @@ Hybrid system: **Tailwind CSS** (with DaisyUI, `themes: false`) for utilities/la
 
 - **Regole e principi: `docs/design-system.md` · variabili: `docs/design-system-tokens.md` · roadmap/stato: `docs/rework-fase-1.md`.** Leggili prima di costruire o modificare componenti.
 - 4 temi per sezione via `data-th="dark|light|lilla|lilla2"` (campo ACF radio `tema`, letto da `cr_theme()`); token in `src/tailwind/components/themes.css`, primitive `.cr-*` in `design-system.css`, colori Tailwind `th-*` in config. **Mai colori hardcoded nei template**: solo `th-*`/`cr-*`.
-- Card prodotto SOLO via `cr_product_card()` (`includes/rework.php`). Page builder: flexible content `components` — loop in `template_homepage.php` e `page.php` (componenti riutilizzabili su ogni pagina).
+- Card prodotto SOLO via `cr_product_card()` (`includes/rework.php`). Page builder: **manifest in codice** (`content/{slug}.php`) + engine `includes/page-builder.php` — vedi "Homepage / component rendering pattern". I componenti restano riutilizzabili su ogni pagina; il backend ACF tiene solo i dati DB (generati dal manifest), il copy è in codice e tradotto.
 - Pagina vivente dei primitivi: template **“Design System”** (`template_styleguide.php`) — ogni componente nuovo si verifica lì.
 
 ### JS Libraries

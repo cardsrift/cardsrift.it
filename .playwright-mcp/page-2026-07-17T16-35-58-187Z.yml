@@ -1,0 +1,154 @@
+- generic [active] [ref=f21e1]:
+  - banner [ref=f21e2]:
+    - generic [ref=f21e3]:
+      - link "CardsRift" [ref=f21e4] [cursor=pointer]:
+        - /url: http://localhost/cardsrift/public/
+        - img "CardsRift" [ref=f21e5]
+      - navigation [ref=f21e6]:
+        - link "Prodotti" [ref=f21e7] [cursor=pointer]:
+          - /url: "#"
+      - generic [ref=f21e8]:
+        - link "Cerca" [ref=f21e9] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public
+        - link "Carrello" [ref=f21e13] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/cart/
+        - button "Menu" [ref=f21e18] [cursor=pointer]
+  - generic [ref=f21e23]:
+    - generic [ref=f21e24]:
+      - generic [ref=f21e27]:
+        - generic [ref=f21e28]: Chi siamo
+        - heading "Un negozio di carte collezionabili tenuto da chi le colleziona" [level=1] [ref=f21e29]
+        - paragraph [ref=f21e30]: "CardsRift è la mia collezione diventata negozio: Pokémon, One Piece e Magic, sealed e singole, controllate una a una e spedite come vorrei riceverle io. Il sito è nuovo, ma le carte le spedisco già da un po’ — con il 100% di valutazioni positive su Cardmarket."
+      - generic [ref=f21e33]:
+        - generic [ref=f21e34]:
+          - generic [ref=f21e35]: La storia
+          - heading "Come è nato CardsRift" [level=2] [ref=f21e36]
+        - generic [ref=f21e37]:
+          - paragraph [ref=f21e38]: "Mi chiamo Marco e colleziono carte da molto prima di venderle. CardsRift nasce da lì: dal voler trasformare una passione in un mestiere, e avere un motivo in più per continuare a raccontarla a chi la condivide."
+          - paragraph [ref=f21e39]: "Ho iniziato dove iniziano quasi tutti i collezionisti seri, su Cardmarket. Cento e più spedizioni dopo, con ogni valutazione tornata positiva, ho aperto questo portale per fare le cose fino in fondo a modo mio: foto reali, condizioni dette come stanno, e qualcuno che risponde davvero dall’altra parte."
+          - paragraph [ref=f21e40]: Sono una persona sola, non un magazzino. Ogni carta che parte è passata dalle mie mani.
+      - generic [ref=f21e43]:
+        - generic [ref=f21e44]:
+          - generic [ref=f21e45]: In concreto
+          - heading "Cosa succede a una carta prima di arrivarti" [level=2] [ref=f21e46]
+        - generic [ref=f21e47]:
+          - generic [ref=f21e48]:
+            - term [ref=f21e49]: La controllo
+            - definition [ref=f21e50]: Apro, verifico e giudico le condizioni sulla scala del mercato — NM, LP, MP, HP — sempre per difetto. Se è Lightly Played, nella scheda leggi Lightly Played.
+          - generic [ref=f21e51]:
+            - term [ref=f21e52]: La fotografo
+            - definition [ref=f21e53]: "Se ha valore la scansiono fronte e retro: quello che vedi nella scheda è il pezzo che ricevi, non un’immagine di catalogo."
+          - generic [ref=f21e54]:
+            - term [ref=f21e55]: La imballo
+            - definition [ref=f21e56]: Sleeve, top loader o rinforzo secondo il valore, poi busta o scatola rigida. Parte tracciata in 24/48h — come vorrei riceverla io.
+      - generic [ref=f21e59]:
+        - generic [ref=f21e60]: La reputazione conta
+        - generic [ref=f21e61]: "La fiducia non si inventa: si costruisce un pacco alla volta. Le stesse carte che trovi qui le vendo su Cardmarket — il posto dove i collezionisti si fidano dei numeri, non delle promesse. Il portale è nuovo; la cura con cui spedisco è quella di sempre."
+        - generic [ref=f21e62]:
+          - generic [ref=f21e63]:
+            - generic [ref=f21e64]: 100%
+            - text: valutazioni positive
+          - generic [ref=f21e65]:
+            - generic [ref=f21e66]: 100+
+            - text: vendite su Cardmarket
+          - generic [ref=f21e67]:
+            - generic [ref=f21e68]: "2025"
+            - text: venditore dal
+        - link "Guarda il profilo su Cardmarket" [ref=f21e69] [cursor=pointer]:
+          - /url: https://www.cardmarket.com/it/Magic/Users/CardsRift
+      - generic [ref=f21e72]:
+        - generic [ref=f21e73]:
+          - generic [ref=f21e74]: Domande frequenti
+          - heading "Quello che di solito mi chiedono" [level=2] [ref=f21e75]
+        - generic [ref=f21e76]:
+          - group [ref=f21e77]:
+            - generic "Le carte sono originali?" [ref=f21e78] [cursor=pointer]
+          - group [ref=f21e82]:
+            - generic "Come giudichi le condizioni?" [ref=f21e83] [cursor=pointer]
+          - group [ref=f21e87]:
+            - generic "Come spedisci, e in quanto tempo?" [ref=f21e88] [cursor=pointer]
+          - group [ref=f21e92]:
+            - generic "Vendi solo Pokémon, One Piece e Magic?" [ref=f21e93] [cursor=pointer]
+          - group [ref=f21e97]:
+            - generic "Posso vendervi le mie carte?" [ref=f21e98] [cursor=pointer]
+          - group [ref=f21e102]:
+            - generic "Chi c’è dietro CardsRift?" [ref=f21e103] [cursor=pointer]
+      - generic [ref=f21e109]:
+        - generic [ref=f21e110]: Anche il contrario
+        - generic [ref=f21e111]: Hai carte che non guardi più? Da me trovano un’altra collezione dove stare. Le valuto con calma, ti dico tutto prima — e se l’offerta non ti convince, ci siamo salutati bene lo stesso.
+        - link "Come vendere le tue carte" [ref=f21e112] [cursor=pointer]:
+          - /url: /compriamo-le-tue-carte
+      - generic [ref=f21e115]:
+        - generic [ref=f21e116]: Community
+        - heading "Siamo agli inizi. Entra dal principio." [level=2] [ref=f21e117]
+        - paragraph [ref=f21e118]: "Il canale Telegram è ancora piccolo, e va bene così: restock, nuove uscite e qualche chicca prima che altrove. Si entra gratis, senza spam — e da qui cresciamo insieme."
+        - link "Entra nel canale" [ref=f21e119] [cursor=pointer]:
+          - /url: https://t.me/cardsrift
+    - contentinfo [ref=f21e120]:
+      - generic [ref=f21e122]:
+        - generic [ref=f21e123]:
+          - generic [ref=f21e124]:
+            - link "CardsRift" [ref=f21e125] [cursor=pointer]:
+              - /url: http://localhost/cardsrift/public/
+              - img "CardsRift" [ref=f21e126]
+            - paragraph [ref=f21e127]: "Il tuo portale per il collezionismo: carte controllate una a una, protette e spedite in 24/48h."
+            - generic [ref=f21e128]:
+              - link "Instagram" [ref=f21e129] [cursor=pointer]:
+                - /url: https://www.instagram.com/cardsrift/
+              - link "Telegram" [ref=f21e134] [cursor=pointer]:
+                - /url: https://t.me/cardsrift
+          - generic [ref=f21e137]:
+            - heading "Il negozio" [level=4] [ref=f21e138]
+            - list [ref=f21e139]:
+              - listitem [ref=f21e140]:
+                - link "Il progetto" [ref=f21e141] [cursor=pointer]:
+                  - /url: /chi-siamo
+              - listitem [ref=f21e142]:
+                - link "Come imballiamo" [ref=f21e143] [cursor=pointer]:
+                  - /url: /come-imballiamo
+              - listitem [ref=f21e144]:
+                - link "Recensioni" [ref=f21e145] [cursor=pointer]:
+                  - /url: /recensioni
+              - listitem [ref=f21e146]:
+                - link "Community Telegram" [ref=f21e147] [cursor=pointer]:
+                  - /url: https://t.me/cardsrift
+          - generic [ref=f21e148]:
+            - heading "Assistenza" [level=4] [ref=f21e149]
+            - list [ref=f21e150]:
+              - listitem [ref=f21e151]:
+                - link "Spedizioni e resi" [ref=f21e152] [cursor=pointer]:
+                  - /url: /spedizioni-e-resi
+              - listitem [ref=f21e153]:
+                - link "Guida alle condizioni" [ref=f21e154] [cursor=pointer]:
+                  - /url: /guida-alle-condizioni
+              - listitem [ref=f21e155]:
+                - link "Domande frequenti" [ref=f21e156] [cursor=pointer]:
+                  - /url: /faq
+              - listitem [ref=f21e157]:
+                - link "Contatti" [ref=f21e158] [cursor=pointer]:
+                  - /url: /contatti
+          - generic [ref=f21e159]:
+            - heading "Contatti" [level=4] [ref=f21e160]
+            - list [ref=f21e161]:
+              - listitem [ref=f21e162]:
+                - link "cardsrift@gmail.com" [ref=f21e163] [cursor=pointer]:
+                  - /url: mailto:cardsrift@gmail.com
+              - listitem [ref=f21e164]: P.IVA 13934020960
+        - generic [ref=f21e165]:
+          - generic [ref=f21e166]:
+            - generic [ref=f21e167]: © 2026 CardsRift
+            - generic [ref=f21e168]: ·
+            - link "Privacy" [ref=f21e169] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045
+            - generic [ref=f21e170]: ·
+            - link "Cookie" [ref=f21e171] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045/cookie-policy
+          - list [ref=f21e172]:
+            - listitem [ref=f21e173]:
+              - img "Visa" [ref=f21e174]
+            - listitem [ref=f21e175]:
+              - img "Mastercard" [ref=f21e176]
+            - listitem [ref=f21e177]:
+              - img "PayPal" [ref=f21e178]
+  - button "Le tue preferenze relative al consenso per le tecnologie di tracciamento" [ref=f21e179] [cursor=pointer]
+  - status [ref=f21e181]

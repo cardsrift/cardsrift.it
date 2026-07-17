@@ -4,17 +4,26 @@ add_theme_support('post-thumbnails');
 
 // INCLUDES
 include('includes/helpers.php');
+include('includes/config.php');
 include('includes/rework.php');
+include('includes/page-builder.php');
+include('includes/seo.php');
 include('includes/script_and_style.php');
 include('includes/acf.php');
 
 // show_admin_bar(true);
 
 
-add_action('after_setup_theme', 'register_my_menu');
-function register_my_menu()
+add_action('after_setup_theme', 'cr_theme_setup');
+function cr_theme_setup()
 {
-	register_nav_menu('header', __('Header', 'theme-slug'));
+	// Traduzioni del tema: le stringhe __()/esc_html__() con text domain 'cardsrift'
+	// vengono caricate da languages/cardsrift-{locale}.mo (setup per la traduzione EN).
+	load_theme_textdomain('cardsrift', get_template_directory() . '/languages');
+
+	add_theme_support('title-tag'); // <title> gestito da WordPress (rimosso wp_title() da header.php)
+
+	register_nav_menu('header', __('Header', 'cardsrift'));
 }
 
 

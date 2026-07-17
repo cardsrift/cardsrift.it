@@ -2,18 +2,33 @@
 
 /**
  * HERO VETRINA (HERO-6) — hero di default: claim quieto + vetrina di 3 prodotti inclinati.
- * Layout ACF: hero_vetrina — campi: tema, eyebrow, titolo, sottotitolo,
- * cta_label/cta_url, cta2_label/cta2_url, vetrina (repeater: prodotto, etichetta),
- * trust (repeater: testo, evidenzia)
+ * Copy dal manifest (content/home.php). Unico dato da backend: "vetrina" = 3 prodotti
+ * (campo ACF generato dall'engine); l'etichetta pill è dedotta in automatico dal prodotto.
  */
 $c = is_array($component_data ?? null) ? $component_data : [];
 $tema     = cr_theme($c);
 $eyebrow  = $c['eyebrow'] ?? __('Il tuo portale per il collezionismo', 'cardsrift');
 $titolo   = $c['titolo'] ?? '';
 $sotto    = $c['sottotitolo'] ?? '';
-$vetrina  = is_array($c['vetrina'] ?? null) ? array_slice($c['vetrina'], 0, 3) : [];
+$vetrina  = array_slice(array_filter((array) ($c['vetrina'] ?? [])), 0, 3);
 $trust    = is_array($c['trust'] ?? null) ? $c['trust'] : [];
 $rotazioni = ['-rotate-6 left-[5%] top-[13%] z-[2]', 'rotate-2 left-[35%] top-[2%] z-[3] scale-110', 'rotate-[8deg] left-[63%] top-[26%] z-[1]'];
+
+// Vetrina: prodotti reali (3 post_object da ACF) o, se vuota, placeholder in sviluppo.
+$showcase = [];
+if ($vetrina) {
+	foreach ($vetrina as $slot) {
+		$pid = is_object($slot) ? $slot->ID : (int) $slot;
+		if ($pid) {
+			$showcase[] = ['img' => get_the_post_thumbnail_url($pid, 'woocommerce_thumbnail'), 'label' => cr_product_chip($pid)];
+		}
+	}
+} elseif (CR_PLACEHOLDER) {
+	$ph_img = function_exists('wc_placeholder_img_src') ? wc_placeholder_img_src('woocommerce_thumbnail') : '';
+	foreach (['151 · IT', 'OP-10 · JP', 'MTG · EN'] as $ph_label) {
+		$showcase[] = ['img' => $ph_img, 'label' => $ph_label];
+	}
+}
 ?>
 
 <section class="cr-sec cr-patt hero-vetrina" data-th="<?= esc_attr($tema); ?>">
@@ -51,20 +66,15 @@ $rotazioni = ['-rotate-6 left-[5%] top-[13%] z-[2]', 'rotate-2 left-[35%] top-[2
 				<?php endif; ?>
 			</div>
 
-			<?php if ($vetrina) : ?>
+			<?php if ($showcase) : ?>
 				<div class="hero-vetrina__showcase relative h-[340px] lg:h-[410px] max-lg:max-w-[540px]" aria-hidden="true">
-					<?php foreach ($vetrina as $i => $slot) :
-						$pid = is_object($slot['prodotto'] ?? null) ? $slot['prodotto']->ID : (int) ($slot['prodotto'] ?? 0);
-						if (!$pid) continue;
-						$img = get_the_post_thumbnail_url($pid, 'woocommerce_thumbnail');
-						$etichetta = $slot['etichetta'] ?? '';
-					?>
+					<?php foreach ($showcase as $i => $s) : ?>
 						<div class="absolute w-[47%] max-w-[255px] aspect-[5/6] bg-white-pure rounded-2xl p-4 shadow-th border border-th-line <?= esc_attr($rotazioni[$i] ?? ''); ?>">
-							<?php if ($img) : ?>
-								<img class="w-full h-full object-contain" src="<?= esc_url($img); ?>" alt="">
+							<?php if ($s['img']) : ?>
+								<img class="w-full h-full object-contain" src="<?= esc_url($s['img']); ?>" alt="">
 							<?php endif; ?>
-							<?php if ($etichetta) : ?>
-								<span class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-black text-white font-metropolis font-bold text-xs rounded-full px-3.5 py-1 whitespace-nowrap"><?= esc_html($etichetta); ?></span>
+							<?php if ($s['label']) : ?>
+								<span class="absolute -bottom-3 left-1/2 -translate-x-1/2 <?= $tema === 'dark' ? 'bg-purple-deep' : 'bg-black'; ?> text-white font-metropolis font-bold text-xs rounded-full px-3.5 py-1 whitespace-nowrap"><?= esc_html($s['label']); ?></span>
 							<?php endif; ?>
 						</div>
 					<?php endforeach; ?>

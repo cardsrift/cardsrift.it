@@ -1,0 +1,307 @@
+# Copyright (C) 2026 Beaverlab
+# This file is distributed under the COMMERCIAL.
+msgid ""
+msgstr ""
+"Project-Id-Version: CardsRift 1.0\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/theme/src\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-07-17T09:46:51+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.11.0\n"
+"X-Domain: cardsrift\n"
+
+#. Theme Name of the theme
+#: wp-theme
+msgid "CardsRift"
+msgstr ""
+
+#. Description of the theme
+#: wp-theme
+msgid "CardsRift Theme"
+msgstr ""
+
+#. Author of the theme
+#: wp-theme
+msgid "Beaverlab"
+msgstr ""
+
+#: global-components/hero-drop/template.php:39
+msgid "Drop tra"
+msgstr ""
+
+#: global-components/hero-vetrina/template.php:10
+#: wp-theme/content/home.php:22
+msgid "Il tuo portale per il collezionismo"
+msgstr ""
+
+#: global-components/newsletter-box/template.php:33
+msgid "La tua email"
+msgstr ""
+
+#: global-components/newsletter-box/template.php:34
+msgid "Iscriviti"
+msgstr ""
+
+#: global-components/raccoglitore-singole/template.php:60
+#: wp-theme/includes/rework.php:116
+msgid "Scegli condizione"
+msgstr ""
+
+#: global-components/raccoglitore-singole/template.php:60
+msgid "Vedi carta"
+msgstr ""
+
+#: wp-theme/content/home.php:23
+msgid ""
+"Le carte che cerchi,\n"
+"scelte una per una."
+msgstr ""
+
+#: wp-theme/content/home.php:24
+msgid "Sealed, singole e accessori per Pokémon, One Piece e Magic. Le controlliamo una per una e le imballiamo come se restassero da noi."
+msgstr ""
+
+#: wp-theme/content/home.php:25
+msgid "Esplora il catalogo"
+msgstr ""
+
+#: wp-theme/content/home.php:27
+msgid "Come lavoriamo"
+msgstr ""
+
+#: wp-theme/content/home.php:30
+msgid "recensioni verificate"
+msgstr ""
+
+#: wp-theme/content/home.php:31
+msgid "spedizione tracciata"
+msgstr ""
+
+#: wp-theme/content/home.php:32
+msgid "Foto reali"
+msgstr ""
+
+#: wp-theme/content/home.php:32
+msgid "di ogni singola oltre i 50€"
+msgstr ""
+
+#: wp-theme/content/home.php:35
+msgid "Prodotti in vetrina (3)"
+msgstr ""
+
+#: wp-theme/content/home.php:48
+msgid "Appena arrivati"
+msgstr ""
+
+#: wp-theme/content/home.php:49
+msgid "Aggiunti di recente"
+msgstr ""
+
+#: wp-theme/content/home.php:50
+msgid "Tutte le novità"
+msgstr ""
+
+#: wp-theme/content/home.php:60
+msgid "Occasioni"
+msgstr ""
+
+#: wp-theme/content/home.php:61
+msgid "In offerta questa settimana"
+msgstr ""
+
+#: wp-theme/content/home.php:62
+msgid "Tutte le offerte"
+msgstr ""
+
+#: wp-theme/content/home.php:70
+msgid "Carte singole"
+msgstr ""
+
+#: wp-theme/content/home.php:71
+msgid "Sfoglia il raccoglitore"
+msgstr ""
+
+#: wp-theme/content/home.php:72
+msgid "Apri il raccoglitore"
+msgstr ""
+
+#: wp-theme/content/home.php:80
+msgid "Prossime uscite"
+msgstr ""
+
+#: wp-theme/content/home.php:81
+msgid "In arrivo prossimamente"
+msgstr ""
+
+#: wp-theme/content/home.php:91
+msgid "in credito negozio"
+msgstr ""
+
+#: wp-theme/content/home.php:92
+#: wp-theme/includes/rework.php:234
+msgid "Compriamo le tue carte"
+msgstr ""
+
+#: wp-theme/content/home.php:93
+msgid "Le tue doppie valgono. Da noi diventano credito."
+msgstr ""
+
+#: wp-theme/content/home.php:94
+msgid "È così che ci riforniamo di singole: dalle collezioni di chi, come te, ne ha qualcuna di troppo. Valutazione trasparente sui prezzi di Cardmarket, pagamento tracciato in 24/48h."
+msgstr ""
+
+#: wp-theme/content/home.php:95
+msgid "Valuta le tue carte"
+msgstr ""
+
+#: wp-theme/content/home.php:98
+msgid "Conteggio in foto e video, sempre"
+msgstr ""
+
+#: wp-theme/content/home.php:99
+msgid "Reso gratis se rifiuti l’offerta"
+msgstr ""
+
+#: wp-theme/content/home.php:100
+msgid "Pagamento tracciato, oppure %s in credito"
+msgstr ""
+
+#: wp-theme/content/home.php:109
+msgid "Il progetto"
+msgstr ""
+
+#: wp-theme/content/home.php:110
+msgid "Siamo collezionisti prima che negozianti. <b>CardsRift nasce per essere il portale che avremmo voluto trovare noi:</b> carte controllate una per una, condizioni oneste, e qualcuno che risponde davvero dall’altra parte. Niente foto finte, niente sorprese all’apertura — <b>solo le carte che cerchi, trattate come se restassero nella nostra collezione.</b>"
+msgstr ""
+
+#: wp-theme/content/home.php:112
+msgid "su %s recensioni"
+msgstr ""
+
+#: wp-theme/content/home.php:113
+msgid "ordini spediti"
+msgstr ""
+
+#: wp-theme/content/home.php:114
+msgid "dal primo pacco"
+msgstr ""
+
+#: wp-theme/content/home.php:116
+msgid "Chi siamo"
+msgstr ""
+
+#: wp-theme/content/home.php:124
+msgid "Community"
+msgstr ""
+
+#: wp-theme/content/home.php:125
+msgid "Il canale dove succede prima"
+msgstr ""
+
+#: wp-theme/content/home.php:126
+msgid "Restock, drop e chicche li annunciamo lì prima che altrove — con qualche prezzo che sul sito non trovi. Si entra gratis, e senza spam."
+msgstr ""
+
+#: wp-theme/content/home.php:127
+msgid "Entra nel canale"
+msgstr ""
+
+#: wp-theme/content/home.php:136
+msgid "Newsletter"
+msgstr ""
+
+#: wp-theme/content/home.php:137
+msgid "−5% sul tuo primo ordine"
+msgstr ""
+
+#: wp-theme/content/home.php:138
+msgid "Una mail solo quando arriva qualcosa che vale: le uscite, i restock, e lo sconto di benvenuto appena ti iscrivi."
+msgstr ""
+
+#: wp-theme/content/home.php:139
+msgid "Niente spam. Ti cancelli quando vuoi, con un clic."
+msgstr ""
+
+#: wp-theme/functions.php:23
+msgid "Header"
+msgstr ""
+
+#: wp-theme/includes/page-builder.php:96
+msgid "Questa pagina è composta da codice (struttura, ordine e testi). Qui sotto trovi solo i contenuti collegati al database da riempire — il resto è automatico."
+msgstr ""
+
+#: wp-theme/includes/page-builder.php:124
+msgid "Contenuti pagina"
+msgstr ""
+
+#: wp-theme/includes/page-builder.php:136
+msgid "Prodotto — Dati rework"
+msgstr ""
+
+#: wp-theme/includes/page-builder.php:139
+msgid "Data di uscita"
+msgstr ""
+
+#: wp-theme/includes/page-builder.php:142
+msgid "Compila solo per i prodotti \"in arrivo\": alimenta la vetrina uscite e li esclude dalle griglie in vendita."
+msgstr ""
+
+#: wp-theme/includes/rework.php:97
+msgid "In arrivo"
+msgstr ""
+
+#: wp-theme/includes/rework.php:99
+msgid "Esaurito"
+msgstr ""
+
+#: wp-theme/includes/rework.php:101
+msgid "Top deal"
+msgstr ""
+
+#: wp-theme/includes/rework.php:113
+msgid "Aggiungi al carrello"
+msgstr ""
+
+#: wp-theme/includes/rework.php:130
+msgid "Esce il %s"
+msgstr ""
+
+#: wp-theme/includes/rework.php:130
+msgid "Prossimamente"
+msgstr ""
+
+#: wp-theme/includes/rework.php:137
+msgid "Ultimi %d"
+msgstr ""
+
+#: wp-theme/includes/rework.php:139
+msgid "Disponibile"
+msgstr ""
+
+#: wp-theme/includes/rework.php:146
+msgid "Avvisami quando torna"
+msgstr ""
+
+#: wp-theme/includes/rework.php:234
+msgid "%s in credito"
+msgstr ""
+
+#: wp-theme/includes/rework.php:235
+msgid "Spedizione tracciata"
+msgstr ""
+
+#: wp-theme/includes/rework.php:235
+msgid "in 24/48h"
+msgstr ""
+
+#: wp-theme/includes/rework.php:247
+msgid "Appena aggiunto"
+msgstr ""
+
+#: wp-theme/includes/rework.php:254
+msgid "In offerta"
+msgstr ""

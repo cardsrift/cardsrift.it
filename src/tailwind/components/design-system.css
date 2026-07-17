@@ -23,10 +23,15 @@
 	.cr-patt::before {
 		content: "";
 		position: absolute;
-		inset: -12%;
+		/* quadrato molto più grande della sezione, centrato: ruotato copre SEMPRE
+		   tutta la sezione (nessun angolo scoperto), a prescindere dalle proporzioni. */
+		top: 50%;
+		left: 50%;
+		width: 200vmax;
+		height: 200vmax;
 		background: var(--cr-patt) 0 0/92px repeat;
 		opacity: var(--cr-patt-op);
-		transform: rotate(-11deg);
+		transform: translate(-50%, -50%) rotate(-11deg);
 		pointer-events: none;
 		z-index: 0;
 	}

@@ -1,16 +1,15 @@
 <?php
 
 /**
- * PREORDINI E USCITE (PRE-3 + PRE-2) — card preordine + calendario a righe.
- * La data viene dal campo ACF "data_uscita" sul prodotto (testo, es. "26/09").
- * Layout ACF: preordini_uscite — campi: tema, eyebrow, titolo, link_label/link_url,
- * prodotti (relationship, ordinati a mano dall'editor), mostra_calendario (true/false)
+ * IN ARRIVO (PRE-3 + PRE-2) — vetrina "sola vista" dei prodotti in arrivo + calendario a righe.
+ * NON preordinabili: le card non hanno acquisto. Sorgente AUTOMATICA (cr_preorder_products):
+ * i prodotti col campo "data_uscita" valorizzato, ordinati per data crescente. Nessun campo backend.
  */
 $c = is_array($component_data ?? null) ? $component_data : [];
 $tema = cr_theme($c);
-$ids  = array_map(fn($p) => is_object($p) ? $p->ID : (int) $p, (array) ($c['prodotti'] ?? []));
-$ids  = array_filter($ids);
-if (!$ids) {
+$ids  = cr_preorder_products(12);
+$ph   = !$ids && CR_PLACEHOLDER; // sezione vuota + modalità sviluppo → card + calendario di esempio
+if (!$ids && !$ph) {
 	return;
 }
 $cards = array_slice($ids, 0, 3);
@@ -34,28 +33,46 @@ $cards = array_slice($ids, 0, 3);
 				<?php endif; ?>
 			</div>
 
-			<div class="grid grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
-				<?php foreach ($cards as $pid) : ?>
-					<?php cr_product_card($pid, ['preordine' => true]); ?>
-				<?php endforeach; ?>
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
+				<?php if ($ph) : ?>
+					<?php for ($k = 0; $k < 3; $k++) cr_ph_card(['in_arrivo' => true]); ?>
+				<?php else : ?>
+					<?php foreach ($cards as $pid) : ?>
+						<?php cr_product_card($pid, ['in_arrivo' => true]); ?>
+					<?php endforeach; ?>
+				<?php endif; ?>
 			</div>
 
 			<?php if (!empty($c['mostra_calendario'])) : ?>
-				<div class="mt-8 border-t border-th-lines">
-					<?php foreach ($ids as $pid) :
-						$product = wc_get_product($pid);
-						if (!$product) continue;
-						$data  = get_field('data_uscita', $pid);
-						$terms = get_the_terms($pid, 'product_cat');
-						$gioco = $terms && !is_wp_error($terms) ? $terms[0]->name : '';
-					?>
-						<a class="grid grid-cols-[80px_1fr] lg:grid-cols-[96px_1fr_auto_auto] gap-3 lg:gap-6 items-baseline py-4 px-2 border-b border-th-line no-underline transition-all hover:bg-th-accsoft" href="<?= esc_url(get_permalink($pid)); ?>">
-							<span class="font-bylon text-sm text-th-acc"><?= esc_html($data ?: '—'); ?></span>
-							<h3 class="font-metropolis font-medium !text-base text-th-ink"><?= esc_html($product->get_name()); ?></h3>
-							<span class="max-lg:hidden font-metropolis text-xxs uppercase tracking-[0.16em] text-th-soft"><?= esc_html($gioco); ?></span>
-							<span class="max-lg:hidden font-metropolis font-semibold text-sm text-th-acc tabular-nums"><?= __('Preordina', 'cardsrift'); ?> — <?= wp_strip_all_tags($product->get_price_html()); ?></span>
-						</a>
-					<?php endforeach; ?>
+				<div class="mt-8 w-fit max-w-full">
+					<?php if ($ph) : ?>
+						<?php
+						// Calendario placeholder (date fittizie in ordine, nomi dal dataset di esempio)
+						$ph_dates = ['26/09', '11/10', '25/10', '08/11', '22/11', '06/12'];
+						foreach (cr_placeholder_dataset() as $j => $d) :
+							$gioco = explode(' · ', $d['chip'])[0];
+						?>
+							<span class="grid grid-cols-[72px_54px_1fr] lg:grid-cols-[120px_88px_1fr] gap-3 lg:gap-5 items-baseline py-4 px-2 w-full border-b border-th-lines last:border-b-0">
+								<span class="font-metropolis font-semibold text-xxs uppercase tracking-[0.14em] text-th-soft truncate"><?= esc_html($gioco); ?></span>
+								<span class="font-bylon text-sm text-th-acc"><?= esc_html($ph_dates[$j % count($ph_dates)]); ?></span>
+								<span class="font-metropolis font-medium !text-base text-th-ink truncate"><?= esc_html($d['name']); ?></span>
+							</span>
+						<?php endforeach; ?>
+					<?php else : ?>
+						<?php foreach ($ids as $pid) :
+							$product = wc_get_product($pid);
+							if (!$product) continue;
+							$data  = cr_format_uscita(get_field('data_uscita', $pid));
+							$terms = get_the_terms($pid, 'product_cat');
+							$gioco = $terms && !is_wp_error($terms) ? $terms[0]->name : '';
+						?>
+							<a class="grid grid-cols-[72px_54px_1fr] lg:grid-cols-[120px_88px_1fr] gap-3 lg:gap-5 items-baseline py-4 px-2 w-full border-b border-th-lines last:border-b-0 no-underline transition-all hover:bg-th-accsoft" href="<?= esc_url(get_permalink($pid)); ?>">
+								<span class="font-metropolis font-semibold text-xxs uppercase tracking-[0.14em] text-th-soft truncate"><?= esc_html($gioco); ?></span>
+								<span class="font-bylon text-sm text-th-acc"><?= esc_html($data ?: '—'); ?></span>
+								<h3 class="font-metropolis font-medium !text-base text-th-ink truncate"><?= esc_html($product->get_name()); ?></h3>
+							</a>
+						<?php endforeach; ?>
+					<?php endif; ?>
 				</div>
 			<?php endif; ?>
 

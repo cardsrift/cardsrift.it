@@ -1,0 +1,382 @@
+- generic [active] [ref=f15e1]:
+  - banner [ref=f15e2]:
+    - generic [ref=f15e3]:
+      - link "CardsRift" [ref=f15e4] [cursor=pointer]:
+        - /url: http://localhost/cardsrift/public/
+        - img "CardsRift" [ref=f15e5]
+      - navigation [ref=f15e6]:
+        - link "Prodotti" [ref=f15e7] [cursor=pointer]:
+          - /url: "#"
+      - generic [ref=f15e8]:
+        - link "Cerca" [ref=f15e9] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public
+        - link "Account" [ref=f15e13] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/my-account/
+        - link "Carrello" [ref=f15e17] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/cart/
+  - generic [ref=f15e22]:
+    - generic [ref=f15e23]:
+      - generic [ref=f15e26]:
+        - generic [ref=f15e27]:
+          - generic [ref=f15e28]: Il tuo portale per il collezionismo
+          - heading "Le carte che cerchi, scelte una per una." [level=1] [ref=f15e29]
+          - paragraph [ref=f15e30]: Sealed, singole e accessori per Pokémon, One Piece e Magic. Le controlliamo una per una e le imballiamo come se restassero da noi.
+          - generic [ref=f15e31]:
+            - link "Esplora il catalogo" [ref=f15e32] [cursor=pointer]:
+              - /url: /shop
+            - link "Come lavoriamo" [ref=f15e33] [cursor=pointer]:
+              - /url: /chi-siamo
+          - generic [ref=f15e34]:
+            - generic [ref=f15e35]: 4,9/5 recensioni verificate
+            - generic [ref=f15e36]: 24/48h spedizione tracciata
+            - generic [ref=f15e37]: Foto reali di ogni singola oltre i 50€
+        - generic [ref=f15e38]:
+          - generic [ref=f15e39]: Novità
+          - generic [ref=f15e41]: "Magic: The Gathering"
+          - generic [ref=f15e43]: Display Box
+      - generic [ref=f15e47]:
+        - generic [ref=f15e48]: Compriamo le tue carte — +10% in credito
+        - generic [ref=f15e49]: Spedizione tracciata — in 24/48h
+        - generic [ref=f15e50]: Appena aggiunto — Night Wanderer Display 30 Buste (JP)
+        - generic [ref=f15e51]: Compriamo le tue carte — +10% in credito
+        - generic [ref=f15e52]: Spedizione tracciata — in 24/48h
+        - generic [ref=f15e53]: Appena aggiunto — Night Wanderer Display 30 Buste (JP)
+        - generic [ref=f15e54]: Compriamo le tue carte — +10% in credito
+        - generic [ref=f15e55]: Spedizione tracciata — in 24/48h
+        - generic [ref=f15e56]: Appena aggiunto — Night Wanderer Display 30 Buste (JP)
+        - generic [ref=f15e57]: Compriamo le tue carte — +10% in credito
+        - generic [ref=f15e58]: Spedizione tracciata — in 24/48h
+        - generic [ref=f15e59]: Appena aggiunto — Night Wanderer Display 30 Buste (JP)
+        - generic [ref=f15e60]: Compriamo le tue carte — +10% in credito
+        - generic [ref=f15e61]: Spedizione tracciata — in 24/48h
+        - generic [ref=f15e62]: Appena aggiunto — Night Wanderer Display 30 Buste (JP)
+        - generic [ref=f15e63]: Compriamo le tue carte — +10% in credito
+        - generic [ref=f15e64]: Spedizione tracciata — in 24/48h
+        - generic [ref=f15e65]: Appena aggiunto — Night Wanderer Display 30 Buste (JP)
+        - generic [ref=f15e66]: Compriamo le tue carte — +10% in credito
+        - generic [ref=f15e67]: Spedizione tracciata — in 24/48h
+        - generic [ref=f15e68]: Appena aggiunto — Night Wanderer Display 30 Buste (JP)
+        - generic [ref=f15e69]: Compriamo le tue carte — +10% in credito
+        - generic [ref=f15e70]: Spedizione tracciata — in 24/48h
+        - generic [ref=f15e71]: Appena aggiunto — Night Wanderer Display 30 Buste (JP)
+        - generic [ref=f15e72]: Compriamo le tue carte — +10% in credito
+        - generic [ref=f15e73]: Spedizione tracciata — in 24/48h
+        - generic [ref=f15e74]: Appena aggiunto — Night Wanderer Display 30 Buste (JP)
+        - generic [ref=f15e75]: Compriamo le tue carte — +10% in credito
+        - generic [ref=f15e76]: Spedizione tracciata — in 24/48h
+        - generic [ref=f15e77]: Appena aggiunto — Night Wanderer Display 30 Buste (JP)
+        - generic [ref=f15e78]: Compriamo le tue carte — +10% in credito
+        - generic [ref=f15e79]: Spedizione tracciata — in 24/48h
+        - generic [ref=f15e80]: Appena aggiunto — Night Wanderer Display 30 Buste (JP)
+        - generic [ref=f15e81]: Compriamo le tue carte — +10% in credito
+        - generic [ref=f15e82]: Spedizione tracciata — in 24/48h
+        - generic [ref=f15e83]: Appena aggiunto — Night Wanderer Display 30 Buste (JP)
+      - generic [ref=f15e86]:
+        - generic [ref=f15e87]:
+          - generic [ref=f15e88]:
+            - generic [ref=f15e89]: Appena arrivati
+            - heading "Aggiunti di recente" [level=2] [ref=f15e90]
+          - link "Tutte le novità →" [ref=f15e91] [cursor=pointer]:
+            - /url: /shop?orderby=date
+        - generic [ref=f15e92]:
+          - link "Night Wanderer Display 30 Buste (JP) Aggiungi al carrello Display box Night Wanderer Display 30 Buste (JP) 45,00 € Disponibile" [ref=f15e93] [cursor=pointer]:
+            - /url: http://localhost/cardsrift/public/product/night-wanderer-display-30-buste-jp/
+            - generic [ref=f15e94]:
+              - img "Night Wanderer Display 30 Buste (JP)" [ref=f15e95]
+              - generic [ref=f15e96]: Aggiungi al carrello
+            - generic [ref=f15e97]:
+              - generic [ref=f15e98]: Display box
+              - generic [ref=f15e99]: Night Wanderer Display 30 Buste (JP)
+              - generic [ref=f15e100]:
+                - generic [ref=f15e101]: 45,00 €
+                - generic [ref=f15e104]: Disponibile
+          - link "Ruler Of The Black Flame Display 30 Buste (JP) Aggiungi al carrello Pokemon Ruler Of The Black Flame Display 30 Buste (JP) 90,00 € Ultimi 2" [ref=f15e105] [cursor=pointer]:
+            - /url: http://localhost/cardsrift/public/product/ruler-of-the-black-flame-display-30-buste-jp/
+            - generic [ref=f15e106]:
+              - img "Ruler Of The Black Flame Display 30 Buste (JP)" [ref=f15e107]
+              - generic [ref=f15e108]: Aggiungi al carrello
+            - generic [ref=f15e109]:
+              - generic [ref=f15e110]: Pokemon
+              - generic [ref=f15e111]: Ruler Of The Black Flame Display 30 Buste (JP)
+              - generic [ref=f15e112]:
+                - generic [ref=f15e113]: 90,00 €
+                - generic [ref=f15e116]: Ultimi 2
+          - link "Heatwave Arena (JAP) – Display Booster Aggiungi al carrello Novità Heatwave Arena (JAP) – Display Booster 90,00 € Ultimi 3" [ref=f15e117] [cursor=pointer]:
+            - /url: http://localhost/cardsrift/public/product/heatwave-arena-jap-display-booster/
+            - generic [ref=f15e118]:
+              - img "Heatwave Arena (JAP) – Display Booster" [ref=f15e119]
+              - generic [ref=f15e120]: Aggiungi al carrello
+            - generic [ref=f15e121]:
+              - generic [ref=f15e122]: Novità
+              - generic [ref=f15e123]: Heatwave Arena (JAP) – Display Booster
+              - generic [ref=f15e124]:
+                - generic [ref=f15e125]: 90,00 €
+                - generic [ref=f15e128]: Ultimi 3
+          - 'link "Final Fantasy (ENG) - Play Booster Box Aggiungi al carrello Magic: The Gathering Final Fantasy (ENG) - Play Booster Box 170,00 € Disponibile" [ref=f15e129] [cursor=pointer]':
+            - /url: http://localhost/cardsrift/public/product/final-fantasy-eng-play-booster-box/
+            - generic [ref=f15e130]:
+              - img "Final Fantasy (ENG) - Play Booster Box" [ref=f15e131]
+              - generic [ref=f15e132]: Aggiungi al carrello
+            - generic [ref=f15e133]:
+              - generic [ref=f15e134]: "Magic: The Gathering"
+              - generic [ref=f15e135]: Final Fantasy (ENG) - Play Booster Box
+              - generic [ref=f15e136]:
+                - generic [ref=f15e137]: 170,00 €
+                - generic [ref=f15e140]: Disponibile
+      - generic [ref=f15e143]:
+        - generic [ref=f15e144]:
+          - generic [ref=f15e145]:
+            - generic [ref=f15e146]: Occasioni
+            - heading "In offerta questa settimana" [level=2] [ref=f15e147]
+          - link "Tutte le offerte →" [ref=f15e148] [cursor=pointer]:
+            - /url: /shop
+        - generic [ref=f15e149]:
+          - generic [ref=f15e153]:
+            - generic [ref=f15e154]: Pokémon · IT
+            - generic [ref=f15e155]: Pokémon 151 · Display
+            - generic [ref=f15e156]:
+              - generic [ref=f15e157]: € 89,90
+              - generic [ref=f15e158]: Disponibile
+          - generic [ref=f15e162]:
+            - generic [ref=f15e163]: One Piece · JP
+            - generic [ref=f15e164]: One Piece OP-09 · Box
+            - generic [ref=f15e165]:
+              - generic [ref=f15e166]: € 109,00
+              - generic [ref=f15e167]: Disponibile
+          - generic [ref=f15e168]:
+            - generic [ref=f15e169]: −15%
+            - generic [ref=f15e172]:
+              - generic [ref=f15e173]: Magic · EN
+              - generic [ref=f15e174]: MTG Bloomburrow · Bundle
+              - generic [ref=f15e175]:
+                - generic [ref=f15e176]: € 44,90
+                - generic [ref=f15e177]: Disponibile
+          - generic [ref=f15e181]:
+            - generic [ref=f15e182]: Pokémon · JP
+            - generic [ref=f15e183]: Shiny Treasure ex · Box
+            - generic [ref=f15e184]:
+              - generic [ref=f15e185]: € 74,50
+              - generic [ref=f15e186]: Disponibile
+      - generic [ref=f15e189]:
+        - generic [ref=f15e190]:
+          - generic [ref=f15e191]:
+            - generic [ref=f15e192]: Carte singole
+            - heading "Sfoglia il raccoglitore" [level=2] [ref=f15e193]
+          - link "Apri il raccoglitore →" [ref=f15e194] [cursor=pointer]:
+            - /url: /carte-singole
+        - generic [ref=f15e196]:
+          - generic [ref=f15e197]:
+            - generic [ref=f15e200]:
+              - generic [ref=f15e201]:
+                - generic [ref=f15e202]: MP
+                - generic [ref=f15e203]: IT
+              - generic [ref=f15e204]: Charizard ex · Special Art
+              - generic [ref=f15e205]: € 129,00
+            - generic [ref=f15e206]: Vedi carta
+          - generic [ref=f15e207]:
+            - generic [ref=f15e210]:
+              - generic [ref=f15e211]:
+                - generic [ref=f15e212]: NM
+                - generic [ref=f15e213]: IT
+              - generic [ref=f15e214]: Luffy Leader · Alternate Art
+              - generic [ref=f15e215]: € 34,90
+            - generic [ref=f15e216]: Vedi carta
+          - generic [ref=f15e217]:
+            - generic [ref=f15e220]:
+              - generic [ref=f15e221]:
+                - generic [ref=f15e222]: LP
+                - generic [ref=f15e223]: IT
+              - generic [ref=f15e224]: Pokémon 151 · Display
+              - generic [ref=f15e225]: € 89,90
+            - generic [ref=f15e226]: Vedi carta
+          - generic [ref=f15e227]:
+            - generic [ref=f15e230]:
+              - generic [ref=f15e231]:
+                - generic [ref=f15e232]: MP
+                - generic [ref=f15e233]: IT
+              - generic [ref=f15e234]: One Piece OP-09 · Box
+              - generic [ref=f15e235]: € 109,00
+            - generic [ref=f15e236]: Vedi carta
+          - generic [ref=f15e237]:
+            - generic [ref=f15e240]:
+              - generic [ref=f15e241]:
+                - generic [ref=f15e242]: NM
+                - generic [ref=f15e243]: IT
+              - generic [ref=f15e244]: MTG Bloomburrow · Bundle
+              - generic [ref=f15e245]: € 44,90
+            - generic [ref=f15e246]: Vedi carta
+          - generic [ref=f15e247]:
+            - generic [ref=f15e250]:
+              - generic [ref=f15e251]:
+                - generic [ref=f15e252]: LP
+                - generic [ref=f15e253]: IT
+              - generic [ref=f15e254]: Shiny Treasure ex · Box
+              - generic [ref=f15e255]: € 74,50
+            - generic [ref=f15e256]: Vedi carta
+      - generic [ref=f15e259]:
+        - generic [ref=f15e261]:
+          - generic [ref=f15e262]: Prossime uscite
+          - heading "In arrivo prossimamente" [level=2] [ref=f15e263]
+        - generic [ref=f15e264]:
+          - generic [ref=f15e265]:
+            - generic [ref=f15e266]: In arrivo
+            - generic [ref=f15e269]:
+              - generic [ref=f15e270]: Pokémon · IT
+              - generic [ref=f15e271]: Charizard ex · Special Art
+              - generic [ref=f15e272]:
+                - generic [ref=f15e273]: € 129,00
+                - generic [ref=f15e274]: Esce il 26/09
+          - generic [ref=f15e275]:
+            - generic [ref=f15e276]: In arrivo
+            - generic [ref=f15e279]:
+              - generic [ref=f15e280]: One Piece · EN
+              - generic [ref=f15e281]: Luffy Leader · Alternate Art
+              - generic [ref=f15e282]:
+                - generic [ref=f15e283]: € 34,90
+                - generic [ref=f15e284]: Esce il 26/09
+          - generic [ref=f15e285]:
+            - generic [ref=f15e286]: In arrivo
+            - generic [ref=f15e289]:
+              - generic [ref=f15e290]: Pokémon · IT
+              - generic [ref=f15e291]: Pokémon 151 · Display
+              - generic [ref=f15e292]:
+                - generic [ref=f15e293]: € 89,90
+                - generic [ref=f15e294]: Esce il 26/09
+        - generic [ref=f15e295]:
+          - generic [ref=f15e296]:
+            - generic [ref=f15e297]: Pokémon
+            - generic [ref=f15e298]: 26/09
+            - generic [ref=f15e299]: Pokémon 151 · Display
+          - generic [ref=f15e300]:
+            - generic [ref=f15e301]: One Piece
+            - generic [ref=f15e302]: 11/10
+            - generic [ref=f15e303]: One Piece OP-09 · Box
+          - generic [ref=f15e304]:
+            - generic [ref=f15e305]: Magic
+            - generic [ref=f15e306]: 25/10
+            - generic [ref=f15e307]: MTG Bloomburrow · Bundle
+          - generic [ref=f15e308]:
+            - generic [ref=f15e309]: Pokémon
+            - generic [ref=f15e310]: 08/11
+            - generic [ref=f15e311]: Shiny Treasure ex · Box
+          - generic [ref=f15e312]:
+            - generic [ref=f15e313]: Pokémon
+            - generic [ref=f15e314]: 22/11
+            - generic [ref=f15e315]: Charizard ex · Special Art
+          - generic [ref=f15e316]:
+            - generic [ref=f15e317]: One Piece
+            - generic [ref=f15e318]: 06/12
+            - generic [ref=f15e319]: Luffy Leader · Alternate Art
+      - generic [ref=f15e322]:
+        - generic [ref=f15e323]:
+          - generic [ref=f15e324]: +10%
+          - generic [ref=f15e325]: in credito negozio
+        - generic [ref=f15e326]:
+          - generic [ref=f15e327]: Compriamo le tue carte
+          - heading "Le tue doppie valgono. Da noi diventano credito." [level=2] [ref=f15e328]
+          - paragraph [ref=f15e329]: "È così che ci riforniamo di singole: dalle collezioni di chi, come te, ne ha qualcuna di troppo. Valutazione trasparente sui prezzi di Cardmarket, pagamento tracciato in 24/48h."
+          - link "Valuta le tue carte" [ref=f15e330] [cursor=pointer]:
+            - /url: /compriamo-le-tue-carte
+          - generic [ref=f15e331]:
+            - generic [ref=f15e332]: Conteggio in foto e video, sempre
+            - generic [ref=f15e335]: Reso gratis se rifiuti l’offerta
+            - generic [ref=f15e338]: Pagamento tracciato, oppure +10% in credito
+      - generic [ref=f15e343]:
+        - generic [ref=f15e344]: Il progetto
+        - generic [ref=f15e345]: "Siamo collezionisti prima che negozianti. CardsRift nasce per essere il portale che avremmo voluto trovare noi: carte controllate una per una, condizioni oneste, e qualcuno che risponde davvero dall’altra parte. Niente foto finte, niente sorprese all’apertura — solo le carte che cerchi, trattate come se restassero nella nostra collezione."
+        - generic [ref=f15e346]:
+          - generic [ref=f15e347]:
+            - generic [ref=f15e348]: 4,9★
+            - text: su 120 recensioni
+          - generic [ref=f15e349]:
+            - generic [ref=f15e350]: 3.000+
+            - text: ordini spediti
+          - generic [ref=f15e351]:
+            - generic [ref=f15e352]: "2019"
+            - text: dal primo pacco
+        - link "Chi siamo" [ref=f15e353] [cursor=pointer]:
+          - /url: /chi-siamo
+      - generic [ref=f15e356]:
+        - generic [ref=f15e357]: Community
+        - heading "Il canale dove succede prima" [level=2] [ref=f15e358]
+        - paragraph [ref=f15e359]: Restock, drop e chicche li annunciamo lì prima che altrove — con qualche prezzo che sul sito non trovi. Si entra gratis, e senza spam.
+        - link "Entra nel canale" [ref=f15e360] [cursor=pointer]:
+          - /url: https://t.me/cardsrift
+      - generic [ref=f15e364]:
+        - generic [ref=f15e365]: Newsletter
+        - heading "−5% sul tuo primo ordine" [level=2] [ref=f15e366]
+        - paragraph [ref=f15e367]: "Una mail solo quando arriva qualcosa che vale: le uscite, i restock, e lo sconto di benvenuto appena ti iscrivi."
+        - generic [ref=f15e368]:
+          - textbox "Email" [ref=f15e369]:
+            - /placeholder: La tua email
+          - button "Iscriviti" [ref=f15e370] [cursor=pointer]
+        - paragraph [ref=f15e371]: Niente spam. Ti cancelli quando vuoi, con un clic.
+    - contentinfo [ref=f15e372]:
+      - generic [ref=f15e374]:
+        - generic [ref=f15e375]:
+          - generic [ref=f15e376]:
+            - link "CardsRift" [ref=f15e377] [cursor=pointer]:
+              - /url: http://localhost/cardsrift/public/
+              - img "CardsRift" [ref=f15e378]
+            - paragraph [ref=f15e379]: "Il tuo portale per il collezionismo: carte controllate una a una, protette e spedite in 24/48h."
+            - generic [ref=f15e380]:
+              - link "Instagram" [ref=f15e381] [cursor=pointer]:
+                - /url: https://www.instagram.com/cardsrift/
+              - link "Telegram" [ref=f15e386] [cursor=pointer]:
+                - /url: https://t.me/cardsrift
+          - generic [ref=f15e389]:
+            - heading "Il negozio" [level=4] [ref=f15e390]
+            - list [ref=f15e391]:
+              - listitem [ref=f15e392]:
+                - link "Il progetto" [ref=f15e393] [cursor=pointer]:
+                  - /url: /chi-siamo
+              - listitem [ref=f15e394]:
+                - link "Come imballiamo" [ref=f15e395] [cursor=pointer]:
+                  - /url: /come-imballiamo
+              - listitem [ref=f15e396]:
+                - link "Recensioni" [ref=f15e397] [cursor=pointer]:
+                  - /url: /recensioni
+              - listitem [ref=f15e398]:
+                - link "Community Telegram" [ref=f15e399] [cursor=pointer]:
+                  - /url: https://t.me/cardsrift
+          - generic [ref=f15e400]:
+            - heading "Assistenza" [level=4] [ref=f15e401]
+            - list [ref=f15e402]:
+              - listitem [ref=f15e403]:
+                - link "Spedizioni e resi" [ref=f15e404] [cursor=pointer]:
+                  - /url: /spedizioni-e-resi
+              - listitem [ref=f15e405]:
+                - link "Guida alle condizioni" [ref=f15e406] [cursor=pointer]:
+                  - /url: /guida-alle-condizioni
+              - listitem [ref=f15e407]:
+                - link "Domande frequenti" [ref=f15e408] [cursor=pointer]:
+                  - /url: /faq
+              - listitem [ref=f15e409]:
+                - link "Contatti" [ref=f15e410] [cursor=pointer]:
+                  - /url: /contatti
+          - generic [ref=f15e411]:
+            - heading "Contatti" [level=4] [ref=f15e412]
+            - list [ref=f15e413]:
+              - listitem [ref=f15e414]:
+                - link "cardsrift@gmail.com" [ref=f15e415] [cursor=pointer]:
+                  - /url: mailto:cardsrift@gmail.com
+              - listitem [ref=f15e416]: Lentate sul Seveso (MB)
+              - listitem [ref=f15e417]: P.IVA 13934020960
+        - generic [ref=f15e418]:
+          - generic [ref=f15e419]:
+            - generic [ref=f15e420]: © 2026 CardsRift
+            - generic [ref=f15e421]: ·
+            - link "Privacy" [ref=f15e422] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045
+            - generic [ref=f15e423]: ·
+            - link "Cookie" [ref=f15e424] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045/cookie-policy
+          - list [ref=f15e425]:
+            - listitem [ref=f15e426]:
+              - img "Visa" [ref=f15e427]
+            - listitem [ref=f15e428]:
+              - img "Mastercard" [ref=f15e429]
+            - listitem [ref=f15e430]:
+              - img "PayPal" [ref=f15e431]
+  - button "Le tue preferenze relative al consenso per le tecnologie di tracciamento" [ref=f15e432] [cursor=pointer]
+  - status [ref=f15e434]

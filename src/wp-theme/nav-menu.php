@@ -34,7 +34,10 @@
 								</a>
 								</li>
 							<?php else : ?>
-								<?php $menu_image = get_field('category_image', $submenu_hamburger['ID'])['url']; ?>
+								<?php
+									$category_image = get_field('category_image', $submenu_hamburger['ID']);
+									$menu_image = is_array($category_image) ? ($category_image['url'] ?? '') : (string) $category_image;
+								?>
 									<li class="menuItemWChild flex flex-col justify-center items-center max-lg:mx-auto lg:px-10 relative max-lg:h-full lg:h-[120px] w-full max-lg:w-1/2 lg:w-2/6 <?= $class ?'text-purple': 'text-black'; ?> px-3">
 										
 									<a class="bg-white rounded-[7px] lg:rounded-[16px] max-lg:mb-6 lg:my-5 py-1 px-2 tb:!py-4 tb:!px-4 lg:px-8 shadow-black shadow-md w-[300px] lg:!h-[120px] flex justify-center items-center lg:border-[4px] border-black border-solid"  href="<?= $submenu_hamburger['url']; ?>">
@@ -61,7 +64,7 @@
 				<li class="max-lg:mt-auto lg:flex lg:items-center">
 					<ul class="flex gap-5 justify-center">
 						<li class="menuItemflex text-center  h-full max-lg:max-w-1/2 max-lg:h-fit text-black">
-							<a class="flex w-full h-full justify-center" href="<?php echo get_field('pagina_carrello', 'option'); ?>">
+							<a class="flex w-full h-full justify-center" href="<?php echo esc_url(function_exists('wc_get_cart_url') ? wc_get_cart_url() : home_url('/')); ?>">
 								<svg class="h-10 w-10">
 									<use xlink:href="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/sprite/sprite.svg#cart"></use>
 								</svg>
@@ -70,7 +73,7 @@
 							</a>
 						</li>
 						<li class="menuItemflex text-center  h-full max-lg:max-w-1/2 max-lg:h-fit text-black">
-							<a class="flex justify-center w-full h-full" href="<?php echo get_field('pagina_account', 'option'); ?>">
+							<a class="flex justify-center w-full h-full" href="<?php echo esc_url(function_exists('wc_get_page_permalink') ? wc_get_page_permalink('myaccount') : home_url('/')); ?>">
 								<svg class="h-10 w-10">
 									<use xlink:href="<?php echo esc_url(get_template_directory_uri()); ?>/assets/images/sprite/sprite.svg#profile"></use>
 								</svg>

@@ -1,0 +1,129 @@
+- generic [active] [ref=f17e1]:
+  - banner [ref=f17e2]:
+    - generic [ref=f17e3]:
+      - link "CardsRift" [ref=f17e4] [cursor=pointer]:
+        - /url: http://localhost/cardsrift/public/
+        - img "CardsRift" [ref=f17e5]
+      - navigation [ref=f17e6]:
+        - link "Prodotti" [ref=f17e7] [cursor=pointer]:
+          - /url: "#"
+      - generic [ref=f17e8]:
+        - link "Cerca" [ref=f17e9] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public
+        - link "Account" [ref=f17e13] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/my-account/
+        - link "Carrello" [ref=f17e17] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/cart/
+  - generic [ref=f17e22]:
+    - generic [ref=f17e23]:
+      - generic [ref=f17e26]:
+        - generic [ref=f17e27]: Chi c’è dietro
+        - heading "Un portale tenuto da collezionisti" [level=1] [ref=f17e28]
+        - paragraph [ref=f17e29]: "Non un magazzino anonimo: qualcuno che le carte le apre, le controlla e le imballa a mano — perché lo fa anche per sé."
+      - generic [ref=f17e32]:
+        - generic [ref=f17e33]: Perché CardsRift
+        - generic [ref=f17e34]: Le tre cose che ci facevano diffidare degli altri shop — carte gonfiate di condizione, foto che non erano quelle del pezzo vero, pacchi arrivati piegati — sono le tre cose che qui non succedono. Controlliamo ogni carta una per una, fotografiamo davvero le singole di valore, e imballiamo ogni ordine come se dovesse arrivare a noi.
+        - generic [ref=f17e35]:
+          - generic [ref=f17e36]:
+            - generic [ref=f17e37]: 4,9★
+            - text: su 120 recensioni
+          - generic [ref=f17e38]:
+            - generic [ref=f17e39]: 3.000+
+            - text: ordini spediti
+          - generic [ref=f17e40]:
+            - generic [ref=f17e41]: "2019"
+            - text: dal primo pacco
+      - generic [ref=f17e44]:
+        - generic [ref=f17e45]:
+          - generic [ref=f17e46]: Come stiamo al mondo
+          - heading "Tre cose su cui non transigiamo" [level=2] [ref=f17e47]
+        - generic [ref=f17e48]:
+          - generic [ref=f17e49]:
+            - heading "Condizioni oneste" [level=3] [ref=f17e50]
+            - paragraph [ref=f17e51]: Se una carta è LP la chiamiamo LP. Meglio una vendita in meno che un cliente deluso.
+          - generic [ref=f17e52]:
+            - heading "Persone, non ticket" [level=3] [ref=f17e53]
+            - paragraph [ref=f17e54]: Ci scrivi e ti risponde chi il negozio lo tiene davvero.
+          - generic [ref=f17e55]:
+            - heading "Un portale, non un supermercato" [level=3] [ref=f17e56]
+            - paragraph [ref=f17e57]: "Catalogo curato e piccolo: quello che teniamo, lo teniamo perché ci crediamo."
+      - generic [ref=f17e60]:
+        - generic [ref=f17e61]:
+          - generic [ref=f17e62]: Nel pacco
+          - heading "Come imballiamo" [level=2] [ref=f17e63]
+        - paragraph [ref=f17e65]: Sleeve, top loader o team bag secondo il valore, cartoncino di rinforzo, busta o scatola rigida. Foto del contenuto prima di chiudere, su richiesta. Se qualcosa arriva rovinato, lo risolviamo — punto.
+      - generic [ref=f17e68]:
+        - generic [ref=f17e69]: Community
+        - heading "Il canale dove succede prima" [level=2] [ref=f17e70]
+        - paragraph [ref=f17e71]: Restock, drop e chicche li annunciamo lì prima che altrove — con qualche prezzo che sul sito non trovi. Si entra gratis, e senza spam.
+        - link "Entra nel canale" [ref=f17e72] [cursor=pointer]:
+          - /url: https://t.me/cardsrift
+    - contentinfo [ref=f17e73]:
+      - generic [ref=f17e75]:
+        - generic [ref=f17e76]:
+          - generic [ref=f17e77]:
+            - link "CardsRift" [ref=f17e78] [cursor=pointer]:
+              - /url: http://localhost/cardsrift/public/
+              - img "CardsRift" [ref=f17e79]
+            - paragraph [ref=f17e80]: "Il tuo portale per il collezionismo: carte controllate una a una, protette e spedite in 24/48h."
+            - generic [ref=f17e81]:
+              - link "Instagram" [ref=f17e82] [cursor=pointer]:
+                - /url: https://www.instagram.com/cardsrift/
+              - link "Telegram" [ref=f17e87] [cursor=pointer]:
+                - /url: https://t.me/cardsrift
+          - generic [ref=f17e90]:
+            - heading "Il negozio" [level=4] [ref=f17e91]
+            - list [ref=f17e92]:
+              - listitem [ref=f17e93]:
+                - link "Il progetto" [ref=f17e94] [cursor=pointer]:
+                  - /url: /chi-siamo
+              - listitem [ref=f17e95]:
+                - link "Come imballiamo" [ref=f17e96] [cursor=pointer]:
+                  - /url: /come-imballiamo
+              - listitem [ref=f17e97]:
+                - link "Recensioni" [ref=f17e98] [cursor=pointer]:
+                  - /url: /recensioni
+              - listitem [ref=f17e99]:
+                - link "Community Telegram" [ref=f17e100] [cursor=pointer]:
+                  - /url: https://t.me/cardsrift
+          - generic [ref=f17e101]:
+            - heading "Assistenza" [level=4] [ref=f17e102]
+            - list [ref=f17e103]:
+              - listitem [ref=f17e104]:
+                - link "Spedizioni e resi" [ref=f17e105] [cursor=pointer]:
+                  - /url: /spedizioni-e-resi
+              - listitem [ref=f17e106]:
+                - link "Guida alle condizioni" [ref=f17e107] [cursor=pointer]:
+                  - /url: /guida-alle-condizioni
+              - listitem [ref=f17e108]:
+                - link "Domande frequenti" [ref=f17e109] [cursor=pointer]:
+                  - /url: /faq
+              - listitem [ref=f17e110]:
+                - link "Contatti" [ref=f17e111] [cursor=pointer]:
+                  - /url: /contatti
+          - generic [ref=f17e112]:
+            - heading "Contatti" [level=4] [ref=f17e113]
+            - list [ref=f17e114]:
+              - listitem [ref=f17e115]:
+                - link "cardsrift@gmail.com" [ref=f17e116] [cursor=pointer]:
+                  - /url: mailto:cardsrift@gmail.com
+              - listitem [ref=f17e117]: Lentate sul Seveso (MB)
+              - listitem [ref=f17e118]: P.IVA 13934020960
+        - generic [ref=f17e119]:
+          - generic [ref=f17e120]:
+            - generic [ref=f17e121]: © 2026 CardsRift
+            - generic [ref=f17e122]: ·
+            - link "Privacy" [ref=f17e123] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045
+            - generic [ref=f17e124]: ·
+            - link "Cookie" [ref=f17e125] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045/cookie-policy
+          - list [ref=f17e126]:
+            - listitem [ref=f17e127]:
+              - img "Visa" [ref=f17e128]
+            - listitem [ref=f17e129]:
+              - img "Mastercard" [ref=f17e130]
+            - listitem [ref=f17e131]:
+              - img "PayPal" [ref=f17e132]
+  - status [ref=f17e133]
+  - button "Le tue preferenze relative al consenso per le tecnologie di tracciamento" [ref=f17e134] [cursor=pointer]

@@ -1,0 +1,209 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "CardsRift" [ref=e4] [cursor=pointer]:
+        - /url: http://localhost/cardsrift/public/
+        - img "CardsRift" [ref=e5]
+      - navigation [ref=e6]:
+        - link "Prodotti" [ref=e7] [cursor=pointer]:
+          - /url: "#"
+      - generic [ref=e8]:
+        - link "Cerca" [ref=e9] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public
+        - link "Account" [ref=e13] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/my-account/
+        - link "Carrello" [ref=e17] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/cart/
+  - generic [ref=e22]:
+    - generic [ref=e23]:
+      - generic [ref=e26]:
+        - generic [ref=e27]:
+          - generic [ref=e28]: Il tuo portale per il collezionismo
+          - heading "Le carte che cerchi, scelte una per una." [level=1] [ref=e29]
+          - paragraph [ref=e30]: Sealed, singole e accessori per Pokémon, One Piece e Magic. Le controlliamo una per una e le imballiamo come se restassero da noi.
+          - generic [ref=e31]:
+            - link "Esplora il catalogo" [ref=e32] [cursor=pointer]:
+              - /url: /shop
+            - link "Come lavoriamo" [ref=e33] [cursor=pointer]:
+              - /url: /chi-siamo
+          - generic [ref=e34]:
+            - generic [ref=e35]: 4,9/5 recensioni verificate
+            - generic [ref=e36]: 24/48h spedizione tracciata
+            - generic [ref=e37]: Foto reali di ogni singola oltre i 50€
+        - generic [ref=e38]:
+          - generic [ref=e39]: Novità
+          - generic [ref=e41]: "Magic: The Gathering"
+          - generic [ref=e43]: Display Box
+      - generic [ref=e47]:
+        - generic [ref=e48]: Compriamo le tue carte — +10% in credito
+        - generic [ref=e49]: Spedizione tracciata — in 24/48h
+        - generic [ref=e50]: Appena aggiunto — Night Wanderer Display 30 Buste (JP)
+        - generic [ref=e51]: Compriamo le tue carte — +10% in credito
+        - generic [ref=e52]: Spedizione tracciata — in 24/48h
+        - generic [ref=e53]: Appena aggiunto — Night Wanderer Display 30 Buste (JP)
+      - generic [ref=e56]:
+        - generic [ref=e57]:
+          - generic [ref=e58]:
+            - generic [ref=e59]: Appena arrivati
+            - heading "Aggiunti di recente" [level=2] [ref=e60]
+          - link "Tutte le novità →" [ref=e61] [cursor=pointer]:
+            - /url: /shop?orderby=date
+        - generic [ref=e62]:
+          - link "Night Wanderer Display 30 Buste (JP) Aggiungi al carrello Display box Night Wanderer Display 30 Buste (JP) 45,00 € Disponibile" [ref=e63] [cursor=pointer]:
+            - /url: http://localhost/cardsrift/public/product/night-wanderer-display-30-buste-jp/
+            - generic [ref=e64]:
+              - img "Night Wanderer Display 30 Buste (JP)" [ref=e65]
+              - generic [ref=e66]: Aggiungi al carrello
+            - generic [ref=e67]:
+              - generic [ref=e68]: Display box
+              - generic [ref=e69]: Night Wanderer Display 30 Buste (JP)
+              - generic [ref=e70]:
+                - generic [ref=e71]: 45,00 €
+                - generic [ref=e74]: Disponibile
+          - link "Ruler Of The Black Flame Display 30 Buste (JP) Aggiungi al carrello Pokemon Ruler Of The Black Flame Display 30 Buste (JP) 90,00 € Ultimi 2" [ref=e75] [cursor=pointer]:
+            - /url: http://localhost/cardsrift/public/product/ruler-of-the-black-flame-display-30-buste-jp/
+            - generic [ref=e76]:
+              - img "Ruler Of The Black Flame Display 30 Buste (JP)" [ref=e77]
+              - generic [ref=e78]: Aggiungi al carrello
+            - generic [ref=e79]:
+              - generic [ref=e80]: Pokemon
+              - generic [ref=e81]: Ruler Of The Black Flame Display 30 Buste (JP)
+              - generic [ref=e82]:
+                - generic [ref=e83]: 90,00 €
+                - generic [ref=e86]: Ultimi 2
+          - link "Heatwave Arena (JAP) – Display Booster Aggiungi al carrello Novità Heatwave Arena (JAP) – Display Booster 90,00 € Ultimi 3" [ref=e87] [cursor=pointer]:
+            - /url: http://localhost/cardsrift/public/product/heatwave-arena-jap-display-booster/
+            - generic [ref=e88]:
+              - img "Heatwave Arena (JAP) – Display Booster" [ref=e89]
+              - generic [ref=e90]: Aggiungi al carrello
+            - generic [ref=e91]:
+              - generic [ref=e92]: Novità
+              - generic [ref=e93]: Heatwave Arena (JAP) – Display Booster
+              - generic [ref=e94]:
+                - generic [ref=e95]: 90,00 €
+                - generic [ref=e98]: Ultimi 3
+          - 'link "Final Fantasy (ENG) - Play Booster Box Aggiungi al carrello Magic: The Gathering Final Fantasy (ENG) - Play Booster Box 170,00 € Disponibile" [ref=e99] [cursor=pointer]':
+            - /url: http://localhost/cardsrift/public/product/final-fantasy-eng-play-booster-box/
+            - generic [ref=e100]:
+              - img "Final Fantasy (ENG) - Play Booster Box" [ref=e101]
+              - generic [ref=e102]: Aggiungi al carrello
+            - generic [ref=e103]:
+              - generic [ref=e104]: "Magic: The Gathering"
+              - generic [ref=e105]: Final Fantasy (ENG) - Play Booster Box
+              - generic [ref=e106]:
+                - generic [ref=e107]: 170,00 €
+                - generic [ref=e110]: Disponibile
+      - generic [ref=e113]:
+        - generic [ref=e114]:
+          - generic [ref=e115]: +10%
+          - generic [ref=e116]: in credito negozio
+        - generic [ref=e117]:
+          - generic [ref=e118]: Compriamo le tue carte
+          - heading "Le tue doppie valgono. Da noi diventano credito." [level=2] [ref=e119]
+          - paragraph [ref=e120]: "È così che ci riforniamo di singole: dalle collezioni di chi, come te, ne ha qualcuna di troppo. Valutazione trasparente sui prezzi di Cardmarket, pagamento tracciato in 24/48h."
+          - link "Valuta le tue carte" [ref=e121] [cursor=pointer]:
+            - /url: /compriamo-le-tue-carte
+          - generic [ref=e122]:
+            - generic [ref=e123]: Conteggio in foto e video, sempre
+            - generic [ref=e126]: Reso gratis se rifiuti l’offerta
+            - generic [ref=e129]: Pagamento tracciato, oppure +10% in credito
+      - generic [ref=e134]:
+        - generic [ref=e135]: Il progetto
+        - generic [ref=e136]: "Siamo collezionisti prima che negozianti. CardsRift nasce per essere il portale che avremmo voluto trovare noi: carte controllate una per una, condizioni oneste, e qualcuno che risponde davvero dall’altra parte. Niente foto finte, niente sorprese all’apertura — solo le carte che cerchi, trattate come se restassero nella nostra collezione."
+        - generic [ref=e137]:
+          - generic [ref=e138]:
+            - generic [ref=e139]: 4,9★
+            - text: su 120 recensioni
+          - generic [ref=e140]:
+            - generic [ref=e141]: 3.000+
+            - text: ordini spediti
+          - generic [ref=e142]:
+            - generic [ref=e143]: "2019"
+            - text: dal primo pacco
+        - link "Chi siamo" [ref=e144] [cursor=pointer]:
+          - /url: /chi-siamo
+      - generic [ref=e147]:
+        - generic [ref=e148]:
+          - generic [ref=e149]: Community
+          - heading "Il canale dove succede prima" [level=2] [ref=e150]
+          - paragraph [ref=e151]: Restock, drop e chicche li annunciamo lì prima che altrove — con qualche prezzo che sul sito non trovi. Si entra gratis, e senza spam.
+        - link "Entra nel canale" [ref=e152] [cursor=pointer]:
+          - /url: https://t.me/cardsrift
+      - generic [ref=e156]:
+        - generic [ref=e157]: Newsletter
+        - heading "−5% sul tuo primo ordine" [level=2] [ref=e158]
+        - paragraph [ref=e159]: "Una mail solo quando arriva qualcosa che vale: le uscite, i restock, e lo sconto di benvenuto appena ti iscrivi."
+        - generic [ref=e160]:
+          - textbox "Email" [ref=e161]:
+            - /placeholder: La tua email
+          - button "Iscriviti" [ref=e162] [cursor=pointer]
+        - paragraph [ref=e163]: Niente spam. Ti cancelli quando vuoi, con un clic.
+    - contentinfo [ref=e164]:
+      - generic [ref=e166]:
+        - generic [ref=e167]:
+          - generic [ref=e168]:
+            - link "CardsRift" [ref=e169] [cursor=pointer]:
+              - /url: http://localhost/cardsrift/public/
+              - img "CardsRift" [ref=e170]
+            - paragraph [ref=e171]: "Il tuo portale per il collezionismo: carte controllate una a una, protette e spedite in 24/48h."
+            - generic [ref=e172]:
+              - link "Instagram" [ref=e173] [cursor=pointer]:
+                - /url: https://www.instagram.com/cardsrift/
+              - link "Telegram" [ref=e178] [cursor=pointer]:
+                - /url: https://t.me/cardsrift
+          - generic [ref=e181]:
+            - heading "Il negozio" [level=4] [ref=e182]
+            - list [ref=e183]:
+              - listitem [ref=e184]:
+                - link "Il progetto" [ref=e185] [cursor=pointer]:
+                  - /url: /chi-siamo
+              - listitem [ref=e186]:
+                - link "Come imballiamo" [ref=e187] [cursor=pointer]:
+                  - /url: /come-imballiamo
+              - listitem [ref=e188]:
+                - link "Recensioni" [ref=e189] [cursor=pointer]:
+                  - /url: /recensioni
+              - listitem [ref=e190]:
+                - link "Community Telegram" [ref=e191] [cursor=pointer]:
+                  - /url: https://t.me/cardsrift
+          - generic [ref=e192]:
+            - heading "Assistenza" [level=4] [ref=e193]
+            - list [ref=e194]:
+              - listitem [ref=e195]:
+                - link "Spedizioni e resi" [ref=e196] [cursor=pointer]:
+                  - /url: /spedizioni-e-resi
+              - listitem [ref=e197]:
+                - link "Guida alle condizioni" [ref=e198] [cursor=pointer]:
+                  - /url: /guida-alle-condizioni
+              - listitem [ref=e199]:
+                - link "Domande frequenti" [ref=e200] [cursor=pointer]:
+                  - /url: /faq
+              - listitem [ref=e201]:
+                - link "Contatti" [ref=e202] [cursor=pointer]:
+                  - /url: /contatti
+          - generic [ref=e203]:
+            - heading "Contatti" [level=4] [ref=e204]
+            - list [ref=e205]:
+              - listitem [ref=e206]:
+                - link "cardsrift@gmail.com" [ref=e207] [cursor=pointer]:
+                  - /url: mailto:cardsrift@gmail.com
+              - listitem [ref=e208]: Lentate sul Seveso (MB)
+              - listitem [ref=e209]: P.IVA 13934020960
+        - generic [ref=e210]:
+          - generic [ref=e211]:
+            - generic [ref=e212]: © 2026 CardsRift
+            - generic [ref=e213]: ·
+            - link "Privacy" [ref=e214] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045
+            - generic [ref=e215]: ·
+            - link "Cookie" [ref=e216] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045/cookie-policy
+          - list [ref=e217]:
+            - listitem [ref=e218]:
+              - img "Visa" [ref=e219]
+            - listitem [ref=e220]:
+              - img "Mastercard" [ref=e221]
+            - listitem [ref=e222]:
+              - img "PayPal" [ref=e223]
+  - status [ref=e224]
+  - button "Le tue preferenze relative al consenso per le tecnologie di tracciamento" [ref=e225] [cursor=pointer]

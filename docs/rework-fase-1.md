@@ -1,7 +1,31 @@
 # Rework CardsRift — Fase 1 · Documento operativo
 
-> Ultimo aggiornamento: 16/07/2026. Questo file è la memoria del progetto: cosa è stato deciso,
+> Ultimo aggiornamento: 17/07/2026. Questo file è la memoria del progetto: cosa è stato deciso,
 > cosa è stato costruito, cosa manca e in che ordine. **Va tenuto aggiornato a ogni step.**
+
+## 🔄 Svolta architetturale (17/07/2026) — struttura in codice, backend minimo
+
+Deciso col cliente: abbandonato il page builder ACF copy-heavy (il gruppo flexible-content
+`components` con ~89 campi, **mai importato** → nessuna migrazione). Nuovo modello:
+
+- **Struttura + ordine + tema + COPY = codice.** Un *manifest* per pagina in `content/{slug}.php`
+  (oggi `content/home.php`), copy in `__()` (traducibile). Engine: `includes/page-builder.php`.
+- **Backend "già apparecchiato" AUTO-GENERATO dal codice:** il manifest dichiara i pochi campi DB
+  (`edit`) → `cr_register_builder_fields()` li registra via `acf_add_local_field_group` (versionati
+  nel repo). Sull'homepage l'unico campo è **i 3 prodotti dell'hero**.
+- **Sezioni automatiche pure:** griglie recenti/offerte, "In arrivo" (query `data_uscita`), ticker
+  (ibrido 2 brand fissi + 2 dai movimenti negozio) — helper in `rework.php`. Nessun campo backend.
+- **Preordini → "In arrivo":** prodotti NON preordinabili (sola vista), ordinati per data di uscita.
+  `data_uscita` ora è un **date_picker** (Ymd) registrato da codice.
+- **Valori scalari** (% bulk, numeri claim, URL Telegram, shortcode newsletter) → `includes/config.php`.
+- **i18n:** completato il setup (`load_theme_textdomain` in `functions.php`, `languages/cardsrift.pot`).
+- **Rimossi:** `theme-acf-fields.php` (stub), `acf/acf-export-rework.json` (obsoleto),
+  `pagina_carrello`/`pagina_account` (→ `wc_get_cart_url()`/`wc_get_page_permalink('myaccount')`).
+- **§3b invertito:** il footer resta **hardcoded** (niente copy footer in ACF Options).
+
+I punti ① (campi ACF a mano) e la parte "prodotti a mano" delle sezioni auto della checklist qui
+sotto sono **superati** da questo modello. Le altre pagine (Chi siamo, Bulk) restano da comporre
+(basta aggiungere un `content/{slug}.php`).
 
 ## ⏱ Stato avanzamento (in ordine di esecuzione)
 

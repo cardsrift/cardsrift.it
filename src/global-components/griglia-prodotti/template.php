@@ -16,7 +16,8 @@ $top_id   = is_object($c['prodotto_top'] ?? null) ? $c['prodotto_top']->ID : (in
 $manual   = array_map(fn($p) => is_object($p) ? $p->ID : (int) $p, (array) ($c['prodotti'] ?? []));
 
 $ids = cr_grid_products($sorgente, $manual, $colonne);
-if (!$ids) {
+$ph  = !$ids && CR_PLACEHOLDER; // sezione vuota + modalità sviluppo → card di esempio
+if (!$ids && !$ph) {
 	return;
 }
 $grid_class = $colonne === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4';
@@ -40,13 +41,17 @@ $grid_class = $colonne === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4';
 				<?php endif; ?>
 			</div>
 
-			<div class="grid grid-cols-2 <?= $grid_class; ?> gap-3 lg:gap-4">
-				<?php foreach ($ids as $pid) : ?>
-					<?php cr_product_card($pid, [
-						'glass'    => $glass,
-						'top_deal' => $top_id && (int) $pid === $top_id,
-					]); ?>
-				<?php endforeach; ?>
+			<div class="grid grid-cols-1 sm:grid-cols-2 <?= $grid_class; ?> gap-3 lg:gap-4">
+				<?php if ($ph) : ?>
+					<?php for ($k = 0; $k < $colonne; $k++) cr_ph_card(['glass' => $glass]); ?>
+				<?php else : ?>
+					<?php foreach ($ids as $pid) : ?>
+						<?php cr_product_card($pid, [
+							'glass'    => $glass,
+							'top_deal' => $top_id && (int) $pid === $top_id,
+						]); ?>
+					<?php endforeach; ?>
+				<?php endif; ?>
 			</div>
 
 		</div>

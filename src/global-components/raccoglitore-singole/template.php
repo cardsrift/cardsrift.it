@@ -4,19 +4,14 @@
  * RACCOGLITORE SINGOLE (GRID-3) — foglio del raccoglitore con tasche a proporzione carta (63:88).
  * Le singole sono prodotti VARIABILI con attributi "condizione" (NM/LP/MP/HP) e "lingua":
  * la tasca mostra i chip e porta alla PDP per la scelta della variazione.
- * Layout ACF: raccoglitore_singole — campi: tema, eyebrow, titolo, link_label/link_url,
- * sorgente (radio: manuale|categoria), prodotti (relationship), categoria (taxonomy product_cat)
+ * Sorgente AUTOMATICA (cr_singole_products): le variabili più recenti. Nessun campo backend.
  */
 $c = is_array($component_data ?? null) ? $component_data : [];
 $tema = cr_theme($c);
 
-if (($c['sorgente'] ?? 'manuale') === 'categoria' && !empty($c['categoria'])) {
-	$term = is_object($c['categoria']) ? $c['categoria'] : get_term((int) $c['categoria'], 'product_cat');
-	$ids  = $term ? wc_get_products(['status' => 'publish', 'limit' => 6, 'category' => [$term->slug], 'return' => 'ids']) : [];
-} else {
-	$ids = array_slice(array_map(fn($p) => is_object($p) ? $p->ID : (int) $p, (array) ($c['prodotti'] ?? [])), 0, 6);
-}
-if (!$ids) {
+$ids = cr_singole_products(6);
+$ph  = !$ids && CR_PLACEHOLDER; // sezione vuota + modalità sviluppo → tasche di esempio
+if (!$ids && !$ph) {
 	return;
 }
 ?>
@@ -41,31 +36,35 @@ if (!$ids) {
 
 			<!-- il foglio del raccoglitore: glass sopra il fondo di sezione -->
 			<div class="cr-glass rounded-[20px] p-4 lg:p-5 shadow-th">
-				<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-					<?php foreach ($ids as $pid) :
-						$product = wc_get_product($pid);
-						if (!$product) continue;
-						$cond   = $product->get_attribute('condizione');
-						$lingua = $product->get_attribute('lingua');
-						// per i variabili gli attributi possono elencare più valori: mostra il primo
-						$cond   = $cond ? trim(explode(',', $cond)[0]) : '';
-						$lingua = $lingua ? trim(explode(',', $lingua)[0]) : '';
-					?>
-						<a class="cr-pocket" href="<?= esc_url(get_permalink($pid)); ?>">
-							<span class="cr-pocket__well">
-								<?= $product->get_image('woocommerce_thumbnail'); ?>
-							</span>
-							<span class="flex flex-col gap-1 pt-2 px-0.5 pb-1">
-								<span class="flex gap-1 flex-wrap">
-									<?php if ($cond) : ?><span class="cr-cchip cr-cchip--cond"><?= esc_html($cond); ?></span><?php endif; ?>
-									<?php if ($lingua) : ?><span class="cr-cchip"><?= esc_html($lingua); ?></span><?php endif; ?>
+				<div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+					<?php if ($ph) : ?>
+						<?php for ($k = 0; $k < 6; $k++) cr_ph_pocket(); ?>
+					<?php else : ?>
+						<?php foreach ($ids as $pid) :
+							$product = wc_get_product($pid);
+							if (!$product) continue;
+							$cond   = $product->get_attribute('condizione');
+							$lingua = $product->get_attribute('lingua');
+							// per i variabili gli attributi possono elencare più valori: mostra il primo
+							$cond   = $cond ? trim(explode(',', $cond)[0]) : '';
+							$lingua = $lingua ? trim(explode(',', $lingua)[0]) : '';
+						?>
+							<a class="cr-pocket" href="<?= esc_url(get_permalink($pid)); ?>">
+								<span class="cr-pocket__well">
+									<?= $product->get_image('woocommerce_thumbnail'); ?>
 								</span>
-								<span class="font-metropolis font-semibold text-xs leading-tight text-th-ink min-h-[2.6em]"><?= esc_html($product->get_name()); ?></span>
-								<span class="cr-price !text-sm"><?= $product->get_price_html(); ?></span>
-							</span>
-							<span class="cr-pocket__pick"><?= $product->is_type('variable') ? __('Scegli condizione', 'cardsrift') : __('Vedi carta', 'cardsrift'); ?></span>
-						</a>
-					<?php endforeach; ?>
+								<span class="flex flex-col gap-1 pt-2 px-0.5 pb-1">
+									<span class="flex gap-1 flex-wrap">
+										<?php if ($cond) : ?><span class="cr-cchip cr-cchip--cond"><?= esc_html($cond); ?></span><?php endif; ?>
+										<?php if ($lingua) : ?><span class="cr-cchip"><?= esc_html($lingua); ?></span><?php endif; ?>
+									</span>
+									<span class="font-metropolis font-semibold text-xs leading-tight text-th-ink min-h-[2.6em]"><?= esc_html($product->get_name()); ?></span>
+									<span class="cr-price !text-sm"><?= $product->get_price_html(); ?></span>
+								</span>
+								<span class="cr-pocket__pick"><?= $product->is_type('variable') ? __('Scegli condizione', 'cardsrift') : __('Vedi carta', 'cardsrift'); ?></span>
+							</a>
+						<?php endforeach; ?>
+					<?php endif; ?>
 				</div>
 			</div>
 

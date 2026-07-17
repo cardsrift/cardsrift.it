@@ -57,10 +57,16 @@ $pos = [
 						$pid = is_object($slot['prodotto'] ?? null) ? $slot['prodotto']->ID : (int) ($slot['prodotto'] ?? 0);
 						if (!$pid) continue;
 						$img = get_the_post_thumbnail_url($pid, 'woocommerce_thumbnail');
+						$etichetta = cr_product_chip($pid);
 					?>
-						<div class="absolute w-[150px] sm:w-[215px] aspect-[4/5] bg-white-pure rounded-2xl p-3.5 shadow-th overflow-hidden <?= esc_attr($pos[$i] ?? ''); ?>" data-cr-holo>
-							<?php if ($img) : ?>
-								<img class="w-full h-full object-contain" src="<?= esc_url($img); ?>" alt="">
+						<div class="absolute w-[150px] sm:w-[215px] aspect-[4/5] <?= esc_attr($pos[$i] ?? ''); ?>">
+							<div class="w-full h-full bg-white-pure rounded-2xl p-3.5 shadow-th overflow-hidden" data-cr-holo>
+								<?php if ($img) : ?>
+									<img class="w-full h-full object-contain" src="<?= esc_url($img); ?>" alt="">
+								<?php endif; ?>
+							</div>
+							<?php if ($etichetta) : ?>
+								<span class="absolute -bottom-3 left-1/2 -translate-x-1/2 <?= $tema === 'dark' ? 'bg-purple-deep' : 'bg-black'; ?> text-white font-metropolis font-bold text-xs rounded-full px-3.5 py-1 whitespace-nowrap"><?= esc_html($etichetta); ?></span>
 							<?php endif; ?>
 						</div>
 					<?php endforeach; ?>
