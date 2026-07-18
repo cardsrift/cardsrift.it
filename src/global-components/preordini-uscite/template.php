@@ -63,8 +63,7 @@ $cards = array_slice($ids, 0, 3);
 							$product = wc_get_product($pid);
 							if (!$product) continue;
 							$data  = cr_format_uscita(get_field('data_uscita', $pid));
-							$terms = get_the_terms($pid, 'product_cat');
-							$gioco = $terms && !is_wp_error($terms) ? $terms[0]->name : '';
+							$gioco = cr_product_game($pid);
 						?>
 							<a class="grid grid-cols-[72px_54px_1fr] lg:grid-cols-[120px_88px_1fr] gap-3 lg:gap-5 items-baseline py-4 px-2 w-full border-b border-th-lines last:border-b-0 no-underline transition-all hover:bg-th-accsoft" href="<?= esc_url(get_permalink($pid)); ?>">
 								<span class="font-metropolis font-semibold text-xxs uppercase tracking-[0.14em] text-th-soft truncate"><?= esc_html($gioco); ?></span>

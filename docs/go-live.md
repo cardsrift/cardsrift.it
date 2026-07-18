@@ -12,7 +12,7 @@
 - [ ] 🟠 **Europa**: la pagina dice "spediamo anche in Europa (su richiesta)", ma WC oggi vende/spedisce **solo Italia**. Per venderci davvero: aggiungere una **zona di spedizione UE con tariffa** + estendere i Paesi in WC → Generale → "Vendita a". *(Altrimenti la pagina resta valida col contatto per l'Europa.)*
 - [ ] 🟡 Confermare che **"gratis sopra 99 €" resti disattivato** (scelta attuale).
 - [ ] 🟠 **Coupon di benvenuto**: creare in WooCommerce il coupon **`BENVENUTO5`** (percentuale **5%**, **1 uso per cliente**, **esclude i prodotti in saldo**). Il tema lo mostra già nell'email "Nuovo account" e in home (`CR_WELCOME_COUPON`).
-- [ ] 🟠 **Abilitare la registrazione**: WooCommerce → Impostazioni → Account e privacy → "Consenti ai clienti di creare un account nella pagina 'Il mio account'".
+- [ ] 🟠 **Abilitare la registrazione**: WooCommerce → Impostazioni → Account e privacy → "Consenti ai clienti di creare un account nella pagina 'Il mio account'" **e** "…durante il checkout" (la spunta consenso marketing compare in entrambi i punti).
 - [ ] 🟡 **WooCommerce in italiano**: in locale My Account/checkout sono in **inglese** → installare/aggiornare il pacchetto lingua IT (Bacheca → Aggiornamenti, con lingua sito = Italiano).
 - [ ] 🟠 **Provare tutto il flusso d'acquisto** (carrello → checkout → pagamento → email d'ordine + email nuovo account col codice) con un gateway attivo.
 

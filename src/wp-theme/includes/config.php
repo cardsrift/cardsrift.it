@@ -42,3 +42,7 @@ if (!defined('CR_HEADER_THEME'))        define('CR_HEADER_THEME', 'light');
 // entry (prodotti / offerte / data_uscita) i placeholder spariscono da soli, mostra il reale.
 // ⚠️ METTERE false PRIMA DEL GO-LIVE (o quando il catalogo è pronto).
 if (!defined('CR_PLACEHOLDER'))         define('CR_PLACEHOLDER', true);
+
+// Categorie prodotto "di tipo" (Singole/Sealed/Accessori): NON sono giochi. Servono al tema per
+// distinguere il termine gioco (Pokémon/Magic/One Piece) dal tipo — senza dipendere dal plugin sync.
+if (!defined('CR_CAT_TIPO'))            define('CR_CAT_TIPO', ['singole', 'sealed', 'accessori']);

@@ -3,8 +3,9 @@
 /**
  * ACCOUNT — sconto di benvenuto alla registrazione (senza provider newsletter) + consenso marketing.
  *  1) Il codice CR_WELCOME_COUPON compare nell'email WooCommerce "Nuovo account" (solo quella).
- *  2) Checkbox facoltativa «Voglio ricevere novità» nel form di registrazione → user meta
- *     `cr_marketing_consent` (yes/no): lista marketing consensata, esportabile in futuro.
+ *  2) Checkbox facoltativa «Voglio ricevere novità» sia nel form di registrazione My Account
+ *     sia nel blocco "crea un account" del checkout → user meta `cr_marketing_consent` (yes/no):
+ *     lista marketing consensata, esportabile in futuro.
  * ⚠️ Il coupon va CREATO in WooCommerce (vedi docs/go-live.md): qui il tema lo mostra soltanto.
  */
 
@@ -29,8 +30,9 @@ function cr_welcome_coupon_email($email)
 	<?php
 }
 
-/* 2 · Consenso marketing facoltativo nel form di registrazione WooCommerce. */
+/* 2 · Consenso marketing facoltativo: form di registrazione My Account + "crea un account" al checkout. */
 add_action('woocommerce_register_form', 'cr_marketing_consent_field');
+add_action('woocommerce_after_checkout_registration_form', 'cr_marketing_consent_field');
 function cr_marketing_consent_field()
 {
 	?>

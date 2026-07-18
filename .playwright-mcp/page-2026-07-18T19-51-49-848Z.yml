@@ -1,0 +1,358 @@
+- generic [active] [ref=f7e1]:
+  - banner [ref=f7e2]:
+    - generic [ref=f7e3]:
+      - link "CardsRift" [ref=f7e4] [cursor=pointer]:
+        - /url: http://localhost/cardsrift/public/
+        - img "CardsRift" [ref=f7e5]
+      - navigation [ref=f7e6]:
+        - link "Prodotti" [ref=f7e7] [cursor=pointer]:
+          - /url: "#"
+      - generic [ref=f7e8]:
+        - link "Cerca" [ref=f7e9] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public
+        - link "Account" [ref=f7e13] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/my-account/
+        - link "Carrello" [ref=f7e17] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/cart/
+  - generic [ref=f7e22]:
+    - generic [ref=f7e23]:
+      - generic [ref=f7e26]:
+        - generic [ref=f7e27]:
+          - generic [ref=f7e28]: Il tuo portale per il collezionismo
+          - heading "Le carte che cerchi, scelte una per una." [level=1] [ref=f7e29]
+          - paragraph [ref=f7e30]: Sealed, singole e accessori per Pokémon, One Piece e Magic. Le controlliamo una per una e le imballiamo come se restassero da noi.
+          - generic [ref=f7e31]:
+            - link "Esplora il catalogo" [ref=f7e32] [cursor=pointer]:
+              - /url: /shop
+            - link "Come lavoriamo" [ref=f7e33] [cursor=pointer]:
+              - /url: /chi-siamo
+          - generic [ref=f7e34]:
+            - generic [ref=f7e35]: 100% valutazioni positive su Cardmarket
+            - generic [ref=f7e36]: 24/48h spedizione tracciata
+            - generic [ref=f7e37]: Foto reali di ogni singola oltre i 50€
+        - generic [ref=f7e38]:
+          - generic [ref=f7e39]: Novità
+          - generic [ref=f7e41]: "Magic: The Gathering"
+          - generic [ref=f7e43]: Display Box
+      - generic [ref=f7e47]:
+        - generic [ref=f7e48]: Compriamo le tue carte — singole e sealed dal 70% Cardmarket
+        - generic [ref=f7e49]: Spedizione tracciata — in 24/48h
+        - generic [ref=f7e50]: Appena aggiunto — Scorta dell'Emissario
+        - generic [ref=f7e51]: Compriamo le tue carte — singole e sealed dal 70% Cardmarket
+        - generic [ref=f7e52]: Spedizione tracciata — in 24/48h
+        - generic [ref=f7e53]: Appena aggiunto — Scorta dell'Emissario
+        - generic [ref=f7e54]: Compriamo le tue carte — singole e sealed dal 70% Cardmarket
+        - generic [ref=f7e55]: Spedizione tracciata — in 24/48h
+        - generic [ref=f7e56]: Appena aggiunto — Scorta dell'Emissario
+        - generic [ref=f7e57]: Compriamo le tue carte — singole e sealed dal 70% Cardmarket
+        - generic [ref=f7e58]: Spedizione tracciata — in 24/48h
+        - generic [ref=f7e59]: Appena aggiunto — Scorta dell'Emissario
+        - generic [ref=f7e60]: Compriamo le tue carte — singole e sealed dal 70% Cardmarket
+        - generic [ref=f7e61]: Spedizione tracciata — in 24/48h
+        - generic [ref=f7e62]: Appena aggiunto — Scorta dell'Emissario
+        - generic [ref=f7e63]: Compriamo le tue carte — singole e sealed dal 70% Cardmarket
+        - generic [ref=f7e64]: Spedizione tracciata — in 24/48h
+        - generic [ref=f7e65]: Appena aggiunto — Scorta dell'Emissario
+        - generic [ref=f7e66]: Compriamo le tue carte — singole e sealed dal 70% Cardmarket
+        - generic [ref=f7e67]: Spedizione tracciata — in 24/48h
+        - generic [ref=f7e68]: Appena aggiunto — Scorta dell'Emissario
+        - generic [ref=f7e69]: Compriamo le tue carte — singole e sealed dal 70% Cardmarket
+        - generic [ref=f7e70]: Spedizione tracciata — in 24/48h
+        - generic [ref=f7e71]: Appena aggiunto — Scorta dell'Emissario
+        - generic [ref=f7e72]: Compriamo le tue carte — singole e sealed dal 70% Cardmarket
+        - generic [ref=f7e73]: Spedizione tracciata — in 24/48h
+        - generic [ref=f7e74]: Appena aggiunto — Scorta dell'Emissario
+        - generic [ref=f7e75]: Compriamo le tue carte — singole e sealed dal 70% Cardmarket
+        - generic [ref=f7e76]: Spedizione tracciata — in 24/48h
+        - generic [ref=f7e77]: Appena aggiunto — Scorta dell'Emissario
+        - generic [ref=f7e78]: Compriamo le tue carte — singole e sealed dal 70% Cardmarket
+        - generic [ref=f7e79]: Spedizione tracciata — in 24/48h
+        - generic [ref=f7e80]: Appena aggiunto — Scorta dell'Emissario
+        - generic [ref=f7e81]: Compriamo le tue carte — singole e sealed dal 70% Cardmarket
+        - generic [ref=f7e82]: Spedizione tracciata — in 24/48h
+        - generic [ref=f7e83]: Appena aggiunto — Scorta dell'Emissario
+      - generic [ref=f7e86]:
+        - generic [ref=f7e87]:
+          - generic [ref=f7e88]:
+            - generic [ref=f7e89]: Appena arrivati
+            - heading "Aggiunti di recente" [level=2] [ref=f7e90]
+          - link "Tutte le novità →" [ref=f7e91] [cursor=pointer]:
+            - /url: /shop?orderby=date
+        - generic [ref=f7e92]:
+          - link "Scorta dell'Emissario Aggiungi al carrello Magic · IT Scorta dell'Emissario 0,20 € Ultimi 1" [ref=f7e93] [cursor=pointer]:
+            - /url: http://localhost/cardsrift/public/product/scorta-dellemissario/
+            - generic [ref=f7e94]:
+              - img "Scorta dell'Emissario" [ref=f7e95]
+              - generic [ref=f7e96]: Aggiungi al carrello
+            - generic [ref=f7e97]:
+              - generic [ref=f7e98]: Magic · IT
+              - generic [ref=f7e99]: Scorta dell'Emissario
+              - generic [ref=f7e100]:
+                - generic [ref=f7e101]: 0,20 €
+                - generic [ref=f7e104]: Ultimi 1
+          - link "Oltre il Silenzio Aggiungi al carrello Magic · IT Oltre il Silenzio 0,20 € Ultimi 1" [ref=f7e105] [cursor=pointer]:
+            - /url: http://localhost/cardsrift/public/product/oltre-il-silenzio/
+            - generic [ref=f7e106]:
+              - img "Oltre il Silenzio" [ref=f7e107]
+              - generic [ref=f7e108]: Aggiungi al carrello
+            - generic [ref=f7e109]:
+              - generic [ref=f7e110]: Magic · IT
+              - generic [ref=f7e111]: Oltre il Silenzio
+              - generic [ref=f7e112]:
+                - generic [ref=f7e113]: 0,20 €
+                - generic [ref=f7e116]: Ultimi 1
+          - link "Mm'menon, la Mano Destra Aggiungi al carrello Magic · IT Mm'menon, la Mano Destra 0,20 € Ultimi 1" [ref=f7e117] [cursor=pointer]:
+            - /url: http://localhost/cardsrift/public/product/mmmenon-la-mano-destra/
+            - generic [ref=f7e118]:
+              - img "Mm'menon, la Mano Destra" [ref=f7e119]
+              - generic [ref=f7e120]: Aggiungi al carrello
+            - generic [ref=f7e121]:
+              - generic [ref=f7e122]: Magic · IT
+              - generic [ref=f7e123]: Mm'menon, la Mano Destra
+              - generic [ref=f7e124]:
+                - generic [ref=f7e125]: 0,20 €
+                - generic [ref=f7e128]: Ultimi 1
+          - link "Night Wanderer Display 30 Buste (JP) Aggiungi al carrello Pokemon Night Wanderer Display 30 Buste (JP) 45,00 € Disponibile" [ref=f7e129] [cursor=pointer]:
+            - /url: http://localhost/cardsrift/public/product/night-wanderer-display-30-buste-jp/
+            - generic [ref=f7e130]:
+              - img "Night Wanderer Display 30 Buste (JP)" [ref=f7e131]
+              - generic [ref=f7e132]: Aggiungi al carrello
+            - generic [ref=f7e133]:
+              - generic [ref=f7e134]: Pokemon
+              - generic [ref=f7e135]: Night Wanderer Display 30 Buste (JP)
+              - generic [ref=f7e136]:
+                - generic [ref=f7e137]: 45,00 €
+                - generic [ref=f7e140]: Disponibile
+      - generic [ref=f7e143]:
+        - generic [ref=f7e144]:
+          - generic [ref=f7e145]:
+            - generic [ref=f7e146]: Occasioni
+            - heading "In offerta questa settimana" [level=2] [ref=f7e147]
+          - link "Tutte le offerte →" [ref=f7e148] [cursor=pointer]:
+            - /url: /shop
+        - generic [ref=f7e149]:
+          - generic [ref=f7e153]:
+            - generic [ref=f7e154]: Pokémon · IT
+            - generic [ref=f7e155]: Pokémon 151 · Display
+            - generic [ref=f7e156]:
+              - generic [ref=f7e157]: € 89,90
+              - generic [ref=f7e158]: Disponibile
+          - generic [ref=f7e162]:
+            - generic [ref=f7e163]: One Piece · JP
+            - generic [ref=f7e164]: One Piece OP-09 · Box
+            - generic [ref=f7e165]:
+              - generic [ref=f7e166]: € 109,00
+              - generic [ref=f7e167]: Disponibile
+          - generic [ref=f7e168]:
+            - generic [ref=f7e169]: −15%
+            - generic [ref=f7e172]:
+              - generic [ref=f7e173]: Magic · EN
+              - generic [ref=f7e174]: MTG Bloomburrow · Bundle
+              - generic [ref=f7e175]:
+                - generic [ref=f7e176]: € 44,90
+                - generic [ref=f7e177]: Disponibile
+          - generic [ref=f7e181]:
+            - generic [ref=f7e182]: Pokémon · JP
+            - generic [ref=f7e183]: Shiny Treasure ex · Box
+            - generic [ref=f7e184]:
+              - generic [ref=f7e185]: € 74,50
+              - generic [ref=f7e186]: Disponibile
+      - generic [ref=f7e189]:
+        - generic [ref=f7e190]:
+          - generic [ref=f7e191]:
+            - generic [ref=f7e192]: Carte singole
+            - heading "Sfoglia il raccoglitore" [level=2] [ref=f7e193]
+          - link "Apri il raccoglitore →" [ref=f7e194] [cursor=pointer]:
+            - /url: /carte-singole
+        - generic [ref=f7e196]:
+          - link "Mm'menon, la Mano Destra NM IT Mm'menon, la Mano Destra 0,20 € Vedi carta" [ref=f7e197] [cursor=pointer]:
+            - /url: http://localhost/cardsrift/public/product/mmmenon-la-mano-destra/
+            - img "Mm'menon, la Mano Destra" [ref=f7e199]
+            - generic [ref=f7e200]:
+              - generic [ref=f7e201]:
+                - generic [ref=f7e202]: NM
+                - generic [ref=f7e203]: IT
+              - generic [ref=f7e204]: Mm'menon, la Mano Destra
+              - generic [ref=f7e205]: 0,20 €
+            - generic [ref=f7e208]: Vedi carta
+          - link "Oltre il Silenzio NM IT Oltre il Silenzio 0,20 € Vedi carta" [ref=f7e209] [cursor=pointer]:
+            - /url: http://localhost/cardsrift/public/product/oltre-il-silenzio/
+            - img "Oltre il Silenzio" [ref=f7e211]
+            - generic [ref=f7e212]:
+              - generic [ref=f7e213]:
+                - generic [ref=f7e214]: NM
+                - generic [ref=f7e215]: IT
+              - generic [ref=f7e216]: Oltre il Silenzio
+              - generic [ref=f7e217]: 0,20 €
+            - generic [ref=f7e220]: Vedi carta
+          - link "Scorta dell'Emissario NM IT Scorta dell'Emissario 0,20 € Vedi carta" [ref=f7e221] [cursor=pointer]:
+            - /url: http://localhost/cardsrift/public/product/scorta-dellemissario/
+            - img "Scorta dell'Emissario" [ref=f7e223]
+            - generic [ref=f7e224]:
+              - generic [ref=f7e225]:
+                - generic [ref=f7e226]: NM
+                - generic [ref=f7e227]: IT
+              - generic [ref=f7e228]: Scorta dell'Emissario
+              - generic [ref=f7e229]: 0,20 €
+            - generic [ref=f7e232]: Vedi carta
+      - generic [ref=f7e235]:
+        - generic [ref=f7e237]:
+          - generic [ref=f7e238]: Prossime uscite
+          - heading "In arrivo prossimamente" [level=2] [ref=f7e239]
+        - generic [ref=f7e240]:
+          - generic [ref=f7e241]:
+            - generic [ref=f7e242]: In arrivo
+            - generic [ref=f7e245]:
+              - generic [ref=f7e246]: Pokémon · IT
+              - generic [ref=f7e247]: Charizard ex · Special Art
+              - generic [ref=f7e248]:
+                - generic [ref=f7e249]: € 129,00
+                - generic [ref=f7e250]: Esce il 26/09
+          - generic [ref=f7e251]:
+            - generic [ref=f7e252]: In arrivo
+            - generic [ref=f7e255]:
+              - generic [ref=f7e256]: One Piece · EN
+              - generic [ref=f7e257]: Luffy Leader · Alternate Art
+              - generic [ref=f7e258]:
+                - generic [ref=f7e259]: € 34,90
+                - generic [ref=f7e260]: Esce il 26/09
+          - generic [ref=f7e261]:
+            - generic [ref=f7e262]: In arrivo
+            - generic [ref=f7e265]:
+              - generic [ref=f7e266]: Pokémon · IT
+              - generic [ref=f7e267]: Pokémon 151 · Display
+              - generic [ref=f7e268]:
+                - generic [ref=f7e269]: € 89,90
+                - generic [ref=f7e270]: Esce il 26/09
+        - generic [ref=f7e271]:
+          - generic [ref=f7e272]:
+            - generic [ref=f7e273]: Pokémon
+            - generic [ref=f7e274]: 26/09
+            - generic [ref=f7e275]: Pokémon 151 · Display
+          - generic [ref=f7e276]:
+            - generic [ref=f7e277]: One Piece
+            - generic [ref=f7e278]: 11/10
+            - generic [ref=f7e279]: One Piece OP-09 · Box
+          - generic [ref=f7e280]:
+            - generic [ref=f7e281]: Magic
+            - generic [ref=f7e282]: 25/10
+            - generic [ref=f7e283]: MTG Bloomburrow · Bundle
+          - generic [ref=f7e284]:
+            - generic [ref=f7e285]: Pokémon
+            - generic [ref=f7e286]: 08/11
+            - generic [ref=f7e287]: Shiny Treasure ex · Box
+          - generic [ref=f7e288]:
+            - generic [ref=f7e289]: Pokémon
+            - generic [ref=f7e290]: 22/11
+            - generic [ref=f7e291]: Charizard ex · Special Art
+          - generic [ref=f7e292]:
+            - generic [ref=f7e293]: One Piece
+            - generic [ref=f7e294]: 06/12
+            - generic [ref=f7e295]: Luffy Leader · Alternate Art
+      - generic [ref=f7e298]:
+        - generic [ref=f7e299]:
+          - generic [ref=f7e300]: 70%
+          - generic [ref=f7e301]: minimo del valore Cardmarket
+        - generic [ref=f7e302]:
+          - generic [ref=f7e303]: Compriamo le tue carte
+          - heading "Le tue doppie valgono. Le valutiamo noi." [level=2] [ref=f7e304]
+          - paragraph [ref=f7e305]: "È così che ci riforniamo di singole: dalle collezioni di chi, come te, ne ha qualcuna di troppo. Valutazione trasparente sui prezzi di Cardmarket, pagamento tracciato in contanti o PayPal entro 24/48h."
+          - link "Valuta le tue carte" [ref=f7e306] [cursor=pointer]:
+            - /url: /compriamo-le-tue-carte
+          - generic [ref=f7e307]:
+            - generic [ref=f7e308]: Conteggio in foto e video, sempre
+            - generic [ref=f7e311]: Reso gratis se rifiuti l’offerta
+            - generic [ref=f7e314]: Pagamento tracciato in 24/48h
+      - generic [ref=f7e319]:
+        - generic [ref=f7e320]: Il progetto
+        - generic [ref=f7e321]: "Siamo collezionisti prima che negozianti. CardsRift nasce per essere il portale che avremmo voluto trovare noi: carte controllate una per una, condizioni oneste, foto vere del pezzo che ricevi, e qualcuno che risponde davvero dall’altra parte — le carte che cerchi, trattate come se restassero nella nostra collezione."
+        - generic [ref=f7e322]:
+          - generic [ref=f7e323]:
+            - generic [ref=f7e324]: 100%
+            - text: valutazioni positive
+          - generic [ref=f7e325]:
+            - generic [ref=f7e326]: 100+
+            - text: vendite su Cardmarket
+          - generic [ref=f7e327]:
+            - generic [ref=f7e328]: "2025"
+            - text: venditore dal
+        - link "Chi siamo" [ref=f7e329] [cursor=pointer]:
+          - /url: /chi-siamo
+      - generic [ref=f7e332]:
+        - generic [ref=f7e333]: Community
+        - heading "Il canale dove succede prima" [level=2] [ref=f7e334]
+        - paragraph [ref=f7e335]: Restock, drop e chicche li annunciamo lì prima che altrove — con qualche prezzo riservato a chi è nel canale. Si entra gratis.
+        - link "Entra nel canale" [ref=f7e336] [cursor=pointer]:
+          - /url: https://t.me/+4XSpVIOPA3FjMmFk
+      - generic [ref=f7e340]:
+        - generic [ref=f7e341]: Benvenuto
+        - heading "Il primo ordine è −5%" [level=2] [ref=f7e342]
+        - paragraph [ref=f7e343]: Crea un account e ti mandiamo il codice di benvenuto via email. Al prossimo acquisto sei anche più veloce.
+        - link "Crea un account" [ref=f7e344] [cursor=pointer]:
+          - /url: /my-account
+        - paragraph [ref=f7e345]: Basta un minuto e una email.
+    - contentinfo [ref=f7e346]:
+      - generic [ref=f7e348]:
+        - generic [ref=f7e349]:
+          - generic [ref=f7e350]:
+            - link "CardsRift" [ref=f7e351] [cursor=pointer]:
+              - /url: http://localhost/cardsrift/public/
+              - img "CardsRift" [ref=f7e352]
+            - paragraph [ref=f7e353]: "Il tuo portale per il collezionismo: carte controllate una a una, protette e spedite in 24/48h."
+            - generic [ref=f7e354]:
+              - link "Instagram" [ref=f7e355] [cursor=pointer]:
+                - /url: https://www.instagram.com/cardsrift/
+              - link "Telegram" [ref=f7e360] [cursor=pointer]:
+                - /url: https://t.me/+4XSpVIOPA3FjMmFk
+          - generic [ref=f7e363]:
+            - heading "Il negozio" [level=4] [ref=f7e364]
+            - list [ref=f7e365]:
+              - listitem [ref=f7e366]:
+                - link "Il progetto" [ref=f7e367] [cursor=pointer]:
+                  - /url: /chi-siamo
+              - listitem [ref=f7e368]:
+                - link "Compriamo le tue carte" [ref=f7e369] [cursor=pointer]:
+                  - /url: /compriamo-le-tue-carte
+              - listitem [ref=f7e370]:
+                - link "Community Telegram" [ref=f7e371] [cursor=pointer]:
+                  - /url: https://t.me/+4XSpVIOPA3FjMmFk
+          - generic [ref=f7e372]:
+            - heading "Assistenza" [level=4] [ref=f7e373]
+            - list [ref=f7e374]:
+              - listitem [ref=f7e375]:
+                - link "Spedizioni e resi" [ref=f7e376] [cursor=pointer]:
+                  - /url: /spedizioni-e-resi
+              - listitem [ref=f7e377]:
+                - link "Guida alle condizioni" [ref=f7e378] [cursor=pointer]:
+                  - /url: /guida-alle-condizioni
+              - listitem [ref=f7e379]:
+                - link "Domande frequenti" [ref=f7e380] [cursor=pointer]:
+                  - /url: /faq
+              - listitem [ref=f7e381]:
+                - link "Contatti" [ref=f7e382] [cursor=pointer]:
+                  - /url: /contatti
+          - generic [ref=f7e383]:
+            - heading "Contatti" [level=4] [ref=f7e384]
+            - list [ref=f7e385]:
+              - listitem [ref=f7e386]:
+                - link "cardsrift@gmail.com" [ref=f7e387] [cursor=pointer]:
+                  - /url: mailto:cardsrift@gmail.com
+              - listitem [ref=f7e388]: P.IVA 13934020960
+        - generic [ref=f7e389]:
+          - generic [ref=f7e390]:
+            - generic [ref=f7e391]: © 2026 CardsRift
+            - generic [ref=f7e392]: ·
+            - link "Privacy" [ref=f7e393] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045
+            - generic [ref=f7e394]: ·
+            - link "Cookie" [ref=f7e395] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045/cookie-policy
+          - list [ref=f7e396]:
+            - listitem [ref=f7e397]:
+              - img "Visa" [ref=f7e398]
+            - listitem [ref=f7e399]:
+              - img "Mastercard" [ref=f7e400]
+            - listitem [ref=f7e401]:
+              - img "PayPal" [ref=f7e402]
+  - status [ref=f7e403]
+  - button "Le tue preferenze relative al consenso per le tecnologie di tracciamento" [ref=f7e404] [cursor=pointer]

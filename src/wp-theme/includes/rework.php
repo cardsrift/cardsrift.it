@@ -17,13 +17,32 @@ function cr_theme($component_data)
 }
 
 /**
- * Chip "gioco · lingua" dedotto dal prodotto (categoria principale + attributo lingua).
+ * Nome del "gioco" del prodotto: il primo termine product_cat che NON è una categoria di tipo
+ * (Singole/Sealed/Accessori). Così un prodotto può stare in "Magic" + "Singole" e il chip/calendario
+ * mostrano sempre "Magic". Solo-lettura del DB: nessuna dipendenza dal plugin sync.
+ */
+function cr_product_game($product_id)
+{
+    $terms = get_the_terms($product_id, 'product_cat');
+    if (!$terms || is_wp_error($terms)) {
+        return '';
+    }
+    $tipo = defined('CR_CAT_TIPO') ? CR_CAT_TIPO : [];
+    foreach ($terms as $t) {
+        if (!in_array($t->slug, $tipo, true)) {
+            return $t->name;
+        }
+    }
+    return $terms[0]->name; // fallback: nessuna categoria gioco assegnata
+}
+
+/**
+ * Chip "gioco · lingua" dedotto dal prodotto (gioco + attributo lingua).
  * Usato dalla card e dalla vetrina hero: l'etichetta è automatica, non da inserire a mano.
  */
 function cr_product_chip($product_id)
 {
-    $terms = get_the_terms($product_id, 'product_cat');
-    $chip  = $terms && !is_wp_error($terms) ? $terms[0]->name : '';
+    $chip    = cr_product_game($product_id);
     $product = wc_get_product($product_id);
     $lingua  = $product ? $product->get_attribute('lingua') : '';
     if ($lingua) {
@@ -151,9 +170,23 @@ function cr_product_card($product_id, $opts = [])
 }
 
 /**
+ * tax_query per ESCLUDERE le singole: stanno SOLO nel raccoglitore, mai nelle griglie
+ * generali / ticker / shop (il resto del catalogo è sealed e accessori).
+ */
+function cr_not_singole_tax()
+{
+    return [[
+        'taxonomy' => 'product_cat',
+        'field'    => 'slug',
+        'terms'    => ['singole'],
+        'operator' => 'NOT IN',
+    ]];
+}
+
+/**
  * Query prodotti per le griglie del page builder.
  * $sorgente: manuale (ids da relationship) | recenti | offerte
- * I prodotti "in arrivo" (con data_uscita) sono esclusi: non sono ancora in vendita.
+ * I prodotti "in arrivo" (con data_uscita) e le singole sono esclusi.
  */
 function cr_grid_products($sorgente, $manual_ids = [], $limit = 4)
 {
@@ -162,10 +195,11 @@ function cr_grid_products($sorgente, $manual_ids = [], $limit = 4)
     }
 
     $args = [
-        'status'  => 'publish',
-        'limit'   => $limit,
-        'return'  => 'ids',
-        'exclude' => cr_preorder_products(100), // niente prodotti in arrivo nelle griglie
+        'status'    => 'publish',
+        'limit'     => $limit,
+        'return'    => 'ids',
+        'exclude'   => cr_preorder_products(100), // niente prodotti in arrivo nelle griglie
+        'tax_query' => cr_not_singole_tax(),      // niente singole: quelle stanno nel raccoglitore
     ];
 
     if ($sorgente === 'offerte') {
@@ -213,18 +247,19 @@ function cr_preorder_products($limit = 3)
 }
 
 /**
- * Singole (raccoglitore): sorgente automatica. Le singole sono prodotti VARIABILI
- * (attributi condizione/lingua): mostriamo i più recenti.
+ * Singole (raccoglitore): sorgente automatica = prodotti in categoria "Singole".
+ * Sono per lo più SEMPLICI (un articolo/condizione, mappa 1:1 con Cardmarket); variabili solo
+ * se una carta è stoccata in più condizioni. Mostriamo i più recenti.
  */
 function cr_singole_products($limit = 6)
 {
     return wc_get_products([
-        'status'  => 'publish',
-        'type'    => 'variable',
-        'limit'   => $limit,
-        'orderby' => 'date',
-        'order'   => 'DESC',
-        'return'  => 'ids',
+        'status'   => 'publish',
+        'category' => ['singole'],
+        'limit'    => $limit,
+        'orderby'  => 'date',
+        'order'    => 'DESC',
+        'return'   => 'ids',
     ]);
 }
 
@@ -252,23 +287,26 @@ function cr_ticker_voci()
         ['testo' => __('Spedizione tracciata', 'cardsrift'),   'evidenzia' => __('in 24/48h', 'cardsrift')],
     ];
 
-    $recent = wc_get_products([
-        'status'  => 'publish',
-        'limit'   => 1,
-        'orderby' => 'date',
-        'order'   => 'DESC',
-        'exclude' => cr_preorder_products(100),
-        'return'  => 'objects',
-    ]);
+    // Base condivisa dalle voci automatiche: niente singole e niente prodotti "in arrivo"
+    // (coerente con le griglie: gli in-arrivo non sono acquistabili, non vanno reclamizzati).
+    $base = [
+        'status'    => 'publish',
+        'limit'     => 1,
+        'return'    => 'objects',
+        'exclude'   => cr_preorder_products(100),
+        'tax_query' => cr_not_singole_tax(),
+    ];
+
+    $recent = wc_get_products($base + ['orderby' => 'date', 'order' => 'DESC']);
     if (!empty($recent[0])) {
         $voci[] = ['testo' => __('Appena aggiunto', 'cardsrift'), 'evidenzia' => $recent[0]->get_name()];
     }
 
     $sale_ids = wc_get_product_ids_on_sale();
     if (!empty($sale_ids)) {
-        $p = wc_get_product($sale_ids[0]);
-        if ($p) {
-            $voci[] = ['testo' => __('In offerta', 'cardsrift'), 'evidenzia' => $p->get_name()];
+        $sale = wc_get_products($base + ['include' => $sale_ids]);
+        if (!empty($sale[0])) {
+            $voci[] = ['testo' => __('In offerta', 'cardsrift'), 'evidenzia' => $sale[0]->get_name()];
         }
     }
 
