@@ -2,9 +2,10 @@
 
 /**
  * NEWSLETTER BOX (NL) — card glass centrata con incentivo primo ordine.
- * Layout ACF: newsletter_box — campi: tema, eyebrow, titolo, testo, micro,
- * form_shortcode (shortcode del provider, es. Brevo — se vuoto: form statico placeholder),
- * pattern (true/false)
+ * Campi: tema, eyebrow, titolo, testo, micro, pattern (true/false) + UNO tra:
+ *   - cta_label/cta_url → modalità "invito" (bottone, es. registrazione account);
+ *   - form_shortcode    → form del provider newsletter (es. Brevo);
+ *   - (nessuno)         → form statico placeholder.
  */
 $c = is_array($component_data ?? null) ? $component_data : [];
 $tema = cr_theme($c);
@@ -25,7 +26,9 @@ $tema = cr_theme($c);
 					<p class="text-th-muted text-sm mb-5"><?= esc_html($c['testo']); ?></p>
 				<?php endif; ?>
 
-				<?php if (!empty($c['form_shortcode'])) : ?>
+				<?php if (!empty($c['cta_url'])) : ?>
+					<a class="cr-btn cr-btn-solid" href="<?= esc_url($c['cta_url']); ?>"><?= esc_html($c['cta_label'] ?? __('Crea un account', 'cardsrift')); ?></a>
+				<?php elseif (!empty($c['form_shortcode'])) : ?>
 					<div class="newsletter-box__form"><?= do_shortcode($c['form_shortcode']); ?></div>
 				<?php else : ?>
 					<!-- placeholder statico finché non c'è il provider (Fase 3) -->

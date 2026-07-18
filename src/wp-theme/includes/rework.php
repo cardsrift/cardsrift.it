@@ -229,6 +229,17 @@ function cr_singole_products($limit = 6)
 }
 
 /**
+ * Link a un messaggio privato Telegram (@khewro) con testo precompilato: così, quando
+ * qualcuno scrive dal sito, il titolare sa da dove arriva. Se $text è vuoto ripiega sul
+ * solo profilo. Il GRUPPO community è un'altra cosa: CR_TELEGRAM_URL (link d'invito).
+ */
+function cr_tg_dm($text = '')
+{
+    $base = defined('CR_TELEGRAM_DM') ? CR_TELEGRAM_DM : '';
+    return ($base && $text) ? $base . '?text=' . rawurlencode($text) : $base;
+}
+
+/**
  * Voci del ticker — automatiche, nessun inserimento a mano (ibrido 2 + 2):
  * 2 messaggi brand fissi (tradotti) + fino a 2 dai movimenti reali del negozio
  * (ultimo arrivo, un prodotto in offerta). Se il negozio è vuoto restano i 2 fissi.
@@ -237,7 +248,7 @@ function cr_singole_products($limit = 6)
 function cr_ticker_voci()
 {
     $voci = [
-        ['testo' => __('Compriamo le tue carte', 'cardsrift'), 'evidenzia' => sprintf(__('%s in credito', 'cardsrift'), CR_BULK_PCT)],
+        ['testo' => __('Compriamo le tue carte', 'cardsrift'), 'evidenzia' => sprintf(__('singole e sealed dal %s Cardmarket', 'cardsrift'), CR_BUY_MIN_PCT)],
         ['testo' => __('Spedizione tracciata', 'cardsrift'),   'evidenzia' => __('in 24/48h', 'cardsrift')],
     ];
 

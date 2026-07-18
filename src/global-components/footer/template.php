@@ -43,8 +43,7 @@ $tpl = get_template_directory_uri();
 					<h4 class="font-metropolis font-semibold text-xs uppercase tracking-[0.16em] text-th-soft mb-4"><?= esc_html__('Il negozio', 'cardsrift'); ?></h4>
 					<ul class="flex flex-col gap-2.5 text-sm text-th-muted">
 						<li><a class="hover:text-th-acc transition-colors" href="/chi-siamo"><?= esc_html__('Il progetto', 'cardsrift'); ?></a></li>
-						<li><a class="hover:text-th-acc transition-colors" href="/come-imballiamo"><?= esc_html__('Come imballiamo', 'cardsrift'); ?></a></li>
-						<li><a class="hover:text-th-acc transition-colors" href="/recensioni"><?= esc_html__('Recensioni', 'cardsrift'); ?></a></li>
+						<li><a class="hover:text-th-acc transition-colors" href="/compriamo-le-tue-carte"><?= esc_html__('Compriamo le tue carte', 'cardsrift'); ?></a></li>
 						<li><a class="hover:text-th-acc transition-colors" href="<?= esc_url(CR_TELEGRAM_URL); ?>" target="_blank" rel="noopener"><?= esc_html__('Community Telegram', 'cardsrift'); ?></a></li>
 					</ul>
 				</div>

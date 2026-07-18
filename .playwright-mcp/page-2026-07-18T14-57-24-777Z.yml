@@ -1,0 +1,115 @@
+- generic [active] [ref=f3e1]:
+  - banner [ref=f3e2]:
+    - generic [ref=f3e3]:
+      - link "CardsRift" [ref=f3e4] [cursor=pointer]:
+        - /url: http://localhost/cardsrift/public/
+        - img "CardsRift" [ref=f3e5]
+      - navigation [ref=f3e6]:
+        - link "Prodotti" [ref=f3e7] [cursor=pointer]:
+          - /url: "#"
+      - generic [ref=f3e8]:
+        - link "Cerca" [ref=f3e9] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public
+        - link "Account" [ref=f3e13] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/my-account/
+        - link "Carrello" [ref=f3e17] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/cart/
+  - generic [ref=f3e22]:
+    - generic [ref=f3e23]:
+      - generic [ref=f3e26]:
+        - generic [ref=f3e27]: Domande frequenti
+        - heading "Le risposte, prima di ordinare" [level=1] [ref=f3e28]
+        - paragraph [ref=f3e29]: Le domande che ci fanno più spesso, in un posto solo. Se ne resta una, siamo a un messaggio di distanza.
+      - generic [ref=f3e32]:
+        - generic [ref=f3e33]:
+          - generic [ref=f3e34]: Domande & risposte
+          - heading "Quello che ci chiedete" [level=2] [ref=f3e35]
+        - generic [ref=f3e36]:
+          - group [ref=f3e37]:
+            - generic "Le carte sono originali?" [ref=f3e38] [cursor=pointer]
+          - group [ref=f3e42]:
+            - generic "Come giudicate le condizioni?" [ref=f3e43] [cursor=pointer]
+          - group [ref=f3e47]:
+            - generic "Quali giochi trattate?" [ref=f3e48] [cursor=pointer]
+          - group [ref=f3e52]:
+            - generic "Quanto costa la spedizione e in quanto arriva?" [ref=f3e53] [cursor=pointer]
+          - group [ref=f3e57]:
+            - generic "Come imballate le carte?" [ref=f3e58] [cursor=pointer]
+          - group [ref=f3e62]:
+            - generic "Posso rendere un ordine?" [ref=f3e63] [cursor=pointer]
+          - group [ref=f3e67]:
+            - generic "Posso vendervi le mie carte?" [ref=f3e68] [cursor=pointer]
+          - group [ref=f3e72]:
+            - 'generic "Il sito è nuovo: posso fidarmi?" [ref=f3e73] [cursor=pointer]'
+          - group [ref=f3e77]:
+            - generic "Chi c’è dietro CardsRift?" [ref=f3e78] [cursor=pointer]
+      - generic [ref=f3e84]:
+        - generic [ref=f3e85]: Ancora dubbi?
+        - generic [ref=f3e86]: "Hai un’altra domanda? Scrivici: ti rispondiamo di solito entro un giorno."
+        - link "Scrivici" [ref=f3e87] [cursor=pointer]:
+          - /url: /contatti
+    - contentinfo [ref=f3e88]:
+      - generic [ref=f3e90]:
+        - generic [ref=f3e91]:
+          - generic [ref=f3e92]:
+            - link "CardsRift" [ref=f3e93] [cursor=pointer]:
+              - /url: http://localhost/cardsrift/public/
+              - img "CardsRift" [ref=f3e94]
+            - paragraph [ref=f3e95]: "Il tuo portale per il collezionismo: carte controllate una a una, protette e spedite in 24/48h."
+            - generic [ref=f3e96]:
+              - link "Instagram" [ref=f3e97] [cursor=pointer]:
+                - /url: https://www.instagram.com/cardsrift/
+              - link "Telegram" [ref=f3e102] [cursor=pointer]:
+                - /url: https://t.me/+4XSpVIOPA3FjMmFk
+          - generic [ref=f3e105]:
+            - heading "Il negozio" [level=4] [ref=f3e106]
+            - list [ref=f3e107]:
+              - listitem [ref=f3e108]:
+                - link "Il progetto" [ref=f3e109] [cursor=pointer]:
+                  - /url: /chi-siamo
+              - listitem [ref=f3e110]:
+                - link "Compriamo le tue carte" [ref=f3e111] [cursor=pointer]:
+                  - /url: /compriamo-le-tue-carte
+              - listitem [ref=f3e112]:
+                - link "Community Telegram" [ref=f3e113] [cursor=pointer]:
+                  - /url: https://t.me/+4XSpVIOPA3FjMmFk
+          - generic [ref=f3e114]:
+            - heading "Assistenza" [level=4] [ref=f3e115]
+            - list [ref=f3e116]:
+              - listitem [ref=f3e117]:
+                - link "Spedizioni e resi" [ref=f3e118] [cursor=pointer]:
+                  - /url: /spedizioni-e-resi
+              - listitem [ref=f3e119]:
+                - link "Guida alle condizioni" [ref=f3e120] [cursor=pointer]:
+                  - /url: /guida-alle-condizioni
+              - listitem [ref=f3e121]:
+                - link "Domande frequenti" [ref=f3e122] [cursor=pointer]:
+                  - /url: /faq
+              - listitem [ref=f3e123]:
+                - link "Contatti" [ref=f3e124] [cursor=pointer]:
+                  - /url: /contatti
+          - generic [ref=f3e125]:
+            - heading "Contatti" [level=4] [ref=f3e126]
+            - list [ref=f3e127]:
+              - listitem [ref=f3e128]:
+                - link "cardsrift@gmail.com" [ref=f3e129] [cursor=pointer]:
+                  - /url: mailto:cardsrift@gmail.com
+              - listitem [ref=f3e130]: P.IVA 13934020960
+        - generic [ref=f3e131]:
+          - generic [ref=f3e132]:
+            - generic [ref=f3e133]: © 2026 CardsRift
+            - generic [ref=f3e134]: ·
+            - link "Privacy" [ref=f3e135] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045
+            - generic [ref=f3e136]: ·
+            - link "Cookie" [ref=f3e137] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045/cookie-policy
+          - list [ref=f3e138]:
+            - listitem [ref=f3e139]:
+              - img "Visa" [ref=f3e140]
+            - listitem [ref=f3e141]:
+              - img "Mastercard" [ref=f3e142]
+            - listitem [ref=f3e143]:
+              - img "PayPal" [ref=f3e144]
+  - button "Le tue preferenze relative al consenso per le tecnologie di tracciamento" [ref=f3e145] [cursor=pointer]
+  - status [ref=f3e147]

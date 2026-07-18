@@ -38,7 +38,7 @@ if (!$faq) {
 							<svg class="w-5 h-5 shrink-0 stroke-th-acc fill-transparent transition-transform duration-200 group-[[open]]:rotate-45" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14" /></svg>
 						</summary>
 						<div class="cr-faq-body overflow-hidden transition-[height] duration-300 ease-out">
-							<div class="pb-5 text-th-muted leading-relaxed max-w-[64ch]"><?= esc_html($item['risposta']); ?></div>
+							<div class="pb-5 text-th-muted leading-relaxed max-w-[64ch] [&_a]:text-th-acc [&_a]:underline [&_a]:underline-offset-2"><?= wp_kses_post($item['risposta']); ?></div>
 						</div>
 					</details>
 				<?php endforeach; ?>

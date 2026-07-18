@@ -1,0 +1,126 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e3]:
+      - link "CardsRift" [ref=e4] [cursor=pointer]:
+        - /url: http://localhost/cardsrift/public/
+        - img "CardsRift" [ref=e5]
+      - navigation [ref=e6]:
+        - link "Prodotti" [ref=e7] [cursor=pointer]:
+          - /url: "#"
+      - generic [ref=e8]:
+        - link "Cerca" [ref=e9] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public
+        - link "Account" [ref=e13] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/my-account/
+        - link "Carrello" [ref=e17] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/cart/
+  - generic [ref=e22]:
+    - generic [ref=e23]:
+      - generic [ref=e26]:
+        - generic [ref=e27]: Contatti
+        - heading "Parla con una persona vera" [level=1] [ref=e28]
+        - paragraph [ref=e29]: "Scrivi a chi il negozio lo tiene davvero. Scegli il canale che preferisci: di solito rispondiamo entro un giorno."
+      - generic [ref=e32]:
+        - generic [ref=e33]:
+          - generic [ref=e34]: I canali
+          - heading "Come raggiungerci" [level=2] [ref=e35]
+        - generic [ref=e36]:
+          - 'link "Telegram Il modo più veloce: ordini, vendite e domande, in chat diretta. Scrivici in chat" [ref=e37] [cursor=pointer]':
+            - /url: https://t.me/khewro?text=Ciao%21%20Ti%20scrivo%20dal%20sito%20CardsRift.
+            - generic [ref=e38]: Telegram
+            - paragraph [ref=e43]: "Il modo più veloce: ordini, vendite e domande, in chat diretta."
+            - generic [ref=e44]: Scrivici in chat
+          - link "Email Per le richieste con più calma o con allegati. cardsrift@gmail.com" [ref=e47] [cursor=pointer]:
+            - /url: mailto:cardsrift@gmail.com
+            - generic [ref=e48]: Email
+            - paragraph [ref=e54]: Per le richieste con più calma o con allegati.
+            - generic [ref=e55]: cardsrift@gmail.com
+          - link "Instagram Novità, anteprime e messaggi diretti. @cardsrift" [ref=e58] [cursor=pointer]:
+            - /url: https://www.instagram.com/cardsrift/
+            - generic [ref=e59]: Instagram
+            - paragraph [ref=e66]: Novità, anteprime e messaggi diretti.
+            - generic [ref=e67]: "@cardsrift"
+          - 'link "Gruppo Telegram La community: restock, drop e chicche, prima che altrove. Unisciti al gruppo" [ref=e70] [cursor=pointer]':
+            - /url: https://t.me/+4XSpVIOPA3FjMmFk
+            - generic [ref=e71]: Gruppo Telegram
+            - paragraph [ref=e79]: "La community: restock, drop e chicche, prima che altrove."
+            - generic [ref=e80]: Unisciti al gruppo
+          - 'link "Cardmarket La nostra reputazione, verificabile: 100% di valutazioni positive. Vedi il profilo" [ref=e83] [cursor=pointer]':
+            - /url: https://www.cardmarket.com/it/Magic/Users/CardsRift
+            - generic [ref=e84]: Cardmarket
+            - paragraph [ref=e89]: "La nostra reputazione, verificabile: 100% di valutazioni positive."
+            - generic [ref=e90]: Vedi il profilo
+        - paragraph [ref=e93]: CardsRift · P.IVA 13934020960
+      - generic [ref=e96]:
+        - generic [ref=e97]: A presto
+        - generic [ref=e98]: Scrivici come ti è più comodo. Dall’altra parte c’è sempre qualcuno pronto a darti una mano.
+        - link "Scrivici su Telegram" [ref=e99] [cursor=pointer]:
+          - /url: https://t.me/khewro?text=Ciao%21%20Ti%20scrivo%20dal%20sito%20CardsRift.
+    - contentinfo [ref=e100]:
+      - generic [ref=e102]:
+        - generic [ref=e103]:
+          - generic [ref=e104]:
+            - link "CardsRift" [ref=e105] [cursor=pointer]:
+              - /url: http://localhost/cardsrift/public/
+              - img "CardsRift" [ref=e106]
+            - paragraph [ref=e107]: "Il tuo portale per il collezionismo: carte controllate una a una, protette e spedite in 24/48h."
+            - generic [ref=e108]:
+              - link "Instagram" [ref=e109] [cursor=pointer]:
+                - /url: https://www.instagram.com/cardsrift/
+              - link "Telegram" [ref=e114] [cursor=pointer]:
+                - /url: https://t.me/+4XSpVIOPA3FjMmFk
+          - generic [ref=e117]:
+            - heading "Il negozio" [level=4] [ref=e118]
+            - list [ref=e119]:
+              - listitem [ref=e120]:
+                - link "Il progetto" [ref=e121] [cursor=pointer]:
+                  - /url: /chi-siamo
+              - listitem [ref=e122]:
+                - link "Come imballiamo" [ref=e123] [cursor=pointer]:
+                  - /url: /come-imballiamo
+              - listitem [ref=e124]:
+                - link "Recensioni" [ref=e125] [cursor=pointer]:
+                  - /url: /recensioni
+              - listitem [ref=e126]:
+                - link "Community Telegram" [ref=e127] [cursor=pointer]:
+                  - /url: https://t.me/+4XSpVIOPA3FjMmFk
+          - generic [ref=e128]:
+            - heading "Assistenza" [level=4] [ref=e129]
+            - list [ref=e130]:
+              - listitem [ref=e131]:
+                - link "Spedizioni e resi" [ref=e132] [cursor=pointer]:
+                  - /url: /spedizioni-e-resi
+              - listitem [ref=e133]:
+                - link "Guida alle condizioni" [ref=e134] [cursor=pointer]:
+                  - /url: /guida-alle-condizioni
+              - listitem [ref=e135]:
+                - link "Domande frequenti" [ref=e136] [cursor=pointer]:
+                  - /url: /faq
+              - listitem [ref=e137]:
+                - link "Contatti" [ref=e138] [cursor=pointer]:
+                  - /url: /contatti
+          - generic [ref=e139]:
+            - heading "Contatti" [level=4] [ref=e140]
+            - list [ref=e141]:
+              - listitem [ref=e142]:
+                - link "cardsrift@gmail.com" [ref=e143] [cursor=pointer]:
+                  - /url: mailto:cardsrift@gmail.com
+              - listitem [ref=e144]: P.IVA 13934020960
+        - generic [ref=e145]:
+          - generic [ref=e146]:
+            - generic [ref=e147]: © 2026 CardsRift
+            - generic [ref=e148]: ·
+            - link "Privacy" [ref=e149] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045
+            - generic [ref=e150]: ·
+            - link "Cookie" [ref=e151] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045/cookie-policy
+          - list [ref=e152]:
+            - listitem [ref=e153]:
+              - img "Visa" [ref=e154]
+            - listitem [ref=e155]:
+              - img "Mastercard" [ref=e156]
+            - listitem [ref=e157]:
+              - img "PayPal" [ref=e158]
+  - status [ref=e159]
+  - button "Le tue preferenze relative al consenso per le tecnologie di tracciamento" [ref=e160] [cursor=pointer]

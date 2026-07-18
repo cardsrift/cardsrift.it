@@ -1,0 +1,126 @@
+- generic [active] [ref=f5e1]:
+  - banner [ref=f5e2]:
+    - generic [ref=f5e3]:
+      - link "CardsRift" [ref=f5e4] [cursor=pointer]:
+        - /url: http://localhost/cardsrift/public/
+        - img "CardsRift" [ref=f5e5]
+      - navigation [ref=f5e6]:
+        - link "Prodotti" [ref=f5e7] [cursor=pointer]:
+          - /url: "#"
+      - generic [ref=f5e8]:
+        - link "Cerca" [ref=f5e9] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public
+        - link "Account" [ref=f5e13] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/my-account/
+        - link "Carrello" [ref=f5e17] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/cart/
+  - generic [ref=f5e22]:
+    - generic [ref=f5e25]:
+      - generic [ref=f5e26]:
+        - heading "Login" [level=2] [ref=f5e27]
+        - generic [ref=f5e28]:
+          - paragraph [ref=f5e29]:
+            - generic [ref=f5e30]:
+              - text: Username or email address *
+              - generic [ref=f5e31]: Required
+            - textbox "Username or email address Required" [ref=f5e32]
+          - paragraph [ref=f5e33]:
+            - generic [ref=f5e34]:
+              - text: Password *
+              - generic [ref=f5e35]: Required
+            - generic [ref=f5e36]:
+              - textbox "Password Required" [ref=f5e37]
+              - button "Show password" [ref=f5e38] [cursor=pointer]
+          - paragraph [ref=f5e39]:
+            - generic [ref=f5e40]:
+              - checkbox "Remember me" [ref=f5e41]
+              - text: Remember me
+            - button "Log in" [ref=f5e42] [cursor=pointer]
+          - paragraph [ref=f5e43]:
+            - link "Lost your password?" [ref=f5e44] [cursor=pointer]:
+              - /url: http://localhost/cardsrift/public/my-account/lost-password/
+      - generic [ref=f5e45]:
+        - heading "Register" [level=2] [ref=f5e46]
+        - generic [ref=f5e47]:
+          - paragraph [ref=f5e48]:
+            - generic [ref=f5e49]:
+              - text: Email address *
+              - generic [ref=f5e50]: Required
+            - textbox "Email address Required" [ref=f5e51]
+          - paragraph [ref=f5e52]: A link to set a new password will be sent to your email address.
+          - paragraph [ref=f5e53]:
+            - generic [ref=f5e54] [cursor=pointer]:
+              - checkbox "Voglio ricevere novità e offerte da CardsRift (facoltativo)." [ref=f5e55]
+              - text: Voglio ricevere novità e offerte da CardsRift (facoltativo).
+          - paragraph [ref=f5e57]:
+            - text: Your personal data will be used to support your experience throughout this website, to manage access to your account, and for other purposes described in our
+            - link "privacy policy" [ref=f5e58] [cursor=pointer]:
+              - /url: ""
+            - text: .
+          - paragraph [ref=f5e59]:
+            - button "Register" [ref=f5e60] [cursor=pointer]
+    - contentinfo [ref=f5e61]:
+      - generic [ref=f5e63]:
+        - generic [ref=f5e64]:
+          - generic [ref=f5e65]:
+            - link "CardsRift":
+              - /url: http://localhost/cardsrift/public/
+              - img "CardsRift"
+            - paragraph [ref=f5e66]: "Il tuo portale per il collezionismo: carte controllate una a una, protette e spedite in 24/48h."
+            - generic [ref=f5e67]:
+              - link "Instagram" [ref=f5e68] [cursor=pointer]:
+                - /url: https://www.instagram.com/cardsrift/
+              - link "Telegram" [ref=f5e73] [cursor=pointer]:
+                - /url: https://t.me/+4XSpVIOPA3FjMmFk
+          - generic [ref=f5e76]:
+            - heading "Il negozio" [level=4] [ref=f5e77]
+            - list [ref=f5e78]:
+              - listitem [ref=f5e79]:
+                - link "Il progetto" [ref=f5e80] [cursor=pointer]:
+                  - /url: /chi-siamo
+              - listitem [ref=f5e81]:
+                - link "Compriamo le tue carte" [ref=f5e82] [cursor=pointer]:
+                  - /url: /compriamo-le-tue-carte
+              - listitem [ref=f5e83]:
+                - link "Community Telegram" [ref=f5e84] [cursor=pointer]:
+                  - /url: https://t.me/+4XSpVIOPA3FjMmFk
+          - generic [ref=f5e85]:
+            - heading "Assistenza" [level=4] [ref=f5e86]
+            - list [ref=f5e87]:
+              - listitem [ref=f5e88]:
+                - link "Spedizioni e resi" [ref=f5e89] [cursor=pointer]:
+                  - /url: /spedizioni-e-resi
+              - listitem [ref=f5e90]:
+                - link "Guida alle condizioni" [ref=f5e91] [cursor=pointer]:
+                  - /url: /guida-alle-condizioni
+              - listitem [ref=f5e92]:
+                - link "Domande frequenti" [ref=f5e93] [cursor=pointer]:
+                  - /url: /faq
+              - listitem [ref=f5e94]:
+                - link "Contatti" [ref=f5e95] [cursor=pointer]:
+                  - /url: /contatti
+          - generic [ref=f5e96]:
+            - heading "Contatti" [level=4] [ref=f5e97]
+            - list [ref=f5e98]:
+              - listitem [ref=f5e99]:
+                - link "cardsrift@gmail.com" [ref=f5e100] [cursor=pointer]:
+                  - /url: mailto:cardsrift@gmail.com
+              - listitem [ref=f5e101]: P.IVA 13934020960
+        - generic [ref=f5e102]:
+          - generic [ref=f5e103]:
+            - generic [ref=f5e104]: © 2026 CardsRift
+            - generic [ref=f5e105]: ·
+            - link "Privacy" [ref=f5e106] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045
+            - generic [ref=f5e107]: ·
+            - link "Cookie" [ref=f5e108] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045/cookie-policy
+          - list [ref=f5e109]:
+            - listitem [ref=f5e110]:
+              - img "Visa" [ref=f5e111]
+            - listitem [ref=f5e112]:
+              - img "Mastercard" [ref=f5e113]
+            - listitem [ref=f5e114]:
+              - img "PayPal" [ref=f5e115]
+  - button "Le tue preferenze relative al consenso per le tecnologie di tracciamento" [ref=f5e116] [cursor=pointer]
+  - status [ref=f5e118]

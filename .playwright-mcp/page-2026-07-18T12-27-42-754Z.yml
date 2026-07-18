@@ -1,0 +1,176 @@
+- generic [active] [ref=f23e1]:
+  - banner [ref=f23e2]:
+    - generic [ref=f23e3]:
+      - link "CardsRift" [ref=f23e4] [cursor=pointer]:
+        - /url: http://localhost/cardsrift/public/
+        - img "CardsRift" [ref=f23e5]
+      - navigation [ref=f23e6]:
+        - link "Prodotti" [ref=f23e7] [cursor=pointer]:
+          - /url: "#"
+      - generic [ref=f23e8]:
+        - link "Cerca" [ref=f23e9] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public
+        - link "Account" [ref=f23e13] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/my-account/
+        - link "Carrello" [ref=f23e17] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/cart/
+  - generic [ref=f23e22]:
+    - generic [ref=f23e23]:
+      - generic [ref=f23e26]:
+        - generic [ref=f23e27]: Compriamo le tue carte
+        - heading "Hai carte da vendere? Parliamone." [level=1] [ref=f23e28]
+        - paragraph [ref=f23e29]: Valutiamo Pokémon, One Piece e Magic sui prezzi correnti di Cardmarket — singole, sealed e bulk. Ti diciamo tutto prima, per iscritto, e paghiamo tracciato in 24/48h. Se l’offerta non ti convince, ti rispediamo tutto a nostre spese.
+        - link "Scrivici su Telegram" [ref=f23e31] [cursor=pointer]:
+          - /url: https://t.me/khewro?text=Ciao%21%20Ti%20scrivo%20dal%20sito%20CardsRift%20%E2%80%94%20avrei%20delle%20carte%20da%20vendere.
+      - generic [ref=f23e34]:
+        - generic [ref=f23e35]:
+          - generic [ref=f23e36]: Come funziona
+          - heading "Tre passi, zero sorprese" [level=2] [ref=f23e37]
+        - generic [ref=f23e38]:
+          - generic [ref=f23e39]:
+            - generic [ref=f23e40]: "01"
+            - heading "Mandaci la lista" [level=3] [ref=f23e41]
+            - paragraph [ref=f23e42]: "Due foto o un file con set e condizioni: bastano per una prima stima. Ci accordiamo su Telegram."
+          - generic [ref=f23e43]:
+            - generic [ref=f23e44]: "02"
+            - heading "Ricevi l’offerta" [level=3] [ref=f23e45]
+            - paragraph [ref=f23e46]: Valutiamo sui prezzi correnti di Cardmarket e ti scriviamo, carta per carta o a blocchi. Senza impegno.
+          - generic [ref=f23e47]:
+            - generic [ref=f23e48]: "03"
+            - heading "Scegli e incassi" [level=3] [ref=f23e49]
+            - paragraph [ref=f23e50]: Ci mandi le carte tracciate; appena arrivano e il conteggio combacia, paghiamo in contanti o PayPal entro 24/48h.
+      - generic [ref=f23e53]:
+        - generic [ref=f23e54]:
+          - generic [ref=f23e55]: Quanto paghiamo
+          - heading "Percentuali chiare, sul valore reale" [level=2] [ref=f23e56]
+          - paragraph [ref=f23e57]: Lavoriamo in percentuale sul prezzo di Cardmarket, mai su cifre inventate. Su singole e sealed partiamo da qui e saliamo con la richiesta; le comuni sfuse le pesiamo.
+        - generic [ref=f23e58]:
+          - generic [ref=f23e59]:
+            - generic [ref=f23e60]:
+              - term [ref=f23e61]:
+                - generic [ref=f23e62]: Singole
+                - generic [ref=f23e63]: in base a condizione e lingua
+              - definition [ref=f23e64]: da 70%
+            - generic [ref=f23e65]:
+              - term [ref=f23e66]:
+                - generic [ref=f23e67]: Sealed
+                - generic [ref=f23e68]: sigillato, sul valore di mercato
+              - definition [ref=f23e69]: da 70%
+            - generic [ref=f23e70]:
+              - term [ref=f23e71]:
+                - generic [ref=f23e72]: Bulk Magic
+                - generic [ref=f23e73]: comuni e non comuni sfuse, a peso
+              - definition [ref=f23e74]: 5 €/kg
+            - generic [ref=f23e75]:
+              - term [ref=f23e76]:
+                - generic [ref=f23e77]: Bulk Pokémon
+                - generic [ref=f23e78]: comuni e non comuni sfuse, a peso
+              - definition [ref=f23e79]: 6 €/kg
+          - paragraph [ref=f23e80]: Percentuali sul prezzo Cardmarket del giorno della valutazione. Paghiamo in contanti o PayPal tracciato — non in credito negozio. Acquistiamo da privati con regolare ricevuta (regime del margine).
+      - generic [ref=f23e83]:
+        - generic [ref=f23e84]:
+          - generic [ref=f23e85]: Le nostre garanzie
+          - heading "Perché puoi fidarti a scatola chiusa" [level=2] [ref=f23e86]
+        - generic [ref=f23e87]:
+          - generic [ref=f23e88]:
+            - term [ref=f23e89]: Contiamo tutto in foto e video
+            - definition [ref=f23e90]: "Prima di chiudere l’offerta documentiamo il conteggio: sai esattamente su cosa ci stiamo accordando, senza «fidati»."
+          - generic [ref=f23e91]:
+            - term [ref=f23e92]: Te lo mettiamo per iscritto
+            - definition [ref=f23e93]: La valutazione te la mandiamo scritta. Nessun ricalcolo a sorpresa quando il pacco è già partito.
+          - generic [ref=f23e94]:
+            - term [ref=f23e95]: Se rifiuti, reso gratis
+            - definition [ref=f23e96]: L’offerta non ti vincola a niente. Se non ti torna, ti rispediamo le carte a nostre spese.
+          - generic [ref=f23e97]:
+            - term [ref=f23e98]: Pagamento tracciato
+            - definition [ref=f23e99]: Contanti o PayPal entro 24/48h dall’arrivo. Acquistiamo da privati con regolare ricevuta (regime del margine).
+      - generic [ref=f23e102]:
+        - generic [ref=f23e103]:
+          - generic [ref=f23e104]: Domande frequenti
+          - heading "Prima di scriverci" [level=2] [ref=f23e105]
+        - generic [ref=f23e106]:
+          - group [ref=f23e107]:
+            - generic "Come valutate le mie carte?" [ref=f23e108] [cursor=pointer]
+          - group [ref=f23e112]:
+            - generic "Come mi pagate?" [ref=f23e113] [cursor=pointer]
+          - group [ref=f23e117]:
+            - generic "Comprate anche il bulk?" [ref=f23e118] [cursor=pointer]
+          - group [ref=f23e122]:
+            - generic "E se l’offerta non mi convince?" [ref=f23e123] [cursor=pointer]
+          - group [ref=f23e127]:
+            - generic "Comprate da tutta Italia?" [ref=f23e128] [cursor=pointer]
+          - group [ref=f23e132]:
+            - generic "Devo emettere fattura o ricevuta?" [ref=f23e133] [cursor=pointer]
+      - generic [ref=f23e139]:
+        - generic [ref=f23e140]: Facciamo due conti
+        - generic [ref=f23e141]: "Una collezione intera, uno scatolone o solo quelle tre carte di troppo? Scrivici: la valutazione è gratis e non ti impegna a niente."
+        - link "Scrivici su Telegram" [ref=f23e142] [cursor=pointer]:
+          - /url: https://t.me/khewro?text=Ciao%21%20Ti%20scrivo%20dal%20sito%20CardsRift%20%E2%80%94%20avrei%20delle%20carte%20da%20vendere.
+    - contentinfo [ref=f23e143]:
+      - generic [ref=f23e145]:
+        - generic [ref=f23e146]:
+          - generic [ref=f23e147]:
+            - link "CardsRift" [ref=f23e148] [cursor=pointer]:
+              - /url: http://localhost/cardsrift/public/
+              - img "CardsRift" [ref=f23e149]
+            - paragraph [ref=f23e150]: "Il tuo portale per il collezionismo: carte controllate una a una, protette e spedite in 24/48h."
+            - generic [ref=f23e151]:
+              - link "Instagram" [ref=f23e152] [cursor=pointer]:
+                - /url: https://www.instagram.com/cardsrift/
+              - link "Telegram" [ref=f23e157] [cursor=pointer]:
+                - /url: https://t.me/+4XSpVIOPA3FjMmFk
+          - generic [ref=f23e160]:
+            - heading "Il negozio" [level=4] [ref=f23e161]
+            - list [ref=f23e162]:
+              - listitem [ref=f23e163]:
+                - link "Il progetto" [ref=f23e164] [cursor=pointer]:
+                  - /url: /chi-siamo
+              - listitem [ref=f23e165]:
+                - link "Come imballiamo" [ref=f23e166] [cursor=pointer]:
+                  - /url: /come-imballiamo
+              - listitem [ref=f23e167]:
+                - link "Recensioni" [ref=f23e168] [cursor=pointer]:
+                  - /url: /recensioni
+              - listitem [ref=f23e169]:
+                - link "Community Telegram" [ref=f23e170] [cursor=pointer]:
+                  - /url: https://t.me/+4XSpVIOPA3FjMmFk
+          - generic [ref=f23e171]:
+            - heading "Assistenza" [level=4] [ref=f23e172]
+            - list [ref=f23e173]:
+              - listitem [ref=f23e174]:
+                - link "Spedizioni e resi" [ref=f23e175] [cursor=pointer]:
+                  - /url: /spedizioni-e-resi
+              - listitem [ref=f23e176]:
+                - link "Guida alle condizioni" [ref=f23e177] [cursor=pointer]:
+                  - /url: /guida-alle-condizioni
+              - listitem [ref=f23e178]:
+                - link "Domande frequenti" [ref=f23e179] [cursor=pointer]:
+                  - /url: /faq
+              - listitem [ref=f23e180]:
+                - link "Contatti" [ref=f23e181] [cursor=pointer]:
+                  - /url: /contatti
+          - generic [ref=f23e182]:
+            - heading "Contatti" [level=4] [ref=f23e183]
+            - list [ref=f23e184]:
+              - listitem [ref=f23e185]:
+                - link "cardsrift@gmail.com" [ref=f23e186] [cursor=pointer]:
+                  - /url: mailto:cardsrift@gmail.com
+              - listitem [ref=f23e187]: P.IVA 13934020960
+        - generic [ref=f23e188]:
+          - generic [ref=f23e189]:
+            - generic [ref=f23e190]: © 2026 CardsRift
+            - generic [ref=f23e191]: ·
+            - link "Privacy" [ref=f23e192] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045
+            - generic [ref=f23e193]: ·
+            - link "Cookie" [ref=f23e194] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045/cookie-policy
+          - list [ref=f23e195]:
+            - listitem [ref=f23e196]:
+              - img "Visa" [ref=f23e197]
+            - listitem [ref=f23e198]:
+              - img "Mastercard" [ref=f23e199]
+            - listitem [ref=f23e200]:
+              - img "PayPal" [ref=f23e201]
+  - button "Le tue preferenze relative al consenso per le tecnologie di tracciamento" [ref=f23e202] [cursor=pointer]
+  - status [ref=f23e204]

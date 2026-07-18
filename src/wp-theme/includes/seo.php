@@ -21,6 +21,26 @@ function cr_seo_map()
 			'title'       => __('Chi siamo · CardsRift — carte Pokémon, One Piece e Magic', 'cardsrift'),
 			'description' => __('CardsRift è carte Pokémon, One Piece e Magic controllate a mano, con il 100% di valutazioni positive su Cardmarket: spedizione tracciata e condizioni dette come stanno.', 'cardsrift'),
 		],
+		'compriamo-le-tue-carte' => [
+			'title'       => __('Compriamo le tue carte · CardsRift — vendi Pokémon, One Piece e Magic', 'cardsrift'),
+			'description' => __('Vendi le tue carte Pokémon, One Piece e Magic. Valutiamo singole, sealed e bulk sui prezzi di Cardmarket: offerta scritta senza impegno, pagamento tracciato in 24/48h.', 'cardsrift'),
+		],
+		'guida-alle-condizioni' => [
+			'title'       => __('Guida alle condizioni delle carte · CardsRift — la scala Cardmarket', 'cardsrift'),
+			'description' => __('Cosa significano Mint, Near Mint, Excellent, Good, Light Played, Played e Poor: la scala ufficiale di Cardmarket spiegata grado per grado. Classifichiamo sempre per difetto.', 'cardsrift'),
+		],
+		'spedizioni-e-resi' => [
+			'title'       => __('Spedizioni e resi · CardsRift — spedizione tracciata e reso in 14 giorni', 'cardsrift'),
+			'description' => __('Come spediamo — Poste Italiane, tracciata, imballaggio protetto, in 24/48h — e come funziona il reso: hai 14 giorni per il diritto di recesso. Spedizione in Italia a 10,90 €.', 'cardsrift'),
+		],
+		'contatti' => [
+			'title'       => __('Contatti · CardsRift — scrivici su Telegram, email o Instagram', 'cardsrift'),
+			'description' => __('Come contattare CardsRift: scrivici su Telegram, per email o su Instagram. Scegli il canale che preferisci, di solito rispondiamo entro un giorno.', 'cardsrift'),
+		],
+		'faq' => [
+			'title'       => __('Domande frequenti · CardsRift — carte Pokémon, One Piece e Magic', 'cardsrift'),
+			'description' => __('Le risposte alle domande più comuni: originalità, condizioni, spedizioni, resi e come vendere le tue carte. Tutto quello che serve prima di ordinare su CardsRift.', 'cardsrift'),
+		],
 	];
 }
 

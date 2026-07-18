@@ -1,0 +1,127 @@
+- generic [active] [ref=f24e1]:
+  - banner [ref=f24e2]:
+    - generic [ref=f24e3]:
+      - link "CardsRift" [ref=f24e4] [cursor=pointer]:
+        - /url: http://localhost/cardsrift/public/
+        - img "CardsRift" [ref=f24e5]
+      - navigation [ref=f24e6]:
+        - link "Prodotti" [ref=f24e7] [cursor=pointer]:
+          - /url: "#"
+      - generic [ref=f24e8]:
+        - link "Cerca" [ref=f24e9] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public
+        - link "Account" [ref=f24e13] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/my-account/
+        - link "Carrello" [ref=f24e17] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/cart/
+  - generic [ref=f24e22]:
+    - generic [ref=f24e23]:
+      - generic [ref=f24e26]:
+        - generic [ref=f24e27]: Guida alle condizioni
+        - heading "Come classifichiamo le condizioni" [level=1] [ref=f24e28]
+        - paragraph [ref=f24e29]: "La condizione conta quanto la carta stessa. Usiamo la scala ufficiale di Cardmarket — sette gradi, dalla Mint alla Poor — e la applichiamo sempre per difetto: nel dubbio, scendiamo di un gradino."
+      - generic [ref=f24e32]:
+        - generic [ref=f24e33]:
+          - generic [ref=f24e34]: La scala
+          - heading "Dalla Mint alla Poor" [level=2] [ref=f24e35]
+          - paragraph [ref=f24e36]: Gli stessi sette gradi ufficiali di Cardmarket, il mercato di riferimento. Li leggi in ogni scheda prodotto, accanto al prezzo.
+        - generic [ref=f24e37]:
+          - generic [ref=f24e38]:
+            - term [ref=f24e39]: Mint · MT
+            - definition [ref=f24e40]: "Perfetta, come appena uscita dalla busta: angoli netti, superficie pulita, immacolata anche vista da vicino."
+          - generic [ref=f24e41]:
+            - term [ref=f24e42]: Near Mint · NM
+            - definition [ref=f24e43]: "Quasi perfetta: al massimo un’impercettibile imperfezione, visibile solo a un esame attento. È la condizione più richiesta."
+          - generic [ref=f24e44]:
+            - term [ref=f24e45]: Excellent · EX
+            - definition [ref=f24e46]: "Segni d’uso lievi: qualche micro-graffio o un accenno di consumo sui bordi, percepibili da vicino."
+          - generic [ref=f24e47]:
+            - term [ref=f24e48]: Good · GD
+            - definition [ref=f24e49]: "Uso evidente ma carta integra: graffi, leggero sbiancamento dei bordi, a volte una piega minima."
+          - generic [ref=f24e50]:
+            - term [ref=f24e51]: Light Played · LP
+            - definition [ref=f24e52]: "Uso marcato e ben visibile: bordi sbiancati, graffi sulla superficie, qualche piega leggera."
+          - generic [ref=f24e53]:
+            - term [ref=f24e54]: Played · PL
+            - definition [ref=f24e55]: "Molto giocata: graffi profondi, pieghe evidenti, sbiancamento diffuso, piccoli difetti strutturali."
+          - generic [ref=f24e56]:
+            - term [ref=f24e57]: Poor · PO
+            - definition [ref=f24e58]: "Fortemente segnata: pieghe importanti, strappi, aloni o scritte. Resta riconoscibile e giocabile in bustina."
+      - generic [ref=f24e61]:
+        - generic [ref=f24e62]:
+          - generic [ref=f24e63]: Il nostro metodo
+          - heading "Nel dubbio, un gradino sotto" [level=2] [ref=f24e64]
+        - paragraph [ref=f24e66]: "Giudichiamo alla luce piena, fronte e retro, prima di assegnare un grado. Quando una carta è a cavallo tra due condizioni scegliamo la più bassa: meglio una sorpresa in positivo all’apertura. Le carte di valore le trovi fotografate davvero nella scheda, così il grado lo verifichi con i tuoi occhi."
+      - generic [ref=f24e69]:
+        - generic [ref=f24e70]: In pratica
+        - generic [ref=f24e71]: Quello che vedi nella scheda è quello che ricevi. Ogni carta di valore è fotografata fronte e retro, con la sua condizione scritta accanto.
+        - link "Sfoglia il catalogo" [ref=f24e72] [cursor=pointer]:
+          - /url: /shop
+    - contentinfo [ref=f24e73]:
+      - generic [ref=f24e75]:
+        - generic [ref=f24e76]:
+          - generic [ref=f24e77]:
+            - link "CardsRift" [ref=f24e78] [cursor=pointer]:
+              - /url: http://localhost/cardsrift/public/
+              - img "CardsRift" [ref=f24e79]
+            - paragraph [ref=f24e80]: "Il tuo portale per il collezionismo: carte controllate una a una, protette e spedite in 24/48h."
+            - generic [ref=f24e81]:
+              - link "Instagram" [ref=f24e82] [cursor=pointer]:
+                - /url: https://www.instagram.com/cardsrift/
+              - link "Telegram" [ref=f24e87] [cursor=pointer]:
+                - /url: https://t.me/+4XSpVIOPA3FjMmFk
+          - generic [ref=f24e90]:
+            - heading "Il negozio" [level=4] [ref=f24e91]
+            - list [ref=f24e92]:
+              - listitem [ref=f24e93]:
+                - link "Il progetto" [ref=f24e94] [cursor=pointer]:
+                  - /url: /chi-siamo
+              - listitem [ref=f24e95]:
+                - link "Come imballiamo" [ref=f24e96] [cursor=pointer]:
+                  - /url: /come-imballiamo
+              - listitem [ref=f24e97]:
+                - link "Recensioni" [ref=f24e98] [cursor=pointer]:
+                  - /url: /recensioni
+              - listitem [ref=f24e99]:
+                - link "Community Telegram" [ref=f24e100] [cursor=pointer]:
+                  - /url: https://t.me/+4XSpVIOPA3FjMmFk
+          - generic [ref=f24e101]:
+            - heading "Assistenza" [level=4] [ref=f24e102]
+            - list [ref=f24e103]:
+              - listitem [ref=f24e104]:
+                - link "Spedizioni e resi" [ref=f24e105] [cursor=pointer]:
+                  - /url: /spedizioni-e-resi
+              - listitem [ref=f24e106]:
+                - link "Guida alle condizioni" [ref=f24e107] [cursor=pointer]:
+                  - /url: /guida-alle-condizioni
+              - listitem [ref=f24e108]:
+                - link "Domande frequenti" [ref=f24e109] [cursor=pointer]:
+                  - /url: /faq
+              - listitem [ref=f24e110]:
+                - link "Contatti" [ref=f24e111] [cursor=pointer]:
+                  - /url: /contatti
+          - generic [ref=f24e112]:
+            - heading "Contatti" [level=4] [ref=f24e113]
+            - list [ref=f24e114]:
+              - listitem [ref=f24e115]:
+                - link "cardsrift@gmail.com" [ref=f24e116] [cursor=pointer]:
+                  - /url: mailto:cardsrift@gmail.com
+              - listitem [ref=f24e117]: P.IVA 13934020960
+        - generic [ref=f24e118]:
+          - generic [ref=f24e119]:
+            - generic [ref=f24e120]: © 2026 CardsRift
+            - generic [ref=f24e121]: ·
+            - link "Privacy" [ref=f24e122] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045
+            - generic [ref=f24e123]: ·
+            - link "Cookie" [ref=f24e124] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045/cookie-policy
+          - list [ref=f24e125]:
+            - listitem [ref=f24e126]:
+              - img "Visa" [ref=f24e127]
+            - listitem [ref=f24e128]:
+              - img "Mastercard" [ref=f24e129]
+            - listitem [ref=f24e130]:
+              - img "PayPal" [ref=f24e131]
+  - status [ref=f24e132]
+  - button "Le tue preferenze relative al consenso per le tecnologie di tracciamento" [ref=f24e133] [cursor=pointer]

@@ -2,7 +2,7 @@
 
 /**
  * RACCOGLITORE SINGOLE (GRID-3) — foglio del raccoglitore con tasche a proporzione carta (63:88).
- * Le singole sono prodotti VARIABILI con attributi "condizione" (NM/LP/MP/HP) e "lingua":
+ * Le singole sono prodotti VARIABILI con attributi "condizione" (scala Cardmarket: MT/NM/EX/GD/LP/PL/PO) e "lingua":
  * la tasca mostra i chip e porta alla PDP per la scelta della variazione.
  * Sorgente AUTOMATICA (cr_singole_products): le variabili più recenti. Nessun campo backend.
  */

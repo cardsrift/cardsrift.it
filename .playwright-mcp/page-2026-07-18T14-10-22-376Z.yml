@@ -1,0 +1,129 @@
+- generic [active] [ref=f25e1]:
+  - banner [ref=f25e2]:
+    - generic [ref=f25e3]:
+      - link "CardsRift" [ref=f25e4] [cursor=pointer]:
+        - /url: http://localhost/cardsrift/public/
+        - img "CardsRift" [ref=f25e5]
+      - navigation [ref=f25e6]:
+        - link "Prodotti" [ref=f25e7] [cursor=pointer]:
+          - /url: "#"
+      - generic [ref=f25e8]:
+        - link "Cerca" [ref=f25e9] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public
+        - link "Account" [ref=f25e13] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/my-account/
+        - link "Carrello" [ref=f25e17] [cursor=pointer]:
+          - /url: http://localhost/cardsrift/public/cart/
+  - generic [ref=f25e22]:
+    - generic [ref=f25e23]:
+      - generic [ref=f25e26]:
+        - generic [ref=f25e27]: Spedizioni e resi
+        - heading "Spedizione tracciata, reso semplice." [level=1] [ref=f25e28]
+        - paragraph [ref=f25e29]: Ogni ordine parte protetto e tracciato in 24/48h. E se ci ripensi, hai 14 giorni per il reso — te lo rendiamo facile.
+      - generic [ref=f25e32]:
+        - generic [ref=f25e33]:
+          - generic [ref=f25e34]: La spedizione
+          - heading "Come arriva il pacco" [level=2] [ref=f25e35]
+        - generic [ref=f25e37]:
+          - generic [ref=f25e38]:
+            - term [ref=f25e39]: In Italia
+            - definition [ref=f25e40]: Corriere tracciato a 8,90 €, in tutta Italia. Il pacco parte entro 24/48h dall’ordine.
+          - generic [ref=f25e41]:
+            - term [ref=f25e42]: In Europa
+            - definition [ref=f25e43]: "Spediamo anche nel resto d’Europa: scrivici prima dell’ordine e ti confermiamo tempi e costo per il tuo Paese."
+          - generic [ref=f25e44]:
+            - term [ref=f25e45]: Imballaggio
+            - definition [ref=f25e46]: "Ogni carta protetta secondo il valore: sleeve, top loader o rinforzo, poi busta o scatola rigida."
+          - generic [ref=f25e47]:
+            - term [ref=f25e48]: Tracciamento
+            - definition [ref=f25e49]: Appena parte ricevi il codice, e segui il pacco fino alla porta.
+      - generic [ref=f25e52]:
+        - generic [ref=f25e53]:
+          - generic [ref=f25e54]: Resi e recesso
+          - heading "Se ci ripensi, hai 14 giorni" [level=2] [ref=f25e55]
+        - generic [ref=f25e57]:
+          - generic [ref=f25e58]:
+            - term [ref=f25e59]: 14 giorni per ripensarci
+            - definition [ref=f25e60]: Per legge puoi esercitare il diritto di recesso entro 14 giorni dalla consegna. Ti basta scriverci.
+          - generic [ref=f25e61]:
+            - term [ref=f25e62]: Come funziona
+            - definition [ref=f25e63]: Ci rimandi le carte protette come le hai ricevute; appena arrivano, partiamo col rimborso.
+          - generic [ref=f25e64]:
+            - term [ref=f25e65]: Il rimborso
+            - definition [ref=f25e66]: Ti torna tutto sullo stesso metodo di pagamento, entro 14 giorni dal reso.
+          - generic [ref=f25e67]:
+            - term [ref=f25e68]: La spedizione di ritorno
+            - definition [ref=f25e69]: È a tuo carico per il ripensamento; se l’errore è nostro — carta sbagliata o arrivata danneggiata — la copriamo noi.
+      - generic [ref=f25e72]:
+        - generic [ref=f25e73]: Un intoppo?
+        - generic [ref=f25e74]: Qualcosa è andato storto con un ordine? Scrivici e lo risolviamo — un pacco alla volta, come li spediamo.
+        - link "Scrivici su Telegram" [ref=f25e75] [cursor=pointer]:
+          - /url: https://t.me/khewro?text=Ciao%21%20Ti%20scrivo%20dal%20sito%20CardsRift%20%E2%80%94%20ho%20una%20domanda%20su%20un%20ordine.
+    - contentinfo [ref=f25e76]:
+      - generic [ref=f25e78]:
+        - generic [ref=f25e79]:
+          - generic [ref=f25e80]:
+            - link "CardsRift" [ref=f25e81] [cursor=pointer]:
+              - /url: http://localhost/cardsrift/public/
+              - img "CardsRift" [ref=f25e82]
+            - paragraph [ref=f25e83]: "Il tuo portale per il collezionismo: carte controllate una a una, protette e spedite in 24/48h."
+            - generic [ref=f25e84]:
+              - link "Instagram" [ref=f25e85] [cursor=pointer]:
+                - /url: https://www.instagram.com/cardsrift/
+              - link "Telegram" [ref=f25e90] [cursor=pointer]:
+                - /url: https://t.me/+4XSpVIOPA3FjMmFk
+          - generic [ref=f25e93]:
+            - heading "Il negozio" [level=4] [ref=f25e94]
+            - list [ref=f25e95]:
+              - listitem [ref=f25e96]:
+                - link "Il progetto" [ref=f25e97] [cursor=pointer]:
+                  - /url: /chi-siamo
+              - listitem [ref=f25e98]:
+                - link "Come imballiamo" [ref=f25e99] [cursor=pointer]:
+                  - /url: /come-imballiamo
+              - listitem [ref=f25e100]:
+                - link "Recensioni" [ref=f25e101] [cursor=pointer]:
+                  - /url: /recensioni
+              - listitem [ref=f25e102]:
+                - link "Community Telegram" [ref=f25e103] [cursor=pointer]:
+                  - /url: https://t.me/+4XSpVIOPA3FjMmFk
+          - generic [ref=f25e104]:
+            - heading "Assistenza" [level=4] [ref=f25e105]
+            - list [ref=f25e106]:
+              - listitem [ref=f25e107]:
+                - link "Spedizioni e resi" [ref=f25e108] [cursor=pointer]:
+                  - /url: /spedizioni-e-resi
+              - listitem [ref=f25e109]:
+                - link "Guida alle condizioni" [ref=f25e110] [cursor=pointer]:
+                  - /url: /guida-alle-condizioni
+              - listitem [ref=f25e111]:
+                - link "Domande frequenti" [ref=f25e112] [cursor=pointer]:
+                  - /url: /faq
+              - listitem [ref=f25e113]:
+                - link "Contatti" [ref=f25e114] [cursor=pointer]:
+                  - /url: /contatti
+          - generic [ref=f25e115]:
+            - heading "Contatti" [level=4] [ref=f25e116]
+            - list [ref=f25e117]:
+              - listitem [ref=f25e118]:
+                - link "cardsrift@gmail.com" [ref=f25e119] [cursor=pointer]:
+                  - /url: mailto:cardsrift@gmail.com
+              - listitem [ref=f25e120]: P.IVA 13934020960
+        - generic [ref=f25e121]:
+          - generic [ref=f25e122]:
+            - generic [ref=f25e123]: © 2026 CardsRift
+            - generic [ref=f25e124]: ·
+            - link "Privacy" [ref=f25e125] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045
+            - generic [ref=f25e126]: ·
+            - link "Cookie" [ref=f25e127] [cursor=pointer]:
+              - /url: https://www.iubenda.com/privacy-policy/20607045/cookie-policy
+          - list [ref=f25e128]:
+            - listitem [ref=f25e129]:
+              - img "Visa" [ref=f25e130]
+            - listitem [ref=f25e131]:
+              - img "Mastercard" [ref=f25e132]
+            - listitem [ref=f25e133]:
+              - img "PayPal" [ref=f25e134]
+  - button "Le tue preferenze relative al consenso per le tecnologie di tracciamento" [ref=f25e135] [cursor=pointer]
+  - status [ref=f25e137]

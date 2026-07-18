@@ -8,6 +8,7 @@ include('includes/config.php');
 include('includes/rework.php');
 include('includes/page-builder.php');
 include('includes/seo.php');
+include('includes/account.php');
 include('includes/script_and_style.php');
 include('includes/acf.php');
 

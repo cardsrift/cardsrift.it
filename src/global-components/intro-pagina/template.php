@@ -4,7 +4,8 @@
  * INTRO PAGINA — intestazione editoriale riutilizzabile per le pagine secondarie
  * (chi-siamo, compriamo-le-tue-carte, ...): eyebrow → titolo → sottotitolo, centrato.
  * Interamente da codice (nessun campo DB). Copy nel manifest content/{slug}.php.
- * Campi: tema, eyebrow, titolo (\n = a capo), sottotitolo, pattern (true/false).
+ * Campi: tema, eyebrow, titolo (\n = a capo), sottotitolo, cta_label/cta_url (opz.),
+ * pattern (true/false).
  */
 $c = is_array($component_data ?? null) ? $component_data : [];
 $tema = cr_theme($c);
@@ -24,6 +25,12 @@ $tema = cr_theme($c);
 
 			<?php if (!empty($c['sottotitolo'])) : ?>
 				<p class="text-th-muted !text-base lg:!text-lg leading-relaxed max-w-[54ch] mt-5"><?= esc_html($c['sottotitolo']); ?></p>
+			<?php endif; ?>
+
+			<?php if (!empty($c['cta_label']) && !empty($c['cta_url'])) : ?>
+				<div class="mt-8">
+					<a class="cr-btn cr-btn-solid" href="<?= esc_url($c['cta_url']); ?>"><?= esc_html($c['cta_label']); ?></a>
+				</div>
 			<?php endif; ?>
 
 		</div>

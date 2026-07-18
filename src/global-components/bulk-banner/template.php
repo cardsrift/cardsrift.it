@@ -1,9 +1,9 @@
 <?php
 
 /**
- * BULK BANNER (Bulk A) — "Compriamo le tue carte": doppia offerta col bonus credito in evidenza.
+ * BULK BANNER (Bulk A) — "Compriamo le tue carte": teaser con la tariffa in evidenza.
  * È il canale di rifornimento delle singole: il banner porta alla pagina dedicata.
- * Layout ACF: bulk_banner — campi: tema, percentuale, percentuale_label, eyebrow, titolo,
+ * Campi: tema, percentuale, percentuale_label, eyebrow, titolo,
  * testo, cta_label/cta_url, microtrust (repeater: testo), pattern (true/false)
  */
 $c = is_array($component_data ?? null) ? $component_data : [];

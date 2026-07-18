@@ -82,22 +82,22 @@ return [
 		'mostra_calendario' => true,
 	],
 
-	// 7 · Bulk banner — % da config (CR_BULK_PCT)
+	// 7 · Bulk banner — tariffa reale da config (CR_BUY_MIN_PCT), pagamento cash/PayPal
 	[
 		'comp'              => 'bulk-banner',
 		'tema'              => 'lilla',
 		'pattern'           => true,
-		'percentuale'       => CR_BULK_PCT,
-		'percentuale_label' => __('in credito negozio', 'cardsrift'),
+		'percentuale'       => CR_BUY_MIN_PCT,
+		'percentuale_label' => __('minimo del valore Cardmarket', 'cardsrift'),
 		'eyebrow'           => __('Compriamo le tue carte', 'cardsrift'),
-		'titolo'            => __('Le tue doppie valgono. Da noi diventano credito.', 'cardsrift'),
-		'testo'             => __('È così che ci riforniamo di singole: dalle collezioni di chi, come te, ne ha qualcuna di troppo. Valutazione trasparente sui prezzi di Cardmarket, pagamento tracciato in 24/48h.', 'cardsrift'),
+		'titolo'            => __('Le tue doppie valgono. Le valutiamo noi.', 'cardsrift'),
+		'testo'             => __('È così che ci riforniamo di singole: dalle collezioni di chi, come te, ne ha qualcuna di troppo. Valutazione trasparente sui prezzi di Cardmarket, pagamento tracciato in contanti o PayPal entro 24/48h.', 'cardsrift'),
 		'cta_label'         => __('Valuta le tue carte', 'cardsrift'),
 		'cta_url'           => '/compriamo-le-tue-carte',
 		'microtrust'        => [
 			['testo' => __('Conteggio in foto e video, sempre', 'cardsrift')],
 			['testo' => __('Reso gratis se rifiuti l’offerta', 'cardsrift')],
-			['testo' => sprintf(__('Pagamento tracciato, oppure %s in credito', 'cardsrift'), CR_BULK_PCT)],
+			['testo' => __('Pagamento tracciato in 24/48h', 'cardsrift')],
 		],
 	],
 
@@ -107,7 +107,7 @@ return [
 		'tema'      => 'dark',
 		'pattern'   => true,
 		'eyebrow'   => __('Il progetto', 'cardsrift'),
-		'testo'     => __('Siamo collezionisti prima che negozianti. <b>CardsRift nasce per essere il portale che avremmo voluto trovare noi:</b> carte controllate una per una, condizioni oneste, e qualcuno che risponde davvero dall’altra parte. Niente foto finte, niente sorprese all’apertura — <b>solo le carte che cerchi, trattate come se restassero nella nostra collezione.</b>', 'cardsrift'),
+		'testo'     => __('Siamo collezionisti prima che negozianti. <b>CardsRift nasce per essere il portale che avremmo voluto trovare noi:</b> carte controllate una per una, condizioni oneste, foto vere del pezzo che ricevi, e qualcuno che risponde davvero dall’altra parte — <b>le carte che cerchi, trattate come se restassero nella nostra collezione.</b>', 'cardsrift'),
 		'stats'     => [
 			['valore' => CR_CM_POSITIVE,   'etichetta' => __('valutazioni positive', 'cardsrift')],
 			['valore' => CR_CM_SALES,        'etichetta' => __('vendite su Cardmarket', 'cardsrift')],
@@ -123,20 +123,21 @@ return [
 		'tema'      => 'dark',
 		'eyebrow'   => __('Community', 'cardsrift'),
 		'titolo'    => __('Il canale dove succede prima', 'cardsrift'),
-		'testo'     => __('Restock, drop e chicche li annunciamo lì prima che altrove — con qualche prezzo che sul sito non trovi. Si entra gratis, e senza spam.', 'cardsrift'),
+		'testo'     => __('Restock, drop e chicche li annunciamo lì prima che altrove — con qualche prezzo riservato a chi è nel canale. Si entra gratis.', 'cardsrift'),
 		'cta_label' => __('Entra nel canale', 'cardsrift'),
 		'cta_url'   => CR_TELEGRAM_URL,
 	],
 
-	// 10 · Newsletter — shortcode da config (vuoto = form placeholder) · respiro lilla2
+	// 10 · Invito registrazione — sconto di benvenuto (niente provider newsletter) · respiro lilla2
 	[
-		'comp'           => 'newsletter-box',
-		'tema'           => 'lilla2',
-		'pattern'        => true,
-		'eyebrow'        => __('Newsletter', 'cardsrift'),
-		'titolo'         => __('−5% sul tuo primo ordine', 'cardsrift'),
-		'testo'          => __('Una mail solo quando arriva qualcosa che vale: le uscite, i restock, e lo sconto di benvenuto appena ti iscrivi.', 'cardsrift'),
-		'micro'          => __('Niente spam. Ti cancelli quando vuoi, con un clic.', 'cardsrift'),
-		'form_shortcode' => CR_NEWSLETTER_SHORTCODE,
+		'comp'      => 'newsletter-box',
+		'tema'      => 'lilla2',
+		'pattern'   => true,
+		'eyebrow'   => __('Benvenuto', 'cardsrift'),
+		'titolo'    => sprintf(__('Il primo ordine è −%s', 'cardsrift'), CR_WELCOME_PCT),
+		'testo'     => __('Crea un account e ti mandiamo il codice di benvenuto via email. Al prossimo acquisto sei anche più veloce.', 'cardsrift'),
+		'cta_label' => __('Crea un account', 'cardsrift'),
+		'cta_url'   => '/my-account',
+		'micro'     => __('Basta un minuto e una email.', 'cardsrift'),
 	],
 ];
