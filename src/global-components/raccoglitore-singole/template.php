@@ -40,30 +40,7 @@ if (!$ids && !$ph) {
 					<?php if ($ph) : ?>
 						<?php for ($k = 0; $k < 6; $k++) cr_ph_pocket(); ?>
 					<?php else : ?>
-						<?php foreach ($ids as $pid) :
-							$product = wc_get_product($pid);
-							if (!$product) continue;
-							$cond   = $product->get_attribute('condizione');
-							$lingua = $product->get_attribute('lingua');
-							// per i variabili gli attributi possono elencare più valori: mostra il primo
-							$cond   = $cond ? trim(explode(',', $cond)[0]) : '';
-							$lingua = $lingua ? trim(explode(',', $lingua)[0]) : '';
-						?>
-							<a class="cr-pocket" href="<?= esc_url(get_permalink($pid)); ?>">
-								<span class="cr-pocket__well">
-									<?= $product->get_image('woocommerce_thumbnail'); ?>
-								</span>
-								<span class="flex flex-col gap-1 pt-2 px-0.5 pb-1">
-									<span class="flex gap-1 flex-wrap">
-										<?php if ($cond) : ?><span class="cr-cchip cr-cchip--cond"><?= esc_html($cond); ?></span><?php endif; ?>
-										<?php if ($lingua) : ?><span class="cr-cchip"><?= esc_html($lingua); ?></span><?php endif; ?>
-									</span>
-									<span class="font-metropolis font-semibold text-xs leading-tight text-th-ink min-h-[2.6em]"><?= esc_html($product->get_name()); ?></span>
-									<span class="cr-price !text-sm"><?= $product->get_price_html(); ?></span>
-								</span>
-								<span class="cr-pocket__pick"><?= $product->is_type('variable') ? __('Scegli condizione', 'cardsrift') : __('Vedi carta', 'cardsrift'); ?></span>
-							</a>
-						<?php endforeach; ?>
+						<?php foreach ($ids as $pid) cr_pocket_card($pid); ?>
 					<?php endif; ?>
 				</div>
 			</div>

@@ -20,6 +20,7 @@ function crs_import_row($rec, $opts)
 	}
 
 	$sku = $rec['sku'];
+	$lang = !empty($rec['lang']) ? $rec['lang'] : $opts['lang']; // per-riga dall'export, fallback al default del form
 	$existing_id = wc_get_product_id_by_sku($sku);
 
 	if ($existing_id && $opts['mode'] === 'add') {
@@ -43,7 +44,7 @@ function crs_import_row($rec, $opts)
 		// attributi impostati PRIMA del save → un solo save (niente doppio giro)
 		$attrs = crs_build_attributes([
 			'condizione' => strtolower($rec['condition']),
-			'lingua'     => strtolower($opts['lang']),
+			'lingua'     => strtolower($lang),
 			'foil'       => 'normale',
 		]);
 		if ($attrs) {
@@ -95,7 +96,7 @@ function crs_import_row($rec, $opts)
 	if ($creating) {
 		crs_assign_attr_terms($pid, [
 			'condizione' => strtolower($rec['condition']),
-			'lingua'     => strtolower($opts['lang']),
+			'lingua'     => strtolower($lang),
 			'foil'       => 'normale',
 		]);
 		if (!empty($opts['images']) && $rec['image_url'] && !$product->get_image_id()) {

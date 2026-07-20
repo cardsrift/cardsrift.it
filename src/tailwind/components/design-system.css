@@ -344,6 +344,32 @@
 		min-height: 90px;
 	}
 
+	/* ---- paginazione (listati) — stila l'output di paginate_links ---- */
+	.cr-pagenav {
+		@apply flex flex-wrap justify-center items-center gap-1.5;
+	}
+	.cr-pagenav .page-numbers {
+		@apply inline-grid place-items-center font-metropolis font-semibold text-sm rounded-[10px] no-underline transition-colors;
+		min-width: 40px;
+		height: 40px;
+		padding: 0 12px;
+		color: var(--cr-ink);
+		border: 1px solid var(--cr-line-s);
+	}
+	.cr-pagenav a.page-numbers:hover {
+		background-color: var(--cr-accsoft);
+		border-color: var(--cr-acc2);
+	}
+	.cr-pagenav .page-numbers.current {
+		background-color: var(--cr-btn);
+		color: var(--cr-btn-fg);
+		border-color: transparent;
+	}
+	.cr-pagenav .page-numbers.dots {
+		border-color: transparent;
+		min-width: 24px;
+	}
+
 	@media (prefers-reduced-motion: reduce) {
 		.cr-ticker__track,
 		.cr-dropchip::before,

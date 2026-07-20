@@ -188,10 +188,16 @@ function cr_not_singole_tax()
  * $sorgente: manuale (ids da relationship) | recenti | offerte
  * I prodotti "in arrivo" (con data_uscita) e le singole sono esclusi.
  */
-function cr_grid_products($sorgente, $manual_ids = [], $limit = 4)
+function cr_grid_products($sorgente, $manual_ids = [], $limit = 4, $game = '')
 {
     if ($sorgente === 'manuale') {
         return array_slice(array_filter(array_map('intval', (array) $manual_ids)), 0, $limit);
+    }
+
+    // niente singole (stanno nel raccoglitore) e, se richiesto, un solo gioco (mai misto)
+    $tax = cr_not_singole_tax();
+    if ($game) {
+        $tax = ['relation' => 'AND', ['taxonomy' => 'product_cat', 'field' => 'slug', 'terms' => [$game]], $tax[0]];
     }
 
     $args = [
@@ -199,7 +205,7 @@ function cr_grid_products($sorgente, $manual_ids = [], $limit = 4)
         'limit'     => $limit,
         'return'    => 'ids',
         'exclude'   => cr_preorder_products(100), // niente prodotti in arrivo nelle griglie
-        'tax_query' => cr_not_singole_tax(),      // niente singole: quelle stanno nel raccoglitore
+        'tax_query' => $tax,
     ];
 
     if ($sorgente === 'offerte') {
@@ -244,6 +250,33 @@ function cr_preorder_products($limit = 3)
         $all = $q->posts;
     }
     return $limit > 0 ? array_slice($all, 0, $limit) : $all;
+}
+
+/**
+ * Hero della landing di un gioco, curato a mano dalle Theme Options
+ * (gruppo "Hero landing di gioco", un tab per gioco → campi hero_{gioco}_*).
+ * Ritorna un array normalizzato; 'img' vuoto ⇒ la landing usa lo skin di brand.
+ * I campi copy vuoti restano vuoti: i default li decide il template.
+ */
+function cr_game_hero($game)
+{
+    $gs  = str_replace('-', '_', (string) $game); // slug → nome campo (one-piece → one_piece)
+    $img = get_field("hero_{$gs}_immagine", 'option');
+    $url = '';
+    if (is_array($img) && !empty($img['url'])) {
+        $url = $img['url'];
+    } elseif (is_string($img) && $img !== '') {
+        $url = $img;
+    }
+    return [
+        'img'         => $url,
+        'sopratitolo' => trim((string) get_field("hero_{$gs}_sopratitolo", 'option')),
+        'titolo'      => trim((string) get_field("hero_{$gs}_titolo", 'option')),
+        'sottotitolo' => trim((string) get_field("hero_{$gs}_sottotitolo", 'option')),
+        'data'        => trim((string) get_field("hero_{$gs}_data", 'option')),
+        'cta_label'   => trim((string) get_field("hero_{$gs}_cta_label", 'option')),
+        'cta_url'     => trim((string) get_field("hero_{$gs}_cta_url", 'option')),
+    ];
 }
 
 /**
@@ -398,4 +431,80 @@ function cr_ph_pocket()
         <span class="cr-pocket__pick"><?= esc_html__('Vedi carta', 'cardsrift'); ?></span>
     </span>
 <?php
+}
+
+/**
+ * Tasca singola REALE (raccoglitore + listati). Variabile → chip condizione/lingua
+ * (primo valore) e CTA "Scegli condizione"; semplice → "Vedi carta". Echo diretto.
+ */
+function cr_pocket_card($pid)
+{
+    $product = wc_get_product($pid);
+    if (!$product) {
+        return;
+    }
+    $cond   = $product->get_attribute('condizione');
+    $lingua = $product->get_attribute('lingua');
+    $cond   = $cond ? trim(explode(',', $cond)[0]) : '';
+    $lingua = $lingua ? trim(explode(',', $lingua)[0]) : '';
+?>
+    <a class="cr-pocket" href="<?= esc_url(get_permalink($pid)); ?>">
+        <span class="cr-pocket__well">
+            <?= $product->get_image('woocommerce_thumbnail'); ?>
+        </span>
+        <span class="flex flex-col gap-1 pt-2 px-0.5 pb-1">
+            <span class="flex gap-1 flex-wrap">
+                <?php if ($cond) : ?><span class="cr-cchip cr-cchip--cond"><?= esc_html($cond); ?></span><?php endif; ?>
+                <?php if ($lingua) : ?><span class="cr-cchip"><?= esc_html($lingua); ?></span><?php endif; ?>
+            </span>
+            <span class="font-metropolis font-semibold text-xs leading-tight text-th-ink min-h-[2.6em]"><?= esc_html($product->get_name()); ?></span>
+            <span class="cr-price !text-sm"><?= $product->get_price_html(); ?></span>
+        </span>
+        <span class="cr-pocket__pick"><?= $product->is_type('variable') ? esc_html__('Scegli condizione', 'cardsrift') : esc_html__('Vedi carta', 'cardsrift'); ?></span>
+    </a>
+<?php
+}
+
+/**
+ * Faccette filtro disponibili per un listato (gioco+tipo). Solo gli attributi con
+ * ALMENO 2 valori realmente presenti tra i prodotti in scope: niente filtri a opzione
+ * singola. Chiave = taxonomy (pa_*), valore = ['label'=>..., 'terms'=>[...]].
+ */
+function cr_listing_facets($game, $tipo)
+{
+    $tax = ['relation' => 'AND'];
+    if ($game) {
+        $tax[] = ['taxonomy' => 'product_cat', 'field' => 'slug', 'terms' => [$game]];
+    }
+    if ($tipo) {
+        $tax[] = ['taxonomy' => 'product_cat', 'field' => 'slug', 'terms' => [$tipo]];
+    }
+    $ids = get_posts([
+        'post_type'   => 'product',
+        'post_status' => 'publish',
+        'numberposts' => -1,
+        'fields'      => 'ids',
+        'tax_query'   => $tax,
+    ]);
+    if (!$ids) {
+        return [];
+    }
+    $wanted = [
+        'pa_espansione' => __('Espansione', 'cardsrift'),
+        'pa_condizione' => __('Condizione', 'cardsrift'),
+        'pa_lingua'     => __('Lingua', 'cardsrift'),
+        'pa_foil'       => __('Foil', 'cardsrift'),
+    ];
+    $facets = [];
+    foreach ($wanted as $txn => $label) {
+        if (!taxonomy_exists($txn)) {
+            continue;
+        }
+        $terms = wp_get_object_terms($ids, $txn);
+        if (is_wp_error($terms) || count($terms) < 2) {
+            continue; // utile solo con ≥2 opzioni reali
+        }
+        $facets[$txn] = ['label' => $label, 'terms' => $terms];
+    }
+    return $facets;
 }

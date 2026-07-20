@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html <?php language_attributes(); ?> class="">
+<html <?php language_attributes(); ?> class="scroll-smooth scroll-pt-[var(--header-h-mobile)] lg:scroll-pt-[var(--header-h-desktop)]">
 
 <head>
 	<meta charset="UTF-8">
@@ -40,16 +40,23 @@
 				<?php if ($cr_logo_url) : ?><img class="w-full h-auto<?= $cr_ht === 'dark' ? ' brightness-0 invert' : ''; ?>" src="<?= esc_url($cr_logo_url); ?>" alt="CardsRift"><?php endif; ?>
 			</a>
 
-			<!-- NAV (desktop in linea · mobile overlay a scomparsa) -->
-			<nav class="mainMenu flex items-center gap-7 font-metropolis font-medium text-sm uppercase tracking-wide lg:flex-1 lg:justify-center max-lg:fixed max-lg:top-[var(--header-h-mobile)] max-lg:left-0 max-lg:right-0 max-lg:bottom-0 max-lg:z-40 max-lg:flex-col max-lg:justify-center max-lg:gap-7 max-lg:text-lg max-lg:bg-th-pg">
-				<?php foreach ($cr_menu as $cr_item) : ?>
-					<a class="text-th-ink hover:text-th-acc transition-colors whitespace-nowrap" href="<?= esc_url($cr_item['url']); ?>"><?= esc_html($cr_item['title']); ?></a>
+			<!-- NAV = GAME-SWITCHER (i 3 giochi + Accessori globale) · gioco attivo evidenziato -->
+			<?php
+			$cr_games       = defined('CR_GAMES') ? CR_GAMES : ['magic', 'pokemon', 'one-piece'];
+			$cr_active_game = function_exists('cr_current_game') ? cr_current_game() : '';
+			$cr_on_access   = (get_query_var('cr_tipo') === 'accessori');
+			?>
+			<nav class="mainMenu flex items-center gap-6 font-metropolis font-medium text-sm lg:flex-1 lg:justify-center max-lg:fixed max-lg:top-[var(--header-h-mobile)] max-lg:left-0 max-lg:right-0 max-lg:bottom-0 max-lg:z-40 max-lg:flex-col max-lg:justify-center max-lg:gap-7 max-lg:text-lg max-lg:bg-th-pg">
+				<?php foreach ($cr_games as $cr_g) : $cr_is = ($cr_g === $cr_active_game); ?>
+					<a class="whitespace-nowrap transition-colors <?= $cr_is ? 'text-th-acc font-semibold' : 'text-th-ink hover:text-th-acc'; ?>" href="<?= esc_url(home_url('/' . $cr_g . '/')); ?>"><?= esc_html(function_exists('cr_game_label') ? cr_game_label($cr_g) : $cr_g); ?></a>
 				<?php endforeach; ?>
+				<span class="hidden lg:block w-px h-4 bg-th-lines shrink-0"></span>
+				<a class="whitespace-nowrap transition-colors <?= $cr_on_access ? 'text-th-acc font-semibold' : 'text-th-ink hover:text-th-acc'; ?>" href="<?= esc_url(home_url('/accessori/')); ?>"><?= esc_html__('Accessori', 'cardsrift'); ?></a>
 			</nav>
 
 			<!-- ICONE -->
 			<div class="flex items-center gap-0.5 lg:gap-1.5 shrink-0 relative z-50">
-				<a class="w-10 h-10 grid place-items-center rounded-full text-th-ink hover:text-th-acc hover:bg-th-accsoft transition-colors" href="<?= esc_url($cr_shop_url); ?>" aria-label="<?= esc_attr__('Cerca', 'cardsrift'); ?>">
+				<a class="w-10 h-10 grid place-items-center rounded-full text-th-ink hover:text-th-acc hover:bg-th-accsoft transition-colors" href="<?= esc_url(home_url('/')); ?>" aria-label="<?= esc_attr__('Cerca', 'cardsrift'); ?>">
 					<svg class="w-5 h-5 stroke-current fill-transparent" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5L21 21"/></svg>
 				</a>
 				<a class="w-10 h-10 grid place-items-center rounded-full text-th-ink hover:text-th-acc hover:bg-th-accsoft transition-colors max-sm:hidden" href="<?= esc_url($cr_acct_url); ?>" aria-label="<?= esc_attr__('Account', 'cardsrift'); ?>">
@@ -75,4 +82,5 @@
 
 
 	<div class="wrapper pt-[var(--header-h-mobile)] lg:pt-[var(--header-h-desktop)]">
-		<div class="base <?= function_exists('cr_is_builder_page') && cr_is_builder_page() ? '!max-w-none !px-0' : 'container'; ?>">
+		<?php if (function_exists('cr_render_game_subnav')) cr_render_game_subnav(); ?>
+			<div class="base <?= function_exists('cr_is_builder_page') && cr_is_builder_page() ? '!max-w-none !px-0' : 'container'; ?>">

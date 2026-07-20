@@ -15,7 +15,7 @@ $glass    = ($c['stile_card'] ?? 'solido') === 'glass';
 $top_id   = is_object($c['prodotto_top'] ?? null) ? $c['prodotto_top']->ID : (int) ($c['prodotto_top'] ?? 0);
 $manual   = array_map(fn($p) => is_object($p) ? $p->ID : (int) $p, (array) ($c['prodotti'] ?? []));
 
-$ids = cr_grid_products($sorgente, $manual, $colonne);
+$ids = cr_grid_products($sorgente, $manual, $colonne, $c['gioco'] ?? '');
 $ph  = !$ids && CR_PLACEHOLDER; // sezione vuota + modalità sviluppo → card di esempio
 if (!$ids && !$ph) {
 	return;
@@ -23,7 +23,7 @@ if (!$ids && !$ph) {
 $grid_class = $colonne === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4';
 ?>
 
-<section class="cr-sec griglia-prodotti <?= !empty($c['pattern']) ? 'cr-patt' : ''; ?>" data-th="<?= esc_attr($tema); ?>">
+<section <?= !empty($c['anchor']) ? 'id="' . esc_attr($c['anchor']) . '"' : ''; ?> class="cr-sec griglia-prodotti <?= !empty($c['pattern']) ? 'cr-patt' : ''; ?>" data-th="<?= esc_attr($tema); ?>">
 	<div class="tw-container tw-section">
 		<div class="py-14 lg:py-16">
 

@@ -115,9 +115,9 @@ File: `cardmarket-stock-2026-07-18-it-Magic-v2.2.7.csv` (estensione lupzn, UI IT
 
 **Presenti e affidabili:** `idProduct`, `Name` (IT localizzato), `Expansion` (IT), `Rarity`, `Condition`/`ConditionFull`, `Price_EUR`, `Amount`, **`ImageUrl`** (801/801, con set code nel path), `ProductUrl` (slug EN).
 
-**ASSENTI / inaffidabili in questo export** (nonostante il readme dell'estensione dica il contrario):
-- **`Language`: 0/801** ⚠️ — non mappabile da questo file.
-- **Foil: nessuna colonna** ⚠️ — c'è solo `ReverseHolo` (tutto `N`).
+**ASSENTI / inaffidabili in questo export** (la colonna può esistere nel tracciato ma restare vuota — diagnosi in §8.1):
+- **`Language`: 0/801** ⚠️ — colonna presente ma **vuota** (bug di localizzazione dell'estensione, §8.1), non un dato assente su Cardmarket.
+- **Foil: non esportato** ⚠️ — nessuna colonna `isFoil`; c'è solo `ReverseHolo` (tutto `N`), che è reverse-holo (Pokémon), **non** il foil Magic (§8.1).
 - **`CollectorNumber`: 0/801** ⚠️ — chiave di match blueprint mancante.
 - `SetCode`: solo 32/801 (ma recuperabile da `ImageUrl`).
 
@@ -126,6 +126,23 @@ File: `cardmarket-stock-2026-07-18-it-Magic-v2.2.7.csv` (estensione lupzn, UI IT
 **Implicazione sul MODELLO:** le singole reali sono quasi tutte **mono-condizione, qty 1** → un **prodotto SEMPLICE per articolo** è più adatto del variabile-a-matrice per il grosso; il variabile serve solo per le poche carte stoccate in più condizioni. → Rivedere il gate `type=variable` di `cr_singole_products()` (identificare le singole via **categoria**, non via tipo prodotto).
 
 **Implicazione sulla STRATEGIA:** questo file **è** il bulk Cardmarket (767 carte da pochi centesimi) → **resta su Cardmarket**. Il sito parte con **sealed + singole chase curate** (lingua/foil/foto noti a mano), non con questo bulk. Lingua/foil/collector# vanno risolti solo per la **migrazione futura** del bulk (path d'export alternativo o API), non bloccano il lancio.
+
+### 8.1 · Perché lingua e foil mancano — diagnosi estensione lupzn (v2.2.7)
+
+Letto il sorgente (`popup.js`: tutta la logica sta lì, nessun content script). Lo **stock export raschia solo la tabella della lista** stock — non apre mai la pagina di dettaglio dell'articolo. Da lì:
+
+- **Lingua** — dedotta dal **tooltip della bandierina** nella riga, confrontato con una regex che conosce **solo i nomi in tedesco/inglese** (`Deutsch|Englisch|Französisch|… | English|German|French|…`, **niente italiano**). L'export è stato fatto con **UI Cardmarket in italiano** → i tooltip dicevano "Inglese"/"Tedesco"… non riconosciuti → `Language` vuota su tutte le righe. **È un bug di localizzazione dell'estensione, non un dato assente su Cardmarket** (l'estensione ha UI solo DE/EN).
+- **Foil (Magic)** — **non rilevato affatto** nell'export: nessuna colonna `isFoil`, nessun toggle. C'è solo `ReverseHolo` (euristica su commenti/tooltip). Il flag `isFoil` esiste solo nella fase di *bulk-update* (round-trip di flag già presenti nel CSV, dalla v2.2.5), **non** nell'export.
+
+**Opzioni dell'estensione** (nessuna popola la lingua o aggiunge il foil): max pagine · delay · "itera per espansione" · `sortBy=name_asc` (serve alla paginazione) · **"Load my sets"** (esporta solo espansioni scelte, v2.2.7) · **filtro lingua** (multi-select su `idLanguage`: filtra *quali* lingue raschiare) · Fast Mode · Bulk price update (dry-run/verify) · Want-Lists export.
+
+**Workaround per la lingua (nessuno richiede codice):**
+- **A — UI in inglese:** imposta Cardmarket su English/Deutsch e ri-esporta → la regex riconosce i tooltip → `Language` si popola per-riga. **Confermato** (test 19/07: export EN di Alara Reborn → `Language=Italian` 3/3). L'importer ora **legge la colonna** (`crs_cm_langname_to_slug`, EN+DE→slug) e la usa nello SKU/attributo, con **fallback** al default del form quando vuota. ⚠️ L'export EN dà anche i **nomi in inglese** (`Filigree Angel` invece di `Angelo della Filigrana`): scelta di merchandising → **per Magic teniamo i nomi EN** (standard tra i giocatori e portano la lingua). Pokémon/One Piece da valutare.
+- **B — un file per lingua (consigliato):** usa il **filtro lingua** dell'estensione per esportare EN, poi IT, ecc.; ogni file è mono-lingua → si imposta la **"lingua predefinita"** nel form d'import (già usata nello SKU e negli attributi). Zero ambiguità, zero codice.
+
+**Foil:** per il lancio, **a mano** sulle poche chase (lo sai già). Per la migrazione futura del bulk serve l'**API Cardmarket** (`isFoil` affidabile) o una patch all'estensione che parsi l'icona foil nella lista.
+
+⚠️ **Compatibilità parser:** se ri-esporti (es. in inglese) e la prima riga diventasse una riga meta `# CMSE-META …` (introdotta in v2.1.0), il nostro parser — che legge la riga 1 come header — va adattato (2 minuti). Nel file attuale la meta-line **non** c'è.
 
 ## 9. Motore d'import (plugin `cardsrift-sync`) — comportamento
 
@@ -136,4 +153,5 @@ File: `cardmarket-stock-2026-07-18-it-Magic-v2.2.7.csv` (estensione lupzn, UI IT
 - **Validazione header**: se mancano colonne obbligatorie l'import si ferma (niente corruzione silenziosa). Prezzo: rilevamento robusto del separatore decimale.
 - **Immagini**: default via proxy Cardmarket (§6.2) — host allowlist con confine dominio, `wp_safe_remote_get`, lock anti-thundering-herd, negative-cache, scrittura atomica.
 - **Anti-bloat** verificato: re-import = **+0 righe DB**; prodotti semplici; niente allegati di default.
+- **Versioni della stessa carta**: SKU = `CM-{idProduct}-{COND}[-LANG][-FOIL]` → **condizioni/lingue diverse = prodotti semplici distinti** (fratelli per `_cardmarket_id`, mostrati dal blocco "altre versioni" della PDP). Righe con SKU identico si **sommano**. La **lingua è letta per-riga** dalla colonna `Language` (`crs_cm_langname_to_slug`), con **fallback** alla lingua di default del form quando la colonna è vuota (export IT). Il **foil** non è ancora nei dati (§8.1) → resta `normale` finché non arriverà da API/altro export.
 - **Rinviato**: cache (transient) delle query di home → pass performance pre-go-live.

@@ -68,3 +68,25 @@ function crs_cm_lang_to_ct($id_language)
 	$map = [1 => 'en', 2 => 'fr', 3 => 'de', 4 => 'es', 5 => 'it', 6 => 'zh-CN', 7 => 'jp', 8 => 'pt', 9 => 'ru', 10 => 'kr', 11 => 'zh-TW'];
 	return $map[(int) $id_language] ?? 'en';
 }
+
+/**
+ * Nome lingua testuale dell'export Cardmarket (colonna "Language", popolata con UI EN o DE) -> nostro slug.
+ * Ritorna '' se vuoto o non riconosciuto (cinese/portoghese/russo non hanno slug nel vocabolario attuale):
+ * chi chiama fa fallback alla lingua di default del form. Vedi docs/catalogo-import.md §8.1.
+ */
+function crs_cm_langname_to_slug($name)
+{
+	$n = strtolower(trim((string) $name));
+	if ($n === '') {
+		return '';
+	}
+	$map = [
+		// UI inglese
+		'english' => 'en', 'french' => 'fr', 'german' => 'de', 'spanish' => 'es',
+		'italian' => 'it', 'japanese' => 'jp', 'korean' => 'kr',
+		// UI tedesca
+		'englisch' => 'en', 'französisch' => 'fr', 'franzosisch' => 'fr', 'deutsch' => 'de',
+		'spanisch' => 'es', 'italienisch' => 'it', 'japanisch' => 'jp', 'koreanisch' => 'kr',
+	];
+	return $map[$n] ?? '';
+}

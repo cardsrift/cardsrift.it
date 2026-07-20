@@ -108,7 +108,13 @@ function crs_aggregate_csv($csv_path, $out_path, $opts)
 		$cond  = strtoupper(trim($get($r, 'Condition')));
 		$price = crs_parse_price($get($r, 'Price_EUR'));
 		$qty   = max(0, (int) $get($r, 'Amount'));
-		$sku   = crs_build_sku($cmid, $cond, $opts['lang']);
+		// lingua per-riga dall'export (la colonna Language è popolata solo con UI EN/DE, §8.1);
+		// se vuota/non riconosciuta si usa la lingua di default del form.
+		$lang  = crs_cm_langname_to_slug($get($r, 'Language'));
+		if ($lang === '') {
+			$lang = $opts['lang'];
+		}
+		$sku   = crs_build_sku($cmid, $cond, $lang);
 
 		if (!isset($agg[$sku])) {
 			$agg[$sku] = [
@@ -118,6 +124,7 @@ function crs_aggregate_csv($csv_path, $out_path, $opts)
 				'name'          => $name,
 				'expansion'     => trim($get($r, 'Expansion')),
 				'condition'     => $cond,
+				'lang'          => $lang,
 				'price'         => $price,
 				'qty'           => $qty,
 				'image_url'     => trim($get($r, 'ImageUrl')),

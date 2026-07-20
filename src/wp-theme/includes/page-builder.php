@@ -47,6 +47,10 @@ function cr_is_builder_page()
 	if (is_page_template('template_homepage.php')) {
 		return true;
 	}
+	// rotte gioco-scoped, accessori e pagina prodotto: sezioni full-bleed come la home
+	if (get_query_var('cr_game') || get_query_var('cr_tipo') || is_singular('product')) {
+		return true;
+	}
 	$id = get_queried_object_id();
 	if (!$id) {
 		return false;

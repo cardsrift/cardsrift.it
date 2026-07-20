@@ -6,6 +6,7 @@ add_theme_support('post-thumbnails');
 include('includes/helpers.php');
 include('includes/config.php');
 include('includes/rework.php');
+include('includes/routing.php');
 include('includes/page-builder.php');
 include('includes/seo.php');
 include('includes/account.php');

@@ -22,8 +22,8 @@ return [
 		'eyebrow'     => __('Il tuo portale per il collezionismo', 'cardsrift'),
 		'titolo'      => __("Le carte che cerchi,\nscelte una per una.", 'cardsrift'),
 		'sottotitolo' => __('Sealed, singole e accessori per Pokémon, One Piece e Magic. Le controlliamo una per una e le imballiamo come se restassero da noi.', 'cardsrift'),
-		'cta_label'   => __('Esplora il catalogo', 'cardsrift'),
-		'cta_url'     => '/shop',
+		'cta_label'   => __('Scopri i giochi', 'cardsrift'),
+		'cta_url'     => '#giochi', // ancora alle righe per-gioco qui sotto (niente catalogo globale)
 		'cta2_label'  => __('Come lavoriamo', 'cardsrift'),
 		'cta2_url'    => '/chi-siamo',
 		'trust'       => [
@@ -39,38 +39,41 @@ return [
 	// 2 · Ticker — voci automatiche (2 brand + 2 dal negozio): nessun campo, nessun copy
 	['comp' => 'ticker-info', 'tema' => 'dark'],
 
-	// 3 · Griglia "Aggiunti di recente" — automatica (ultimi prodotti)
+	// 3-5 · VETRINE PER-GIOCO — righe mono-gioco (mai miste); ogni riga → landing del gioco.
+	// Le griglie escludono le singole (quelle si sfogliano nella landing → "Carte singole").
+	[
+		'comp'       => 'griglia-prodotti',
+		'anchor'     => 'giochi',
+		'tema'       => 'light',
+		'sorgente'   => 'recenti',
+		'gioco'      => 'magic',
+		'colonne'    => 4,
+		'eyebrow'    => __('Magic: The Gathering', 'cardsrift'),
+		'titolo'     => __('Novità Magic: The Gathering', 'cardsrift'),
+		'link_label' => __('Entra', 'cardsrift'),
+		'link_url'   => '/magic/',
+	],
+	[
+		'comp'       => 'griglia-prodotti',
+		'tema'       => 'dark',
+		'sorgente'   => 'recenti',
+		'gioco'      => 'pokemon',
+		'colonne'    => 4,
+		'eyebrow'    => __('Pokémon', 'cardsrift'),
+		'titolo'     => __('Novità Pokémon', 'cardsrift'),
+		'link_label' => __('Entra', 'cardsrift'),
+		'link_url'   => '/pokemon/',
+	],
 	[
 		'comp'       => 'griglia-prodotti',
 		'tema'       => 'light',
 		'sorgente'   => 'recenti',
+		'gioco'      => 'one-piece',
 		'colonne'    => 4,
-		'eyebrow'    => __('Appena arrivati', 'cardsrift'),
-		'titolo'     => __('Aggiunti di recente', 'cardsrift'),
-		'link_label' => __('Tutte le novità', 'cardsrift'),
-		'link_url'   => '/shop?orderby=date',
-	],
-
-	// 4 · Griglia "In offerta" — automatica (prodotti in saldo) · respiro chiaro
-	[
-		'comp'       => 'griglia-prodotti',
-		'tema'       => 'light',
-		'sorgente'   => 'offerte',
-		'colonne'    => 4,
-		'eyebrow'    => __('Occasioni', 'cardsrift'),
-		'titolo'     => __('In offerta questa settimana', 'cardsrift'),
-		'link_label' => __('Tutte le offerte', 'cardsrift'),
-		'link_url'   => '/shop',
-	],
-
-	// 5 · Raccoglitore singole — automatico (variabili più recenti)
-	[
-		'comp'       => 'raccoglitore-singole',
-		'tema'       => 'lilla2',
-		'eyebrow'    => __('Carte singole', 'cardsrift'),
-		'titolo'     => __('Sfoglia il raccoglitore', 'cardsrift'),
-		'link_label' => __('Apri il raccoglitore', 'cardsrift'),
-		'link_url'   => '/carte-singole',
+		'eyebrow'    => __('One Piece', 'cardsrift'),
+		'titolo'     => __('Novità One Piece', 'cardsrift'),
+		'link_label' => __('Entra', 'cardsrift'),
+		'link_url'   => '/one-piece/',
 	],
 
 	// 6 · In arrivo — automatico (prodotti con "data di uscita", ordinati per data)
