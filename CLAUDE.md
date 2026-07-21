@@ -66,7 +66,7 @@ Hybrid system: **Tailwind CSS** (with DaisyUI, `themes: false`) for utilities/la
 
 ### JS Libraries
 
-jQuery (WordPress's copy — webpack `externals` maps `jquery` to the global `jQuery`; the `jquery` dep is declared in `wp_register_script`), Swiper 9.4 (installato ma al momento senza import — riservato agli slider futuri; importare `swiper/css` core only, mai `swiper-bundle.css`), ismobilejs. GSAP, Lottie, Plyr, Fancybox, and Select2 are **not** installed — don't import them. Effetti: solo il modulo `src/js/utils/effects.js` (vedi docs/rework-fase-1.md §3d), niente librerie di animazione.
+jQuery (WordPress's copy — webpack `externals` maps `jquery` to the global `jQuery`; the `jquery` dep is declared in `wp_register_script`), Swiper 9.4 (installato ma al momento senza import — riservato agli slider futuri; importare `swiper/css` core only, mai `swiper-bundle.css`), ismobilejs. **GSAP 3 + ScrollTrigger** sono la libreria di motion del sito (dal 21/07/2026 — GSAP è gratis, tutti i plugin inclusi): tutti gli effetti vivono in `src/js/utils/effects.js` (`import gsap from 'gsap'` + `gsap/ScrollTrigger`, bundle-ati da webpack). Regole invariate: GPU-only (transform/opacity/filter), pointer solo con `(hover: hover)`, tutto spento con `prefers-reduced-motion`. Lottie, Plyr, Fancybox e Select2 restano **non** installati — don't import them.
 
 ### WordPress/WooCommerce
 

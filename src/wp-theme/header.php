@@ -26,7 +26,6 @@
 	$cr_logo     = ($cr_ht === 'light') ? get_field('logo_black', 'option') : get_field('logo', 'option');
 	$cr_logo_url = is_array($cr_logo) ? ($cr_logo['url'] ?? '') : (string) $cr_logo;
 	$cr_menu     = function_exists('sort_wp_nav') ? sort_wp_nav('header') : [];
-	$cr_cart_ct  = (function_exists('WC') && WC() && WC()->cart) ? WC()->cart->get_cart_contents_count() : 0;
 	$cr_shop_url = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('shop') : home_url('/');
 	$cr_acct_url = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('myaccount') : home_url('/');
 	$cr_cart_url = function_exists('wc_get_cart_url') ? wc_get_cart_url() : home_url('/');
@@ -64,7 +63,7 @@
 				</a>
 				<a class="w-10 h-10 grid place-items-center rounded-full text-th-ink hover:text-th-acc hover:bg-th-accsoft transition-colors relative" href="<?= esc_url($cr_cart_url); ?>" aria-label="<?= esc_attr__('Carrello', 'cardsrift'); ?>">
 					<svg class="w-5 h-5 stroke-current fill-transparent" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 4h2l2.4 12h11.2l2.4-9H7"/><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>
-					<span class="cart-contents-count absolute top-1 right-1 min-w-[17px] h-[17px] px-1 grid place-items-center rounded-full bg-th-acc text-th-pg text-[10px] font-bold leading-none<?= $cr_cart_ct > 0 ? '' : ' hidden'; ?>"><?= (int) $cr_cart_ct; ?></span>
+					<?= function_exists('cr_cart_badge') ? cr_cart_badge() : ''; ?>
 				</a>
 
 				<!-- HAMBURGER (mobile) -->

@@ -41,7 +41,7 @@ $grid_class = $colonne === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4';
 				<?php endif; ?>
 			</div>
 
-			<div class="grid grid-cols-1 sm:grid-cols-2 <?= $grid_class; ?> gap-3 lg:gap-4">
+			<div class="grid grid-cols-1 sm:grid-cols-2 <?= $grid_class; ?> gap-3 lg:gap-4" data-fx-stagger>
 				<?php if ($ph) : ?>
 					<?php for ($k = 0; $k < $colonne; $k++) cr_ph_card(['glass' => $glass]); ?>
 				<?php else : ?>

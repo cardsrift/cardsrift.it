@@ -17,7 +17,7 @@ if (!$faq) {
 
 <section class="cr-sec blocco-faq <?= !empty($c['pattern']) ? 'cr-patt' : ''; ?>" data-th="<?= esc_attr($tema); ?>">
 	<div class="tw-container tw-section">
-		<div class="py-14 lg:py-16 max-w-[760px] mx-auto">
+		<div class="py-14 lg:py-16 max-w-[760px] mx-auto" data-fx="rise">
 
 			<?php if (!empty($c['eyebrow']) || !empty($c['titolo'])) : ?>
 				<div class="mb-8">

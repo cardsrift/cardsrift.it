@@ -10,9 +10,10 @@ $tema  = cr_theme($c);
 $stats = is_array($c['stats'] ?? null) ? $c['stats'] : [];
 ?>
 
-<section class="cr-sec claim-progetto <?= !empty($c['pattern']) ? 'cr-patt' : ''; ?>" data-th="<?= esc_attr($tema); ?>">
-	<div class="tw-container tw-section">
-		<div class="py-16 lg:py-20 flex flex-col items-center text-center">
+<section class="cr-sec claim-progetto relative overflow-hidden <?= !empty($c['pattern']) ? 'cr-patt' : ''; ?>" data-th="<?= esc_attr($tema); ?>">
+	<div class="cr-orbs" data-cr-orbs aria-hidden="true"><div class="cr-orbs__layer"><span class="cr-orb cr-orb--1"></span><span class="cr-orb cr-orb--2"></span><span class="cr-orb cr-orb--3"></span></div></div>
+	<div class="tw-container tw-section relative z-[1]">
+		<div class="py-16 lg:py-20 flex flex-col items-center text-center" data-fx="rise">
 
 			<?php if (!empty($c['eyebrow'])) : ?>
 				<div class="cr-eyebrow"><?= esc_html($c['eyebrow']); ?></div>

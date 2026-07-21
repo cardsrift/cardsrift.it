@@ -5,3 +5,4 @@ public
 .DS_Store
 src/tailwind/build
 *.log
+.playwright-mcp/

@@ -31,8 +31,9 @@ if ($vetrina) {
 }
 ?>
 
-<section class="cr-sec cr-patt hero-vetrina" data-th="<?= esc_attr($tema); ?>">
-	<div class="tw-container tw-section">
+<section class="cr-sec cr-patt hero-vetrina relative overflow-hidden" data-th="<?= esc_attr($tema); ?>">
+	<div class="cr-orbs" data-cr-orbs aria-hidden="true"><div class="cr-orbs__layer"><span class="cr-orb cr-orb--1"></span><span class="cr-orb cr-orb--2"></span><span class="cr-orb cr-orb--3"></span></div></div>
+	<div class="tw-container tw-section relative z-[1]">
 		<div class="grid lg:grid-cols-2 gap-12 items-center py-16 lg:py-20">
 
 			<div>
@@ -69,10 +70,13 @@ if ($vetrina) {
 			<?php if ($showcase) : ?>
 				<div class="hero-vetrina__showcase relative h-[340px] lg:h-[410px] max-lg:max-w-[540px]" aria-hidden="true">
 					<?php foreach ($showcase as $i => $s) : ?>
-						<div class="absolute w-[47%] max-w-[255px] aspect-[5/6] bg-white-pure rounded-2xl p-4 shadow-th border border-th-line <?= esc_attr($rotazioni[$i] ?? ''); ?>">
+						<div class="hero-vetrina__card absolute w-[47%] max-w-[255px] aspect-[5/6] <?= esc_attr($rotazioni[$i] ?? ''); ?>" data-cr-tilt>
+								<div class="relative w-full h-full bg-white-pure rounded-2xl p-4 shadow-th border border-th-line overflow-hidden">
 							<?php if ($s['img']) : ?>
 								<img class="w-full h-full object-contain" src="<?= esc_url($s['img']); ?>" alt="">
 							<?php endif; ?>
+								<span class="cr-glare"></span>
+							</div>
 							<?php if ($s['label']) : ?>
 								<span class="absolute -bottom-3 left-1/2 -translate-x-1/2 <?= $tema === 'dark' ? 'bg-purple-deep' : 'bg-black'; ?> text-white font-metropolis font-bold text-xs rounded-full px-3.5 py-1 whitespace-nowrap"><?= esc_html($s['label']); ?></span>
 							<?php endif; ?>

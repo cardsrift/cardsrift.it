@@ -232,12 +232,12 @@ while (have_posts()) : the_post();
 					</div>
 					<?php if ($is_singole) : ?>
 						<div class="cr-glass rounded-[20px] p-4 lg:p-5">
-							<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+							<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3" data-fx-stagger>
 								<?php foreach ($related as $rid) cr_pocket_card($rid); ?>
 							</div>
 						</div>
 					<?php else : ?>
-						<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
+						<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4" data-fx-stagger>
 							<?php foreach ($related as $rid) cr_product_card($rid); ?>
 						</div>
 					<?php endif; ?>

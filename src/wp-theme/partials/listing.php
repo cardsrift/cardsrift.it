@@ -99,14 +99,14 @@ $orderby = $active['cr_ord'] ?? '';
 
 				<?php if (!empty($cr_l_is_singole)) : ?>
 					<div class="cr-glass rounded-[20px] p-4 lg:p-5 shadow-th mt-8">
-						<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+						<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3" data-fx-stagger>
 							<?php while (have_posts()) : the_post(); ?>
 								<?php cr_pocket_card(get_the_ID()); ?>
 							<?php endwhile; ?>
 						</div>
 					</div>
 				<?php else : ?>
-					<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4 mt-8">
+					<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4 mt-8" data-fx-stagger>
 						<?php while (have_posts()) : the_post(); ?>
 							<?php cr_product_card(get_the_ID()); ?>
 						<?php endwhile; ?>

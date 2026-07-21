@@ -27,7 +27,7 @@ $icons = [
 
 <section class="cr-sec canali-contatto <?= !empty($c['pattern']) ? 'cr-patt' : ''; ?>" data-th="<?= esc_attr($tema); ?>">
 	<div class="tw-container tw-section">
-		<div class="py-14 lg:py-16">
+		<div class="py-14 lg:py-16" data-fx="rise">
 
 			<?php if (!empty($c['eyebrow']) || !empty($c['titolo'])) : ?>
 				<div class="max-w-[42ch] mb-10">

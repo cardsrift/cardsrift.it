@@ -18,6 +18,21 @@ function crs_clean_id($v)
 }
 
 /**
+ * Codice set (stabile tra le lingue) di una carta: ricavato dall'ImageUrl Cardmarket
+ * (/{n}/{CODE}/{idProduct}/… → CODE, popolato 801/801 nel test), con fallback alle
+ * colonne ExpansionCode/SetCode (spesso vuote). '' se non ricavabile.
+ * Vedi docs/catalogo-import.md §6.2. È lo slug del termine pa_espansione.
+ */
+function crs_expansion_code($image_url, $col_code = '')
+{
+	if ($image_url && preg_match('~/\d+/([A-Za-z0-9]+)/\d+/~', $image_url, $m)) {
+		return strtoupper($m[1]);
+	}
+	$c = trim((string) $col_code, "=\"");
+	return $c !== '' ? strtoupper($c) : '';
+}
+
+/**
  * Converte un prezzo testuale in float, rilevando il separatore decimale reale.
  * "0,20"->0.20 · "16,00"->16.0 · "0.20"->0.20 · "1.234,56"->1234.56 · "1,234.56"->1234.56
  */
@@ -122,7 +137,8 @@ function crs_aggregate_csv($csv_path, $out_path, $opts)
 				'cardmarket_id' => $cmid,
 				'article_id'    => crs_clean_id($get($r, 'ArticleID')),
 				'name'          => $name,
-				'expansion'     => trim($get($r, 'Expansion')),
+				'expansion'      => trim($get($r, 'Expansion')),
+				'expansion_code' => crs_expansion_code($get($r, 'ImageUrl'), $get($r, 'ExpansionCode') ?: $get($r, 'SetCode')),
 				'condition'     => $cond,
 				'lang'          => $lang,
 				'price'         => $price,

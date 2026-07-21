@@ -36,19 +36,45 @@ function crs_import_row($rec, $opts)
 	}
 	$creating = !$existing_id;
 
+	// Espansione: termine pa_espansione con slug = codice set (stabile tra le lingue),
+	// label = nome espansione. Alimenta il fatto in PDP E il filtro del listato.
+	$esp_code = !empty($rec['expansion_code']) ? sanitize_title($rec['expansion_code']) : '';
+	$esp_name = trim((string) ($rec['expansion'] ?? ''));
+	if ($esp_code && $esp_name) {
+		crs_ensure_terms(wc_attribute_taxonomy_name('espansione'), [$esp_code => $esp_name]);
+	} else {
+		$esp_code = ''; // senza nome non creiamo un termine muto
+	}
+
+	// Mappa attributi (aggiunge espansione solo se disponibile).
+	$attr_map = [
+		'condizione' => strtolower($rec['condition']),
+		'lingua'     => strtolower($lang),
+		'foil'       => 'normale',
+	];
+	if ($esp_code) {
+		$attr_map['espansione'] = $esp_code;
+	}
+
 	if ($creating) {
 		$product->set_name($rec['name']);
 		$product->set_sku($sku);
 		$product->set_status('publish');
 		$product->set_catalog_visibility('visible');
 		// attributi impostati PRIMA del save → un solo save (niente doppio giro)
-		$attrs = crs_build_attributes([
-			'condizione' => strtolower($rec['condition']),
-			'lingua'     => strtolower($lang),
-			'foil'       => 'normale',
-		]);
+		$attrs = crs_build_attributes($attr_map);
 		if ($attrs) {
 			$product->set_attributes($attrs);
+		}
+	} elseif ($esp_code) {
+		// backfill: aggiunge SOLO l'espansione se manca (un re-import sistema le carte già dentro),
+		// senza toccare gli altri attributi eventualmente modificati a mano.
+		$existing = $product->get_attributes();
+		if (empty($existing['pa_espansione'])) {
+			$add = crs_build_attributes(['espansione' => $esp_code]);
+			if ($add) {
+				$product->set_attributes(array_merge($existing, $add));
+			}
 		}
 	}
 
@@ -92,13 +118,14 @@ function crs_import_row($rec, $opts)
 		wp_set_object_terms($pid, $cat_ids, 'product_cat');
 	}
 
-	// termini attributo per la navigazione a livelli (solo alla creazione)
+	// termini attributo (relazioni tassonomiche) → alimentano i filtri del listato
 	if ($creating) {
-		crs_assign_attr_terms($pid, [
-			'condizione' => strtolower($rec['condition']),
-			'lingua'     => strtolower($lang),
-			'foil'       => 'normale',
-		]);
+		crs_assign_attr_terms($pid, $attr_map);
+	} elseif ($esp_code) {
+		crs_assign_attr_terms($pid, ['espansione' => $esp_code]); // backfill del filtro espansione
+	}
+
+	if ($creating) {
 		if (!empty($opts['images']) && $rec['image_url'] && !$product->get_image_id()) {
 			$att = crs_sideload_image($rec['image_url'], $pid);
 			if (is_wp_error($att)) {

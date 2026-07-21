@@ -90,14 +90,23 @@
 
 	/* ---- card prodotto (stati WooCommerce inclusi) ---- */
 	.cr-card {
-		@apply relative flex flex-col overflow-hidden rounded-2xl no-underline transition-all;
+		@apply relative flex flex-col overflow-hidden rounded-2xl no-underline;
 		background-color: var(--cr-surface);
 		border: 1px solid var(--cr-line);
+		/* SOLO box-shadow/border (hover CSS): MAI transform/opacity → li gestisce GSAP (tilt/reveal);
+		   una transition su quelli intercetterebbe ogni update per-frame di GSAP e lo farebbe strisciare. */
+		transition: box-shadow .3s ease, border-color .3s ease;
 	}
 	.cr-card:hover {
-		transform: translateY(-4px);
 		box-shadow: var(--cr-shadow);
 		border-color: var(--cr-acc2);
+	}
+	/* le card NON-tilt (es. canali-contatto) usano il lift CSS → serve loro la transition su transform */
+	.cr-card:not([data-cr-tilt]) {
+		transition: box-shadow .3s ease, border-color .3s ease, transform .3s ease;
+	}
+	.cr-card:not([data-cr-tilt]):hover {
+		transform: translateY(-4px);
 	}
 	.cr-card--glass {
 		background-color: var(--cr-glass);
@@ -227,9 +236,11 @@
 
 	/* ---- tasca del raccoglitore (carte singole, proporzione carta 63:88) ---- */
 	.cr-pocket {
-		@apply relative overflow-hidden rounded-[14px] no-underline transition-all;
+		@apply relative overflow-hidden rounded-[14px] no-underline;
 		background-color: var(--cr-surface);
 		border: 1px solid var(--cr-line-s);
+		/* niente transition su transform/opacity: li anima GSAP (vedi .cr-card sopra). */
+		transition: box-shadow .3s ease, border-color .3s ease;
 		padding: 9px;
 	}
 	.cr-pocket::before {
@@ -244,8 +255,10 @@
 		z-index: 2;
 	}
 	.cr-pocket:hover {
-		transform: translateY(-3px);
 		border-color: var(--cr-acc2);
+	}
+	.cr-pocket:not([data-cr-tilt]):hover {
+		transform: translateY(-3px);
 	}
 	.cr-pocket__well {
 		@apply grid place-items-center rounded-lg bg-white-pure;
@@ -370,10 +383,90 @@
 		min-width: 24px;
 	}
 
+	/* ================= FASE EFFETTI (§3d docs/rework-fase-1.md) ================= */
+
+	/* Pre-hide: nascosto SOLO quando GSAP è attivo (.cr-fx su <html>, aggiunta dal JS); GSAP anima
+	   opacity/transform → visibile. Senza JS o con reduced-motion la classe non c'è → tutto visibile. */
+	.cr-fx .hero-vetrina__showcase > *,
+	.cr-fx [data-fx="rise"],
+	.cr-fx [data-fx-stagger] > * {
+		opacity: 0;
+	}
+
+	/* Glare specular su tutte le card [data-cr-tilt]: highlight che segue il puntatore, emerge su
+	   hover. Il tilt/scale/lift è gestito da GSAP (transform inline); qui solo il livello ottico. */
+	.cr-glare,
+	.cr-card[data-cr-tilt] .cr-well::before,
+	.cr-pocket[data-cr-tilt] .cr-pocket__well::before {
+		content: "";
+		position: absolute;
+		inset: 0;
+		z-index: 2;
+		pointer-events: none;
+		border-radius: inherit;
+		background: radial-gradient(farthest-corner circle at var(--cr-mx, 50%) var(--cr-my, 50%),
+			rgba(255, 255, 255, .5), rgba(255, 255, 255, .12) 20%, transparent 55%);
+		mix-blend-mode: soft-light;
+		opacity: calc(var(--cr-active, 0) * .85);
+		transition: opacity .35s ease;
+	}
+
+	/* Holo foil — SOLO sulle singole foil ([data-cr-holo]): riflesso che segue il puntatore. */
+	.cr-pocket__well { position: relative; overflow: hidden; }
+	.cr-card[data-cr-holo] .cr-well::after,
+	.cr-pocket[data-cr-holo] .cr-pocket__well::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+		pointer-events: none;
+		border-radius: inherit;
+		background:
+			radial-gradient(circle at var(--cr-mx, 50%) var(--cr-my, 40%), rgba(255, 255, 255, .8), transparent 46%),
+			repeating-linear-gradient(115deg,
+				rgba(255, 0, 140, .5) 0%, rgba(0, 224, 255, .5) 13%, rgba(120, 255, 150, .5) 26%,
+				rgba(255, 214, 90, .5) 39%, rgba(255, 0, 140, .5) 50%);
+		background-size: auto, 230% 230%;
+		background-position: center, var(--cr-mx, 50%) var(--cr-my, 50%);
+		mix-blend-mode: overlay;
+		opacity: calc(var(--cr-active, 0) * .5);
+		transition: opacity .35s ease;
+	}
+
+	/* Orbs ambientali dietro hero/claim. Clip + MASCHERA morbida sul wrapper STATICO; il parallasse
+	   (GSAP scrub) muove il layer INTERNO → i bordi restano sfumati, gli orb non si tagliano mai netti. */
+	.cr-orbs {
+		position: absolute;
+		inset: 0;
+		z-index: 0;
+		overflow: hidden;
+		pointer-events: none;
+		-webkit-mask-image: radial-gradient(135% 130% at 50% 42%, #000 46%, transparent 100%);
+		mask-image: radial-gradient(135% 130% at 50% 42%, #000 46%, transparent 100%);
+	}
+	.cr-orbs__layer {
+		position: absolute;
+		inset: -10%;
+		will-change: transform;
+	}
+	/* Orb come radial-gradient (morbidi senza `filter: blur` pesante) + blur leggero: così NON
+	   crollano l'FPS. Prima blur(64px) su 3 elementi grandi animati = GPU al collasso → tutto strisciava. */
+	.cr-orb {
+		position: absolute;
+		border-radius: 50%;
+		filter: blur(16px);
+		will-change: transform;
+	}
+	.cr-orb--1 { width: 460px; height: 460px; background: radial-gradient(circle, var(--cr-acc2), transparent 68%); opacity: .6; left: 0%; top: 0%; animation: cr-float 16s ease-in-out infinite; }
+	.cr-orb--2 { width: 360px; height: 360px; background: radial-gradient(circle, var(--cr-acc), transparent 68%); opacity: .45; right: 2%; bottom: 2%; animation: cr-float 20s ease-in-out infinite reverse; }
+	.cr-orb--3 { width: 260px; height: 260px; background: radial-gradient(circle, var(--cr-acc2), transparent 68%); opacity: .38; right: 32%; top: 40%; animation: cr-float 13s ease-in-out infinite; }
+	@keyframes cr-float { 50% { transform: translate(26px, -20px) scale(1.06); } }
+
 	@media (prefers-reduced-motion: reduce) {
 		.cr-ticker__track,
 		.cr-dropchip::before,
-		.cr-card--deal {
+		.cr-card--deal,
+		.cr-orb {
 			animation: none !important;
 		}
 	}

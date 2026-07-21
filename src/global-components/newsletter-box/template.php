@@ -13,7 +13,7 @@ $tema = cr_theme($c);
 
 <section class="cr-sec newsletter-box <?= !empty($c['pattern']) ? 'cr-patt' : ''; ?>" data-th="<?= esc_attr($tema); ?>">
 	<div class="tw-container tw-section">
-		<div class="py-16">
+		<div class="py-16" data-fx="rise">
 			<div class="cr-glass rounded-[20px] shadow-th max-w-[640px] mx-auto text-center px-8 py-10 lg:px-10">
 
 				<?php if (!empty($c['eyebrow'])) : ?>

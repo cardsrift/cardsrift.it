@@ -33,7 +33,7 @@ $cards = array_slice($ids, 0, 3);
 				<?php endif; ?>
 			</div>
 
-			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4">
+			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4" data-fx-stagger>
 				<?php if ($ph) : ?>
 					<?php for ($k = 0; $k < 3; $k++) cr_ph_card(['in_arrivo' => true]); ?>
 				<?php else : ?>

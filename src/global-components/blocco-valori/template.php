@@ -23,7 +23,7 @@ $numerato = !empty($c['numerato']);
 
 <section class="cr-sec blocco-valori <?= !empty($c['pattern']) ? 'cr-patt' : ''; ?>" data-th="<?= esc_attr($tema); ?>">
 	<div class="tw-container tw-section">
-		<div class="py-14 lg:py-16">
+		<div class="py-14 lg:py-16" data-fx="rise">
 
 			<?php if (!empty($c['eyebrow']) || !empty($c['titolo'])) : ?>
 				<div class="max-w-[42ch] mb-10 lg:mb-12">

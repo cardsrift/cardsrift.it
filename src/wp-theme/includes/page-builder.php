@@ -60,6 +60,59 @@ function cr_is_builder_page()
 }
 
 /**
+ * URL interno: i path root-relative ('/chi-siamo', '/magic/') passano da home_url(), così
+ * funzionano sia in produzione (sito su root) sia in locale (sottocartella /cardsrift/public).
+ * Esterni (http…), anchor (#…), mailto:/tel: e protocol-relative (//) restano invariati.
+ */
+function cr_link($url)
+{
+	if (!is_string($url) || $url === '' || $url[0] !== '/') {
+		return $url;
+	}
+	if (isset($url[1]) && $url[1] === '/') {
+		return $url; // protocol-relative //host
+	}
+	return home_url($url);
+}
+
+/** Riscrive gli href root-relative dentro una stringa HTML di copy ('<a href="/guida…">') via home_url(). */
+function cr_fix_inline_links($html)
+{
+	// `/(?!/)` = root-relative ma NON protocol-relative (//host); include anche il root nudo href="/".
+	return preg_replace_callback('~href="(/(?!/)[^"]*)"~', function ($m) {
+		return 'href="' . esc_url(home_url($m[1])) . '"';
+	}, $html);
+}
+
+/**
+ * Normalizza ricorsivamente i link interni di un array di sezione (repeater inclusi):
+ * i campi il cui nome contiene "url" via cr_link(); gli href root-relative dentro il copy HTML
+ * via cr_fix_inline_links(). Così i path '/chi-siamo' funzionano su root (prod) e sottocartella (locale).
+ */
+function cr_normalize_links($data)
+{
+	if (!is_array($data)) {
+		return $data;
+	}
+	// gli array immagine/allegato di ACF (URL assoluti, nessun link interno) non vanno ricorsi
+	if (isset($data['sizes']) || isset($data['mime_type'])) {
+		return $data;
+	}
+	foreach ($data as $k => $v) {
+		if (is_array($v)) {
+			$data[$k] = cr_normalize_links($v);
+		} elseif (is_string($v)) {
+			if (is_string($k) && stripos($k, 'url') !== false) {
+				$data[$k] = cr_link($v);
+			} elseif (strpos($v, 'href="/') !== false) {
+				$data[$k] = cr_fix_inline_links($v);
+			}
+		}
+	}
+	return $data;
+}
+
+/**
  * Renderizza una pagina dal suo manifest: per ogni sezione fonde il copy (dal codice)
  * con i valori DB (dai campi ACF 'edit', letti dalla pagina corrente) e delega al
  * template del componente via la stessa pipeline di sempre (component_data query var).
@@ -85,6 +138,7 @@ function cr_render_page($slug)
 			}
 		}
 		unset($data['edit'], $data['comp'], $data['label']); // meta interne: fuori dal template
+		$data = cr_normalize_links($data); // i path interni ('/chi-siamo') → home_url()
 
 		set_query_var('component_data', $data);
 		get_template_part("global-components/{$section['comp']}/template");

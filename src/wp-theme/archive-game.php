@@ -125,7 +125,7 @@ $cr_upcoming = function_exists('cr_preorder_products')
 				<div class="pb-14 lg:pb-16">
 					<div class="cr-eyebrow"><?= esc_html($cr_label); ?></div>
 					<h2 class="font-metropolis font-bold !text-xl lg:!text-3xl mt-2 mb-7"><?php esc_html_e('In evidenza', 'cardsrift'); ?></h2>
-					<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4">
+					<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 lg:gap-4" data-fx-stagger>
 						<?php while (have_posts()) : the_post(); ?>
 							<?php cr_product_card(get_the_ID()); ?>
 						<?php endwhile; ?>

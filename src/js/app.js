@@ -6,12 +6,14 @@ import { calcViewportHeight, documentReady, pageLoad } from './utils';
 
 import Header from './components/header';
 import globalComponents from './global-components';
+import initEffects from './utils/effects';
 
 window.jQuery = $;
 window.$ = $;
 
 const readyFunc = () => {
 	Header();
+	initEffects();
 };
 
 const loadFunc = () => {

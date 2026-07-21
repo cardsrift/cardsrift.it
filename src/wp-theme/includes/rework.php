@@ -52,6 +52,44 @@ function cr_product_chip($product_id)
 }
 
 /**
+ * Il prodotto è una singola FOIL? (attributo pa_foil = foil o reverse-holo, non "normale").
+ * Serve al riflesso olografico: l'effetto foil sta SOLO sulle singole foil.
+ */
+function cr_is_foil($product_id)
+{
+    $product = wc_get_product($product_id);
+    if (!$product) {
+        return false;
+    }
+    $foil = strtolower((string) $product->get_attribute('foil'));
+    return $foil !== '' && strpos($foil, 'normale') === false;
+}
+
+/** Attributi effetti per la card: tilt "peso" su tutte, holo solo sulle foil. */
+function cr_card_fx_attrs($product_id)
+{
+    return 'data-cr-tilt' . (cr_is_foil($product_id) ? ' data-cr-holo' : '');
+}
+
+/**
+ * Markup del contatore carrello (usato dall'header E dal fragment WooCommerce, così
+ * si aggiorna in AJAX all'add-to-cart e il JS può farlo "poppare"). Le classi Tailwind
+ * qui sono scansionate perché il file vive in src/wp-theme/includes.
+ */
+function cr_cart_badge()
+{
+    $ct = (function_exists('WC') && WC() && WC()->cart) ? (int) WC()->cart->get_cart_contents_count() : 0;
+    $hidden = $ct > 0 ? '' : ' hidden';
+    return '<span class="cart-contents-count absolute top-1 right-1 min-w-[17px] h-[17px] px-1 grid place-items-center rounded-full bg-th-acc text-th-pg text-[10px] font-bold leading-none' . $hidden . '">' . $ct . '</span>';
+}
+add_filter('woocommerce_add_to_cart_fragments', 'cr_cart_fragment');
+function cr_cart_fragment($fragments)
+{
+    $fragments['span.cart-contents-count'] = cr_cart_badge();
+    return $fragments;
+}
+
+/**
  * Data di uscita per il display: il campo ACF "data_uscita" (date_picker) salva Ymd
  * → mostra "gg/mm". Accetta anche testo libero legacy (lo restituisce così com'è).
  */
@@ -110,7 +148,7 @@ function cr_product_card($product_id, $opts = [])
     if ($top_deal) $classes .= ' cr-card--deal';
     if (!$in_stock && !$in_arrivo) $classes .= ' cr-card--soldout';
 ?>
-    <a class="<?= esc_attr($classes); ?>" href="<?= esc_url(get_permalink($product_id)); ?>">
+    <a class="<?= esc_attr($classes); ?>" <?= cr_card_fx_attrs($product_id); ?> href="<?= esc_url(get_permalink($product_id)); ?>">
 
         <?php if ($in_arrivo) : ?>
             <span class="cr-badge cr-badge--pre"><?= esc_html__('In arrivo', 'cardsrift'); ?></span>
@@ -448,7 +486,7 @@ function cr_pocket_card($pid)
     $cond   = $cond ? trim(explode(',', $cond)[0]) : '';
     $lingua = $lingua ? trim(explode(',', $lingua)[0]) : '';
 ?>
-    <a class="cr-pocket" href="<?= esc_url(get_permalink($pid)); ?>">
+    <a class="cr-pocket" <?= cr_card_fx_attrs($pid); ?> href="<?= esc_url(get_permalink($pid)); ?>">
         <span class="cr-pocket__well">
             <?= $product->get_image('woocommerce_thumbnail'); ?>
         </span>

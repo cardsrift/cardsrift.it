@@ -206,6 +206,27 @@ sottolineano, non urlano.
 | Transizione cambio tema | Tutte le sezioni (Regia) | transition su background/color 350ms |
 | Sticky column · outline text · tape/post-it | T2/T5 (non selezionati) | — restano in galleria come riferimento |
 
+#### ✅ Stato implementazione (21/07/2026) — motore GSAP
+
+Motore unico in `src/js/utils/effects.js` su **GSAP 3 + ScrollTrigger** (decisione 21/07: GSAP è gratis
+e più robusto del vanilla per timeline/spring/scroll — vedi CLAUDE.md). Attivato da `app.js` su documentReady;
+CSS di supporto (glare/holo/orbs/pre-hide) nel blocco "FASE EFFETTI" di `design-system.css`.
+**Implementati e verificati** (build + Playwright):
+- **Hero-vetrina — entrance "blur-to-focus + fan"** (`heroEntrance`, `power3.out`, stagger 0.13): le 3 carte
+  emergono dal buio a fuoco. GSAP legge il fan (rotate/scale da Tailwind) e lo conserva; pre-hide via `.cr-fx`.
+- **Hover tilt 3D + glare specular** (`cardTilt`, `gsap.quickTo`): su hero e su TUTTE le card prodotto
+  (`[data-cr-tilt]` da `cr_card_fx_attrs()`); glare = highlight che segue il puntatore (`.cr-glare` /
+  `.cr-well::before`, var `--cr-mx/--cr-my/--cr-active`). Le foil (`[data-cr-holo]`) hanno anche il riflesso holo.
+- **Reveal on scroll** (`sectionReveals`, ScrollTrigger + stagger 0.09) su `[data-fx-stagger]`/`[data-fx="rise"]`.
+- **Orbs + parallasse** (`orbsParallax`, ScrollTrigger scrub): wrapper `.cr-orbs` clippato + **maschera radiale
+  morbida** (bordi mai tagliati netti — bug fixato), layer interno `.cr-orbs__layer` che scorre; orb fluttuano (keyframe).
+- **Micro**: cart badge **pop** (GSAP su evento WooCommerce `added_to_cart` + fragment `cr_cart_badge()`); ticker/countdown già CSS.
+
+**Scelte cliente (21/07):** hover tilt su tutte le card, foil solo sulle singole foil, reveal + orbs; scartati:
+portale animato hero, griglia prospettica, "Il Rift", bottone magnetico. Tutto dietro i gate `(hover:hover)` +
+`prefers-reduced-motion`. Esplorazione mostrata (artifact): https://claude.ai/code/artifact/6c3f4104-6d58-4ae3-a28b-d7b903ce54e0
+Ricerca motion premium (3 agenti): spring `linear()`, tilt+glare stile pokemon-cards-css, gerarchia timing/easing — applicata via GSAP.
+
 #### Roadmap effetti per il sito — in ordine di implementazione
 
 **Tier 1 · Identità (subito dopo l'HTML plain):**
@@ -244,10 +265,12 @@ sottolineano, non urlano.
 - Foil su tutte le card / glow ovunque — uccide la gerarchia (e la GPU su mobile)
 - Parallasse aggressivo multi-layer — il nostro è max 10–15%, oltre è mal di mare
 
-**Note implementative:** un unico modulo `src/js/utils/effects.js` (tilt, sheen, reveal, parallax)
-attivato da data-attribute, registrato una volta in `app.js`; niente librerie (no GSAP — non è
-installato e non serve); ogni effetto dietro i due gate `(hover: hover)` e `prefers-reduced-motion`;
-budget: nessun listener `scroll` diretto (solo rAF/IntersectionObserver).
+**Note implementative:** un unico modulo `src/js/utils/effects.js` su **GSAP 3 + ScrollTrigger**
+(tilt/glare, reveal, parallax, entrance), attivato da data-attribute + `app.js`; ⚠️ aggiornamento 21/07:
+GSAP è ora la libreria motion (prima si diceva "no GSAP" → superato, vedi § Stato implementazione).
+Ogni effetto dietro i due gate `(hover: hover)` e `prefers-reduced-motion`; lo scroll passa da
+ScrollTrigger (niente listener `scroll` diretti). ⚠️ Il bundle supera il warning webpack di 244KB per
+via di GSAP: valutare code-split se il peso diventa un problema.
 
 ### 3e · Fase 2/3 (non ora)
 - Listato/PLP con filtri (set, rarità, condizione, lingua, prezzo, disponibilità), PDP custom.

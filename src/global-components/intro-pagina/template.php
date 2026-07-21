@@ -13,7 +13,7 @@ $tema = cr_theme($c);
 
 <section class="cr-sec intro-pagina <?= !empty($c['pattern']) ? 'cr-patt' : ''; ?>" data-th="<?= esc_attr($tema); ?>">
 	<div class="tw-container tw-section">
-		<div class="py-16 lg:py-24 flex flex-col items-center text-center max-w-[62ch] mx-auto">
+		<div class="py-16 lg:py-24 flex flex-col items-center text-center max-w-[62ch] mx-auto" data-fx="rise">
 
 			<?php if (!empty($c['eyebrow'])) : ?>
 				<div class="cr-eyebrow"><?= esc_html($c['eyebrow']); ?></div>

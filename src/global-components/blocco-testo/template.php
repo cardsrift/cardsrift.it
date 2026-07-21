@@ -11,7 +11,7 @@ $tema = cr_theme($c);
 
 <section class="cr-sec blocco-testo <?= !empty($c['pattern']) ? 'cr-patt' : ''; ?>" data-th="<?= esc_attr($tema); ?>">
 	<div class="tw-container tw-section">
-		<div class="py-14 lg:py-16 grid gap-8 lg:gap-16 lg:grid-cols-[minmax(0,20rem)_1fr]">
+		<div class="py-14 lg:py-16 grid gap-8 lg:gap-16 lg:grid-cols-[minmax(0,20rem)_1fr]" data-fx="rise">
 
 			<div>
 				<?php if (!empty($c['eyebrow'])) : ?>
