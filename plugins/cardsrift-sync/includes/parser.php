@@ -93,10 +93,16 @@ function crs_csv_missing_columns($path)
  * Legge il CSV grezzo, aggrega per SKU (somma qty, prezzo minimo tra i doppioni) e scrive
  * un record JSON per riga in $out. Ritorna il numero di record UNICI.
  */
-function crs_aggregate_csv($csv_path, $out_path, $opts)
+function crs_aggregate_csv($csv_path, $out_path, $opts, &$stats = null)
 {
+	$no_lang = 0; // righe senza lingua riconosciuta
+	$skipped = 0; // di quelle, quante SALTATE (non importate) perché non forziamo una lingua
+	$set_stats = function () use (&$stats, &$no_lang, &$skipped) {
+		$stats = ['no_lang' => $no_lang, 'skipped' => $skipped];
+	};
 	$fh = fopen($csv_path, 'r');
 	if (!$fh) {
+		$set_stats();
 		return 0;
 	}
 	$bom = fread($fh, 3);
@@ -123,13 +129,24 @@ function crs_aggregate_csv($csv_path, $out_path, $opts)
 		$cond  = strtoupper(trim($get($r, 'Condition')));
 		$price = crs_parse_price($get($r, 'Price_EUR'));
 		$qty   = max(0, (int) $get($r, 'Amount'));
-		// lingua per-riga dall'export (la colonna Language è popolata solo con UI EN/DE, §8.1);
-		// se vuota/non riconosciuta si usa la lingua di default del form.
-		$lang  = crs_cm_langname_to_slug($get($r, 'Language'));
+		// lingua per-riga dall'export (la colonna Language è popolata solo con UI EN/DE, §8.1).
+		// REGOLA: NON si inventa la lingua. Se manca/non riconosciuta, la riga si SALTA — altrimenti
+		// si metterebbe in vendita una carta in una lingua che non si possiede. Solo se l'operatore ha
+		// scelto esplicitamente "forza lingua" ($opts['lang'] valorizzato) la applichiamo, a suo rischio.
+		$lang = crs_cm_langname_to_slug($get($r, 'Language'));
 		if ($lang === '') {
-			$lang = $opts['lang'];
+			$no_lang++;
+			if (($opts['lang'] ?? '') === '') {
+				$skipped++;
+				continue; // salta: niente lingua inventata
+			}
+			$lang = $opts['lang']; // forzata esplicitamente dall'operatore
 		}
-		$sku   = crs_build_sku($cmid, $cond, $lang);
+		// foil dalla colonna ReverseHolo: Y → foil. Serve nello SKU altrimenti foil e non-foil si fondono in una
+		// sola voce (qty sommata, prezzo al minimo) e il pull — che costruisce lo SKU CON foil — crea un doppione.
+		$rh   = in_array(strtoupper(trim($get($r, 'ReverseHolo'))), ['Y', '1', 'TRUE', 'YES'], true);
+		$foil = $rh ? (($opts['game'] ?? '') === 'pokemon' ? 'reverse-holo' : 'foil') : 'normale';
+		$sku  = crs_build_sku($cmid, $cond, $lang, $foil);
 
 		if (!isset($agg[$sku])) {
 			$agg[$sku] = [
@@ -141,6 +158,8 @@ function crs_aggregate_csv($csv_path, $out_path, $opts)
 				'expansion_code' => crs_expansion_code($get($r, 'ImageUrl'), $get($r, 'ExpansionCode') ?: $get($r, 'SetCode')),
 				'condition'     => $cond,
 				'lang'          => $lang,
+				'foil'          => $foil,
+				'rarity'        => trim($get($r, 'Rarity')), // attributo catalogo (Magic: Rare/Mythic…; Pokémon: Holo/Ultra/Secret Rare)
 				'price'         => $price,
 				'qty'           => $qty,
 				'image_url'     => trim($get($r, 'ImageUrl')),
@@ -154,6 +173,7 @@ function crs_aggregate_csv($csv_path, $out_path, $opts)
 		}
 	}
 	fclose($fh);
+	$set_stats(); // conteggi lingua pronti (usati dall'admin per l'avviso righe saltate)
 
 	$w = fopen($out_path, 'w');
 	if (!$w) {
@@ -201,13 +221,23 @@ function crs_ndjson_batch($path, $offset, $limit)
 	return [$records, $new_offset, $eof];
 }
 
-/** Set di tutti gli SKU presenti nel file .ndjson (per la finalize "venduti"). */
-function crs_ndjson_skus($path)
+/** Chiave-variante (condizione|lingua|foil, minuscolo) di un record/prodotto: scoping della finalize "venduti". */
+function crs_variant_key($cond, $lang, $foil)
 {
-	$skus = [];
+	return strtolower(trim((string) $cond)) . '|' . strtolower(trim((string) $lang)) . '|' . strtolower(trim((string) ($foil ?: 'normale')));
+}
+
+/**
+ * Presenza nell'export: ['skus'=>[sku=>true], 'tuples'=>[cond|lang|foil=>true]].
+ * Le TUPLE dicono quali (condizione,lingua,foil) l'export copre davvero → la finalize azzera solo dentro
+ * quelle varianti, così un export filtrato (es. solo italiano) NON tocca le altre (fix #2 export parziale).
+ */
+function crs_ndjson_present($path)
+{
+	$out = ['skus' => [], 'tuples' => []];
 	$fh = fopen($path, 'r');
 	if (!$fh) {
-		return $skus;
+		return $out;
 	}
 	while (($line = fgets($fh)) !== false) {
 		$line = trim($line);
@@ -216,9 +246,10 @@ function crs_ndjson_skus($path)
 		}
 		$rec = json_decode($line, true);
 		if (isset($rec['sku'])) {
-			$skus[$rec['sku']] = true;
+			$out['skus'][$rec['sku']] = true;
+			$out['tuples'][crs_variant_key($rec['condition'] ?? '', $rec['lang'] ?? '', $rec['foil'] ?? '')] = true;
 		}
 	}
 	fclose($fh);
-	return $skus;
+	return $out;
 }

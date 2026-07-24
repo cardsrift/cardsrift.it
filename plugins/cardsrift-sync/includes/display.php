@@ -50,6 +50,29 @@ function crs_cm_src($pid)
 	return add_query_arg(['action' => 'crs_img', 'pid' => (int) $pid], admin_url('admin-ajax.php'));
 }
 
+/**
+ * URL immagine di fallback per un prodotto senza foto in evidenza:
+ * CardTrader (CDN, hotlink diretto, nessun proxy) → Cardmarket via proxy. '' se nessuna.
+ * $full=true preferisce la versione piena (672×936) per la scheda prodotto; altrimenti la miniatura.
+ */
+function crs_fallback_image_src($pid, $full = false)
+{
+	if ($full) {
+		$hi = get_post_meta($pid, '_ct_image_full', true);
+		if ($hi) {
+			return $hi;
+		}
+	}
+	$ct = get_post_meta($pid, '_ct_image', true);
+	if ($ct) {
+		return $ct;
+	}
+	if (get_post_meta($pid, CRS_META_CM_IMAGE, true)) {
+		return crs_cm_src($pid);
+	}
+	return '';
+}
+
 /** È davvero un'immagine? (il content-type di Cardmarket è inaffidabile: controllo i byte) */
 function crs_is_image($body)
 {
@@ -72,12 +95,11 @@ function crs_cm_fallback_image($html, $product, $size, $attr, $placeholder, $ima
 		return $html; // c'è una foto in evidenza → vince quella
 	}
 	$pid = $product->get_id();
-	if (!get_post_meta($pid, CRS_META_CM_IMAGE, true)) {
-		return $html;
-	}
-	$src = crs_cm_src($pid);
+	// size grande (scheda prodotto: woocommerce_single/large/full) → immagine piena; altrimenti miniatura
+	$is_full = is_string($size) && in_array($size, ['woocommerce_single', 'shop_single', 'single', 'large', 'full'], true);
+	$src = crs_fallback_image_src($pid, $is_full); // CardTrader (CDN) → Cardmarket (proxy)
 	if (!$src) {
-		return $html; // fallito di recente → placeholder
+		return $html; // nessuna immagine → placeholder
 	}
 
 	$size_name = is_string($size) ? $size : 'woocommerce_thumbnail';
@@ -104,10 +126,10 @@ function crs_cm_single_image($html, $thumbnail_id)
 		return $html;
 	}
 	$product = wc_get_product(get_the_ID());
-	if (!$product || $product->get_image_id() || !get_post_meta($product->get_id(), CRS_META_CM_IMAGE, true)) {
+	if (!$product || $product->get_image_id()) {
 		return $html;
 	}
-	$src = crs_cm_src($product->get_id());
+	$src = crs_fallback_image_src($product->get_id(), true); // scheda prodotto → versione piena
 	if (!$src) {
 		return $html;
 	}
@@ -142,6 +164,21 @@ function crs_img_proxy()
 		exit;
 	}
 
+	// Throttle anti-DoS sul percorso COLD (fetch esterno che occupa un worker): le cache-hit sopra sono già
+	// uscite. Finestra FISSA di 60s (non scorrevole, altrimenti non si azzererebbe mai e bloccherebbe il
+	// cold-browse legittimo), max 60 cold-fetch/finestra per IP → ferma l'abuso "itera 5000 pid". (M2)
+	$rk = 'crs_img_rl_' . md5((string) ($_SERVER['REMOTE_ADDR'] ?? '0'));
+	$rl = get_transient($rk);
+	if (!is_array($rl) || time() >= (int) $rl['reset']) {
+		$rl = ['n' => 0, 'reset' => time() + 60]; // nuova finestra
+	}
+	if ($rl['n'] >= 60) {
+		status_header(429);
+		exit;
+	}
+	$rl['n']++;
+	set_transient($rk, $rl, 180); // TTL > finestra; l'azzeramento lo gestiamo noi con 'reset'
+
 	wp_mkdir_p(dirname($c['file']));
 
 	// lock: collassa i miss concorrenti sullo stesso pid in un solo fetch
@@ -156,7 +193,7 @@ function crs_img_proxy()
 	}
 
 	$resp = wp_safe_remote_get($src, [
-		'timeout'             => 12,
+		'timeout'             => 6, // basso: un worker non resta appeso a lungo su un fetch esterno (M2)
 		'limit_response_size' => 8 * MB_IN_BYTES,
 		'headers'             => ['Referer' => 'https://www.cardmarket.com/'],
 	]);

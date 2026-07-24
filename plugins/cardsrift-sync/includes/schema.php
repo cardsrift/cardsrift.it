@@ -17,6 +17,7 @@ function crs_schema_attributes()
 		'lingua'     => ['label' => 'Lingua', 'terms' => crs_languages()],
 		'foil'       => ['label' => 'Foil', 'terms' => crs_foils()],
 		'espansione' => ['label' => 'Espansione', 'terms' => []], // popolato dall'import
+		'rarita'     => ['label' => 'Rarità', 'terms' => []],     // popolato dall'import (valori per-gioco)
 	];
 }
 
