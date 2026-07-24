@@ -144,7 +144,8 @@ while (have_posts()) : the_post();
 							<?php if ($in_arrivo) : ?>
 								<span class="font-bylon uppercase tracking-[.14em] text-sm text-th-acc"><?php printf(esc_html__('Esce il %s', 'cardsrift'), esc_html($uscita)); ?></span>
 							<?php elseif ($in_stock) : ?>
-								<span class="cr-stock <?= ($qty !== null && $qty <= 2) ? 'cr-stock--low' : 'cr-stock--ok'; ?>"><?php echo esc_html($qty !== null ? sprintf(_n('%d disponibile', '%d disponibili', $qty, 'cardsrift'), $qty) : __('Disponibile', 'cardsrift')); ?></span>
+								<?php // disponibilità reale: scorte meno quello che è già nel carrello ?>
+								<?php cr_stock_line($product); ?>
 							<?php else : ?>
 								<span class="cr-stock" style="color:var(--cr-muted)"><?php esc_html_e('Non disponibile', 'cardsrift'); ?></span>
 							<?php endif; ?>
@@ -163,10 +164,36 @@ while (have_posts()) : the_post();
 						<!-- add to cart -->
 						<?php if ($in_arrivo) : ?>
 							<div class="cr-glass rounded-xl p-4 text-sm text-th-muted"><?php esc_html_e('Non ancora acquistabile: annunciamo l’apertura degli ordini sul canale Telegram e via email.', 'cardsrift'); ?></div>
+						<?php elseif ($in_stock && $product->is_purchasable() && cr_stock_left($product) === 0) : ?>
+							<?php // tutte le copie disponibili sono già nel carrello di chi guarda ?>
+							<div class="cr-panel p-4 flex items-center gap-3">
+								<svg class="w-5 h-5 stroke-th-ok fill-transparent shrink-0" viewBox="0 0 24 24" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5" /></svg>
+								<p class="text-sm text-th-muted leading-relaxed m-0">
+									<?php esc_html_e('Hai già nel carrello tutte le copie che abbiamo.', 'cardsrift'); ?>
+									<a class="text-th-acc no-underline hover:underline" href="<?= esc_url(wc_get_cart_url()); ?>"><?php esc_html_e('Vedi il carrello', 'cardsrift'); ?></a>
+								</p>
+							</div>
+
 						<?php elseif ($in_stock && $product->is_purchasable()) : ?>
+							<?php
+							// Aggiunta in AJAX per i prodotti semplici: senza, la pagina si ricarica e
+							// si perde la posizione — fastidioso proprio sulle singole, dove subito
+							// sotto ci sono le "altre versioni" della stessa carta. Il <form> resta
+							// e funziona da solo se JavaScript non c'è: WooCommerce intercetta il
+							// click solo quando lo script è attivo.
+							$cr_ajax = $product->is_type('simple') ? ' add_to_cart_button ajax_add_to_cart' : '';
+							// il massimo è ciò che resta DAVVERO, non le scorte a magazzino
+							$cr_left = cr_stock_left($product);
+							?>
 							<form class="cart flex items-stretch gap-3" action="<?= esc_url(apply_filters('woocommerce_add_to_cart_form_action', $product->get_permalink())); ?>" method="post">
-								<input type="number" name="quantity" value="1" min="1" <?= $qty !== null ? 'max="' . esc_attr($qty) . '"' : ''; ?> step="1" class="cr-input !w-20 text-center font-semibold" aria-label="<?php esc_attr_e('Quantità', 'cardsrift'); ?>">
-								<button type="submit" name="add-to-cart" value="<?= esc_attr($pid); ?>" class="cr-btn cr-btn-solid flex-1 justify-center single_add_to_cart_button"><?php esc_html_e('Aggiungi al carrello', 'cardsrift'); ?></button>
+								<input type="number" name="quantity" value="1" min="1" <?= $cr_left !== null ? 'max="' . esc_attr($cr_left) . '"' : ''; ?> step="1" class="cr-input !w-20 text-center font-semibold" aria-label="<?php esc_attr_e('Quantità', 'cardsrift'); ?>">
+								<button type="submit" name="add-to-cart" value="<?= esc_attr($pid); ?>" class="cr-btn cr-btn-solid flex-1 justify-center single_add_to_cart_button<?= esc_attr($cr_ajax); ?>" data-product_id="<?= esc_attr($pid); ?>" data-quantity="1">
+									<span class="cr-btn__label"><?php esc_html_e('Aggiungi al carrello', 'cardsrift'); ?></span>
+									<span class="cr-btn__done">
+										<svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5" /></svg>
+										<?php esc_html_e('Aggiunto', 'cardsrift'); ?>
+									</span>
+								</button>
 							</form>
 						<?php else : ?>
 							<button type="button" class="cr-btn cr-btn-ghost opacity-60 cursor-not-allowed w-full justify-center" disabled><?php esc_html_e('Esaurito', 'cardsrift'); ?></button>

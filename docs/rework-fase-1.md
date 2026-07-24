@@ -56,6 +56,12 @@ sotto sono **superati** da questo modello. Le altre pagine (Chi siamo, Bulk) res
 - [ ] **⑤ Header/footer restyle** (ricerca, contatore carrello, footer ACF options) — § 3b
 - [ ] **⑥ Componenti pagina Bulk** (processo, tassi, form) — § 3c
 - [ ] **⑦ Fase effetti**, sezione per sezione — § 3d
+- [x] **Flusso d'acquisto ridisegnato** (24/07/2026): carrello, checkout, conferma d'ordine e area
+      account come **override WooCommerce** in `src/wp-theme/woocommerce/` (31 template), logica in
+      `includes/shop.php`, primitive in `tailwind/components/shop.css`, comportamenti in
+      `js/components/shop.js`. Verificato con screenshot reali desktop+mobile e test d'interazione
+      (auto-update quantità, rimozione con annulla, coupon, ricalcolo AJAX del checkout,
+      validazione inline). Vedi § 3f.
 - [ ] **⑧ Fase 2/3**: PLP/PDP, newsletter provider, back-in-stock, recensioni, SEO — § 3e
 - [ ] Aggiornare CLAUDE.md con le novità strutturali (page.php, themes.css, convenzione cr-/th-)
 - [ ] Go-live: build + deploy **solo su ok esplicito del cliente**
@@ -276,6 +282,176 @@ via di GSAP: valutare code-split se il peso diventa un problema.
 - Listato/PLP con filtri (set, rarità, condizione, lingua, prezzo, disponibilità), PDP custom.
 - Newsletter provider (Brevo?) + coupon −5%; back-in-stock plugin; recensioni (Trustpilot/Google);
   structured data (Product, Organization, BreadcrumbList); title/H1 SEO col motto.
+
+### 3f · Flusso d'acquisto — carrello → checkout → account (fatto il 24/07/2026)
+
+**Decisione architetturale.** Carrello e Checkout erano costruiti coi **blocchi** WooCommerce, che
+non sono sovrascrivibili da template PHP (si possono solo “skinnare” via CSS sulle classi
+`wc-block-*`, fragili e non ristrutturabili). Sono stati riportati agli **shortcode classici**
+(`[woocommerce_cart]`, `[woocommerce_checkout]`), il che sblocca l'override completo dei template.
+Costo accettato: niente slot “express payment” dei blocchi — con Stripe/PayPal classici i pulsanti
+rapidi restano comunque disponibili, e nessun plugin installato dipendeva dai blocchi.
+⚠️ È una configurazione di **pagina**, non di codice: va rifatta in produzione (vedi `go-live.md` §1b).
+
+**Dove vive cosa**
+
+| File | Contenuto |
+|---|---|
+| `src/wp-theme/woocommerce/**` | 31 override: `cart/`, `checkout/`, `myaccount/`, `order/`, `notices/`, `global/` |
+| `src/wp-theme/includes/shop.php` | chrome di sezione, passi del flusso, chip carta, stato ordine, obiettivo spedizione gratuita, campi checkout, dequeue asset WC |
+| `src/tailwind/components/shop.css` | primitive del flusso (`.cr-panel`, `.cr-line`, `.cr-thumb`, `.cr-qty`, `.cr-sumrow`, `.cr-optlist`, `.cr-ostat`, `.cr-steps`, `.cr-accnav`, `.cr-notice`) + skin del markup generato da WooCommerce |
+| `src/js/components/shop.js` | stepper quantità, auto-update del carrello, riepilogo checkout ripiegato su mobile |
+| `src/wp-theme/my-account.php` | cornice dell'area account (avvolge sia il login sia le sezioni) |
+
+**Scelte di UX (e il perché)**
+
+- **Chip condizione · lingua · foil su ogni riga.** Per una singola quegli attributi *sono* il
+  prodotto: il carrello è l'ultimo punto in cui il cliente può verificare di aver preso la copia
+  giusta. Vengono anche salvati come meta di riga all'acquisto, così l'ordine resta leggibile
+  anche se poi il prodotto cambia o sparisce dal catalogo.
+- **Scorte vere nello stepper.** Le singole sono spesso pezzi unici: il “+” si spegne al massimo
+  disponibile e la riga dice “Ultimo pezzo disponibile”. La delusione non deve arrivare al checkout.
+- **Il carrello si aggiorna da solo.** Il pulsante “Aggiorna carrello” resta solo come ripiego
+  senza JavaScript. ⚠️ L'auto-update simula il click su quel pulsante: l'evento `wc_update_cart`
+  serializza il form **senza** il parametro `update_cart` che il gestore di WooCommerce pretende,
+  quindi le quantità andrebbero perse in silenzio.
+- **Costi completi già nel carrello** (spedizione inclusa): i costi a sorpresa sono la prima causa
+  di abbandono. Il campo coupon resta ripiegato — se è in evidenza la gente esce a cercare codici.
+- **Checkout a due colonne**, pagamento in fondo alla colonna sinistra (è un'azione, non un
+  accessorio), riepilogo sticky a destra; su mobile il riepilogo sale in cima **ripiegato**.
+- **Header ridotto nel checkout** (solo logo + “pagamento sicuro”): la navigazione, lì, è una via
+  d'uscita dall'ordine.
+- **Conferma d'ordine = l'unico momento “lilla” del flusso**, seguito dai fatti su fondo chiaro e
+  da “cosa succede adesso” in tre passi.
+- **Registrazione giustificata** (chiudeva il TODO “Registration CTA”): segui l'ordine, indirizzi
+  salvati, codice di benvenuto — i vantaggi *prima* del modulo, sia in account sia al checkout.
+- **Niente placeholder che ripetono l'etichetta**; `address_2` ha finalmente un'etichetta visibile
+  (“Interno, scala, presso”) invece di affidarsi al solo placeholder.
+
+**Trappole trovate (da ricordare)**
+
+1. **Tailwind pota anche `@layer components`.** Le regole che agganciano markup generato da
+   WooCommerce sparivano dal CSS perché quelle classi non compaiono in `src/`. Risolto col
+   **`safelist`** in `tailwind.config.js`: ogni nuovo aggancio va aggiunto lì.
+2. **daisyUI `.checkbox` collideva con WooCommerce**, che usa quella classe sulle *label*: il testo
+   delle spunte veniva schiacciato a 24px. Verificato che daisyUI **non fosse usata da nessun
+   componente** (confronto fra le 325 classi del pacchetto e tutte quelle presenti nei sorgenti:
+   zero corrispondenze reali) e **rimossa** — plugin, blocco di config, dipendenza npm.
+   Veniva dal boilerplate iniziale (primo commit), non da una scelta di progetto.
+   **−104 KB di CSS** (206 → 100 KB). Togliendola sono emerse due dipendenze nascoste:
+
+   **2a · `theme.colors` SOSTITUISCE la palette di Tailwind**, non la estende: mancando le parole
+   chiave di default spariva `stroke-current`, usata da tutte le icone SVG del sito (header,
+   footer, carrello, checkout). Finora le teneva in piedi daisyUI. Aggiunte `current` e `inherit`
+   alla palette in `tailwind.config.js`. ⚠️ Nei template il fallimento sarebbe stato **silenzioso**
+   (utility inesistente = nessuna regola, nessun errore): l'ha fatto emergere solo un `@apply` in
+   `shop.css`, che invece rompe il build.
+
+   **2b · `css-mqpacker` raggruppava le media query nell'ordine in cui le incontrava.** Senza
+   daisyUI a "seminare" l'ordine, il breakpoint `sm` (640px) finiva **dopo** `lg` (1024px) e lo
+   sovrascriveva: le griglie della home restavano a 2 colonne su desktop. Risolto con
+   `require('css-mqpacker')({ sort: true })` in `postcss.config.js` — ordine mobile-first
+   ripristinato (640 → 768 → 1024 → 1280). **Era un bug latente**, mascherato per caso: chiunque
+   avesse toccato l'ordine degli import CSS lo avrebbe fatto esplodere.
+
+   Verifica: confronto **pixel-per-pixel** prima/dopo su home, prodotto, listato, istituzionale,
+   404 e tutte le pagine del flusso → identiche, tranne la banda del ticker (animazione catturata
+   a un offset diverso).
+3. **I placeholder degli indirizzi li riscrive il JS** (`address-i18n.js`) dal locale “default”, che
+   non passa da `woocommerce_get_country_locale`: la leva giusta è `woocommerce_default_address_fields`.
+4. **Gli avvisi del checkout uscivano fuori dal layout**, perché stampati prima del template
+   (`woocommerce_before_checkout_form_cart_notices`). Spostati sull'hook interno; sul ramo
+   “carrello con errori” li stampa `cart-errors.php`.
+
+**Rimosso**: `src/scss/_cart.scss` e `_my-account.scss` (skin legacy ormai sostituite).
+
+### 3g · Aggiunta al carrello: drawer, card senza overlay, disponibilità reale (25/07/2026)
+
+**Il problema di partenza.** Aggiungere al carrello non dava alcun riscontro sul punto in cui si
+cliccava, e il pulsante "Aggiungi al carrello" appariva **sopra la foto** della card, coprendone un
+terzo. Peggio: essendo `opacity: 0` fuori hover ma con i puntatori attivi, su touch era un bersaglio
+invisibile — un tocco sulla carta la metteva nel carrello invece di aprirne la scheda.
+
+**Card e tasche — niente copre più niente.**
+- Via `.cr-qadd` (copriva l'artwork) e `.cr-pocket__pick` (copriva il prezzo).
+- Il comando `.cr-add` sta nella riga del prezzo, **sempre visibile**: funziona anche dove `:hover`
+  non esiste. Glifo = la stessa icona carrello dell'header ("finisce lì").
+- La card non è più un `<a>` che avvolge tutto: è un `<div>`; il link vero è il titolo e si
+  distende sulla card con `::after` (`.cr-card__link`), il comando gli sta sopra. HTML valido
+  (niente controlli dentro un link), tastiera in ordine sensato, nessuna zona cliccabile invisibile.
+
+**Drawer del carrello** (`woocommerce/cart/mini-cart.php` + `cr_cart_drawer()`): entra da destra
+all'aggiunta con il recap di cosa è appena entrato (riga evidenziata "Appena aggiunto"), il resto
+del carrello, subtotale e due strade avanti. Si apre anche dall'icona in header (che resta un link
+vero: senza JS porta al carrello). Focus trap, Esc, blocco dello scroll, `aria-modal`.
+Il contenuto è un **frammento AJAX di WooCommerce**: si rigenera da solo a ogni aggiunta o rimozione.
+
+Da qui si **modificano le quantità e si rimuove**, senza uscire dalla pagina. WooCommerce non ha un
+endpoint per la quantità del mini-carrello (sul carrello vero passa da un POST con reload), quindi
+c'è il nostro `wc-ajax=cr_set_qty`: nonce, limite di scorte **riapplicato lato server** (l'attributo
+`max` del campo è comodità, non garanzia), quantità 0 = rimozione, e in risposta i frammenti
+standard. La posizione di scorrimento della lista viene conservata, altrimenti a ogni "+" si
+tornerebbe in cima. Il carrello vero resta il posto per codici sconto e spedizione.
+⚠️ I tasti − / + dello stepper vanno registrati **globalmente**: erano legati all'inizializzazione
+della sola pagina carrello e nel drawer non facevano nulla.
+
+**Scheda prodotto in AJAX**: niente più ricaricamento (si perdeva la posizione proprio dove sotto
+ci sono le "altre versioni" della carta). Il `<form>` resta e funziona senza JavaScript.
+
+**Errore in aggiunta: mai più sbattuti sulla scheda prodotto.**
+Di suo WooCommerce risponde `{error, product_url}` e `add-to-cart.js` fa `window.location = product_url`.
+Ora `woocommerce_cart_redirect_after_error` torna vuoto e il **motivo** viene mostrato nel drawer,
+dove si è. ⚠️ Due trappole trovate: (a) la risposta d'errore contiene solo un flag, non il motivo —
+serve un secondo giro sull'endpoint `wc-ajax=cr_notices`; (b) a carrello vuoto WooCommerce **non
+persiste la sessione**, quindi l'avviso andava perso e il rifiuto restava muto: si forza il cookie
+di sessione nel momento dell'errore. L'endpoint restituisce **solo** gli errori (altrimenti nel
+drawer finivano anche messaggi di successo residui).
+
+**Doppio click.** WooCommerce ascolta su `document.body`; per fermare un secondo click prima che
+parta una seconda richiesta serve un listener in **fase di cattura** su `document`. Senza, tre click
+rapidi facevano tre chiamate e le risposte successive cancellavano il messaggio appena mostrato
+(la coda avvisi si svuota alla prima lettura). `pointer-events: none` non è un'alternativa: sulle
+card il click passerebbe al link sotto e finirebbe sulla scheda prodotto.
+
+**Disponibilità reale** (`cr_stock_left()`): scorte **meno** ciò che è già nel carrello di chi
+guarda. Card, tasche e scheda prodotto mostrano la quantità vera ("2 disponibili", "Ultimo pezzo");
+quando arriva a zero il comando si spegne e la riga dice **"Tutto nel carrello"** — non "Esaurito",
+che farebbe temere di aver perso il pezzo. Dopo un'aggiunta il contatore si aggiorna senza
+ricaricare (`updateStock`), e il server conferma lo stesso stato al caricamento successivo.
+
+### 3h · Immagini prodotto e rimozione di One Piece (25/07/2026)
+
+**⚠️ Le foto del catalogo NON stanno nella libreria media.** Arrivano dal plugin di sync come URL
+remoti (`_ct_image` anteprima, `_ct_image_full` piena) e vengono iniettate filtrando
+`woocommerce_product_get_image`. Conseguenza pratica: `has_post_thumbnail()` e
+`get_the_post_thumbnail_url()` **restituiscono vuoto su quasi tutti i prodotti**. Usare sempre
+`$product->get_image()`; per sapere se una foto esiste c'è `cr_product_has_image()`.
+
+Due bug nati esattamente da lì:
+
+- **Hero con tre carte bianche.** Il template usava `get_the_post_thumbnail_url()` e, in più, si
+  fidava ciecamente dei 3 prodotti scelti in ACF — che dopo una re-importazione del catalogo **non
+  esistevano più** (il campo conserva gli ID anche quando i post spariscono). Ora la vetrina tiene
+  solo prodotti pubblicati e con foto, e i posti scoperti si riempiono da soli con i più recenti:
+  l'hero è la prima cosa che si vede, non può dipendere da chi si ricorda di aggiornarlo.
+  Stesso trattamento a `hero-drop`, che aveva lo stesso difetto.
+
+- **Immagini sgranate nei listati.** Il plugin serve la piena solo alle size della scheda prodotto
+  (`woocommerce_single`, `large`, `full`); griglie e tasche ricevevano l'**anteprima 180×180**
+  mostrata a ~286 CSS px, cioè 572 px reali su retina: ingrandimento oltre 3×. `cr_full_res_image()`
+  (filtro a priorità 20, dopo il plugin) preferisce `_ct_image_full` (**960×960**). Costa ~134 KB
+  per foto invece di 10, ma è lo stesso file su tutto il sito — una sola copia in cache — e
+  l'anteprima non basterebbe comunque a nessuna densità di schermo.
+
+**One Piece rimosso** (non ancora in vendita). Tolto da `CR_GAMES` (`includes/routing.php`) — da cui
+dipendono rotte, menu, landing e i campi ACF dell'hero di gioco — dalla riga della homepage, dai
+fallback dei template, dal copy SEO e istituzionale, e dal dataset dei placeholder.
+⚠️ `CR_ROUTING_VER` è stato portato a `'2'`: le rewrite restano in database finché non si
+rigenerano, quindi senza bump `/one-piece/` avrebbe continuato a rispondere. Verificato: ora 404.
+Per riattivarlo basta rimetterlo in `CR_GAMES` e ripristinare la sezione nel manifest (i punti sono
+segnati da commenti nel codice). Nessun prodotto usava quella categoria.
+Rinominato in locale il termine `pokemon` da "Pokemon" a "**Pokémon**" (il chip mostra il nome del
+termine): ⚠️ da rifare in produzione.
 
 ## 4 · Vincoli operativi
 - **MAI** commit/push/deploy senza ok esplicito del cliente (vedi CLAUDE.md).

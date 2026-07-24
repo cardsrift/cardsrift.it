@@ -22,7 +22,7 @@ return [
 		'pattern'     => true,
 		'eyebrow'     => __('Compriamo le tue carte', 'cardsrift'),
 		'titolo'      => __("Hai carte da vendere?\nParliamone.", 'cardsrift'),
-		'sottotitolo' => __('Valutiamo Pokémon, One Piece e Magic sui prezzi correnti di Cardmarket — singole, sealed e bulk. Ti diciamo tutto prima, per iscritto, e paghiamo tracciato in 24/48h. Cambi idea? Ti rispediamo tutto a nostre spese.', 'cardsrift'),
+		'sottotitolo' => __('Valutiamo Pokémon e Magic sui prezzi correnti di Cardmarket — singole, sealed e bulk. Ti diciamo tutto prima, per iscritto, e paghiamo tracciato in 24/48h. Cambi idea? Ti rispediamo tutto a nostre spese.', 'cardsrift'),
 		'cta_label'   => __('Scrivici su Telegram', 'cardsrift'),
 		'cta_url'     => cr_tg_dm(__('Ciao! Ti scrivo dal sito CardsRift — avrei delle carte da vendere.', 'cardsrift')),
 	],

@@ -33,12 +33,14 @@ const Header = () => {
 		lastScrollTop = st;
 	});
 
-	// mobile menu
-	hamburgerMenu.addEventListener('click', () => {
-		mainMenu.classList.toggle('menuOpen');
-		hamburgerMenu.classList.toggle('hamburgerOpen');
-		body.classList.toggle('overflow-y-hidden');
-	});
+	// mobile menu — assenti nel checkout, dove l'header è ridotto a logo + rassicurazione
+	if (hamburgerMenu && mainMenu) {
+		hamburgerMenu.addEventListener('click', () => {
+			mainMenu.classList.toggle('menuOpen');
+			hamburgerMenu.classList.toggle('hamburgerOpen');
+			body.classList.toggle('overflow-y-hidden');
+		});
+	}
 	toggleMenu.forEach((element) => {
 		element.addEventListener('click', () => {
 			if (desktopMq.matches) return;

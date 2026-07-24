@@ -106,10 +106,197 @@ function cr_format_uscita($raw)
 }
 
 /**
+ * Il prodotto ha una foto vera (non il segnaposto di WooCommerce)?
+ *
+ * ⚠️ Non usare `has_post_thumbnail()` / `get_the_post_thumbnail_url()` sui prodotti:
+ * le foto del catalogo NON stanno nella libreria media, arrivano dal plugin di sync
+ * come URL remoto in `_ct_image` (CardTrader). `$product->get_image()` le serve
+ * comunque, ma `get_image_id()` resta vuoto — motivo per cui l'hero mostrava carte
+ * bianche mentre le griglie, che usano `get_image()`, erano a posto.
+ */
+function cr_product_has_image($product)
+{
+    if (!$product instanceof WC_Product) {
+        return false;
+    }
+    if ($product->get_image_id()) {
+        return true;
+    }
+    return (bool) get_post_meta($product->get_id(), '_ct_image', true);
+}
+
+/**
+ * QUALITÀ DELLE FOTO — usa sempre la versione piena di CardTrader.
+ *
+ * Il plugin di sync serve l'anteprima (**180×180**) a tutte le size tranne quelle
+ * della scheda prodotto. Ma le nostre card mostrano la foto a ~286 CSS px, che su
+ * uno schermo retina significa 572 px reali: l'anteprima veniva ingrandita più di
+ * tre volte e si vedeva. La versione piena è 960×960 ed è già salvata in
+ * `_ct_image_full`: basta preferirla.
+ *
+ * Il filtro gira DOPO quello del plugin (priorità 20) e si limita a sostituire
+ * l'URL — nessuna logica duplicata, e se un giorno il prodotto avrà una foto in
+ * libreria media questa funzione si fa da parte.
+ *
+ * Costo: ~134 KB per foto invece di 10. Accettabile perché è lo stesso file su
+ * tutto il sito (una sola copia in cache, riusata da griglie, carrello e drawer)
+ * e perché l'anteprima non basterebbe comunque a nessuna densità di schermo.
+ */
+add_filter('woocommerce_product_get_image', 'cr_full_res_image', 20, 2);
+function cr_full_res_image($html, $product)
+{
+    if (!$product instanceof WC_Product || $product->get_image_id()) {
+        return $html; // foto in libreria media: decide WordPress, non noi
+    }
+    $pid     = $product->get_id();
+    $preview = get_post_meta($pid, '_ct_image', true);
+    $full    = get_post_meta($pid, '_ct_image_full', true);
+
+    if (!$preview || !$full || strpos($html, $preview) === false) {
+        return $html;
+    }
+    return str_replace($preview, $full, $html);
+}
+
+/**
+ * Quanti pezzi si possono ANCORA aggiungere: scorte meno quelli già nel carrello
+ * di chi sta guardando.
+ *
+ * È la differenza fra "ne restano 3" e "ne restano 3, ma 3 ce li hai già tu".
+ * Su un catalogo fatto di pezzi unici la seconda è l'unica informazione utile:
+ * senza, si clicca su "aggiungi" per sentirsi dire di no dal server.
+ *
+ * @return int|null null = scorte non gestite (quantità sconosciuta, sempre acquistabile)
+ */
+function cr_stock_left($product)
+{
+    if (!$product instanceof WC_Product || !$product->managing_stock()) {
+        return null;
+    }
+    $qty = $product->get_stock_quantity();
+    if ($qty === null) {
+        return null;
+    }
+
+    $in_cart = 0;
+    if (function_exists('WC') && WC()->cart) {
+        foreach (WC()->cart->get_cart() as $item) {
+            $id = !empty($item['variation_id']) ? (int) $item['variation_id'] : (int) $item['product_id'];
+            if ($id === $product->get_id()) {
+                $in_cart += (int) $item['quantity'];
+            }
+        }
+    }
+    return max(0, (int) $qty - $in_cart);
+}
+
+/**
+ * Riga di disponibilità: quantità reale, e quando è finita lo dice chiaramente.
+ * `$left === 0` con scorte a magazzino significa "ce l'hai già tutto nel carrello":
+ * lo diciamo così invece che "Esaurito", che farebbe temere di averlo perso.
+ */
+function cr_stock_line($product, $small = false)
+{
+    $left = cr_stock_left($product);
+    $cls  = $small ? ' !text-[11px]' : '';
+
+    if ($left === null) {
+        printf('<span class="cr-stock cr-stock--ok%s" data-cr-stock-for="%d">%s</span>', $cls, $product->get_id(), esc_html__('Disponibile', 'cardsrift'));
+        return;
+    }
+    if ($left === 0) {
+        printf('<span class="cr-stock cr-stock--incart%s" data-cr-stock-for="%d">%s</span>', $cls, $product->get_id(), esc_html__('Tutto nel carrello', 'cardsrift'));
+        return;
+    }
+    printf(
+        '<span class="cr-stock %s%s" data-cr-stock-for="%d" data-cr-left="%d">%s</span>',
+        $left <= 3 ? 'cr-stock--low' : 'cr-stock--ok',
+        $cls,
+        $product->get_id(),
+        $left,
+        esc_html($left === 1 ? __('Ultimo pezzo', 'cardsrift') : sprintf(_n('%d disponibile', '%d disponibili', $left, 'cardsrift'), $left))
+    );
+}
+
+/**
+ * Comando "aggiungi al carrello" della card e della tasca.
+ *
+ * Sta SEMPRE nella riga del prezzo, mai sopra la foto: in un negozio di carte
+ * l'immagine è il prodotto, e un overlay che ne copre un terzo nasconde proprio
+ * ciò che si sta comprando. Essendo sempre visibile funziona anche dove `:hover`
+ * non esiste (touch) — prima il pulsante era invisibile ma cliccabile, quindi su
+ * mobile un tocco sulla carta aggiungeva al carrello invece di aprire la scheda.
+ *
+ * @param WC_Product $product
+ * @param string     $size 'md' (card) | 'sm' (tasca del raccoglitore)
+ */
+function cr_add_control($product, $size = 'md')
+{
+	$cls  = 'cr-add' . ($size === 'sm' ? ' cr-add--sm' : '');
+	$name = $product->get_name();
+
+	// Già tutto nel carrello: il comando resta al suo posto (niente salti di layout)
+	// ma è spento, così non si prova un'aggiunta che il server rifiuterebbe.
+	if (cr_stock_left($product) === 0) {
+		printf(
+			'<span class="%s cr-add--full" data-cr-add-for="%d" aria-hidden="true" title="%s">%s</span>',
+			esc_attr($cls),
+			$product->get_id(),
+			esc_attr__('Hai già tutte le copie disponibili nel carrello', 'cardsrift'),
+			cr_icon_check()
+		);
+		return;
+	}
+
+	// Variabile: la scelta di condizione/lingua si fa sulla scheda, non da qui.
+	if (!$product->is_type('simple')) {
+		printf(
+			'<a class="%s" href="%s" aria-label="%s">%s</a>',
+			esc_attr($cls),
+			esc_url(get_permalink($product->get_id())),
+			esc_attr(sprintf(__('Scegli condizione e lingua di %s', 'cardsrift'), $name)),
+			cr_icon_arrow()
+		);
+		return;
+	}
+	?>
+	<button type="button"
+		class="<?= esc_attr($cls); ?> add_to_cart_button ajax_add_to_cart"
+		data-product_id="<?= esc_attr($product->get_id()); ?>"
+		data-cr-add-for="<?= esc_attr($product->get_id()); ?>"
+		data-quantity="1"
+		aria-label="<?= esc_attr(sprintf(__('Aggiungi %s al carrello', 'cardsrift'), $name)); ?>">
+		<?= cr_icon_cart(); // phpcs:ignore ?>
+		<?= cr_icon_check(); // phpcs:ignore ?>
+		<span class="cr-add__spin" aria-hidden="true"></span>
+	</button>
+	<?php
+}
+
+/** Glifi condivisi: stesso tratto (1.8, round) delle icone dell'header. */
+function cr_icon_cart()
+{
+	return '<svg class="cr-add__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 12h11.2l2.4-9H7"/><circle cx="9" cy="20" r="1.4"/><circle cx="17" cy="20" r="1.4"/></svg>';
+}
+function cr_icon_check()
+{
+	return '<svg class="cr-add__ok" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>';
+}
+function cr_icon_arrow()
+{
+	return '<svg class="cr-add__ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+}
+
+/**
  * Card prodotto unica per tutto il sito (griglie, offerte, "in arrivo").
  * Gestisce gli stati WooCommerce: prezzo (del/ins nativo), sconto %,
- * scorte (disponibile / ultimi X / esaurito+avvisami),
- * quick-add AJAX per i prodotti semplici, link alla PDP per i variabili.
+ * scorte (disponibile / ultimi X / esaurito+avvisami), aggiunta al carrello.
+ *
+ * Struttura: la card è un <div>, non un <a>. Il link vero è il titolo, che si
+ * "distende" su tutta la card con ::after (.cr-card__link); il pulsante di
+ * aggiunta gli sta sopra. Così l'HTML è valido (niente controlli dentro un link),
+ * la tastiera raggiunge prima la scheda e poi l'aggiunta, e non restano zone
+ * cliccabili invisibili.
  *
  * @param int   $product_id
  * @param array $opts { glass?: bool, top_deal?: bool, in_arrivo?: bool }
@@ -148,7 +335,7 @@ function cr_product_card($product_id, $opts = [])
     if ($top_deal) $classes .= ' cr-card--deal';
     if (!$in_stock && !$in_arrivo) $classes .= ' cr-card--soldout';
 ?>
-    <a class="<?= esc_attr($classes); ?>" <?= cr_card_fx_attrs($product_id); ?> href="<?= esc_url(get_permalink($product_id)); ?>">
+    <div class="<?= esc_attr($classes); ?>" <?= cr_card_fx_attrs($product_id); ?>>
 
         <?php if ($in_arrivo) : ?>
             <span class="cr-badge cr-badge--pre"><?= esc_html__('In arrivo', 'cardsrift'); ?></span>
@@ -160,50 +347,35 @@ function cr_product_card($product_id, $opts = [])
             <span class="cr-badge cr-badge--sale">−<?= $sale_pct; ?>%</span>
         <?php endif; ?>
 
-        <span class="cr-well">
-            <?= $product->get_image('woocommerce_thumbnail'); ?>
-            <?php if ($in_arrivo) : ?>
-                <?php // sola vista: nessun acquisto ?>
-            <?php elseif ($in_stock && $is_simple) : ?>
-                <!-- quick-add AJAX WooCommerce (prodotti semplici) -->
-                <span class="cr-qadd add_to_cart_button ajax_add_to_cart" data-product_id="<?= $product_id; ?>" data-quantity="1">
-                    <?= esc_html__('Aggiungi al carrello', 'cardsrift'); ?>
-                </span>
-            <?php elseif ($in_stock) : ?>
-                <span class="cr-qadd"><?= esc_html__('Scegli condizione', 'cardsrift'); ?></span>
-            <?php endif; ?>
-        </span>
+        <?php // il well resta libero: niente sopra la foto ?>
+        <span class="cr-well"><?= $product->get_image('woocommerce_thumbnail'); ?></span>
 
-        <span class="flex flex-col gap-2 flex-1 pt-3 px-4 pb-4">
-            <?php if ($chip) : ?>
-                <span class="cr-chip"><?= esc_html($chip); ?></span>
-            <?php endif; ?>
+        <div class="flex flex-col gap-2 flex-1 pt-3 px-4 pb-4">
 
-            <span class="font-metropolis font-semibold text-sm leading-snug text-th-ink min-h-[2.7em]"><?= esc_html($product->get_name()); ?></span>
+            <div class="flex items-center justify-between gap-2 min-h-[22px]">
+                <?php if ($chip) : ?><span class="cr-chip"><?= esc_html($chip); ?></span><?php endif; ?>
+                <?php if (!$in_arrivo && $in_stock) cr_stock_line($product, true); ?>
+            </div>
 
-            <span class="flex items-center justify-between gap-2 mt-auto">
+            <a class="cr-card__link font-metropolis font-semibold text-sm leading-snug text-th-ink min-h-[2.7em] no-underline" href="<?= esc_url(get_permalink($product_id)); ?>"><?= esc_html($product->get_name()); ?></a>
+
+            <div class="flex items-center justify-between gap-2 mt-auto min-h-[40px]">
                 <?php if ($in_arrivo) : ?>
                     <span class="font-metropolis font-semibold text-xs uppercase tracking-wider text-th-acc">
                         <?= $data_uscita ? esc_html(sprintf(__('Esce il %s', 'cardsrift'), $data_uscita)) : esc_html__('Prossimamente', 'cardsrift'); ?>
                     </span>
                 <?php else : ?>
                     <span class="cr-price"><?= $product->get_price_html(); ?></span>
-                    <?php if (!$in_stock) : ?>
-                        <?php // nessuno stato: sotto compare "Avvisami quando torna" ?>
-                    <?php elseif ($stock_qty !== null && $stock_qty <= 3) : ?>
-                        <span class="cr-stock cr-stock--low"><?= esc_html(sprintf(__('Ultimi %d', 'cardsrift'), $stock_qty)); ?></span>
-                    <?php else : ?>
-                        <span class="cr-stock cr-stock--ok"><?= esc_html__('Disponibile', 'cardsrift'); ?></span>
-                    <?php endif; ?>
+                    <?php if ($in_stock) cr_add_control($product); ?>
                 <?php endif; ?>
-            </span>
+            </div>
 
             <?php if (!$in_stock && !$in_arrivo) : ?>
                 <!-- back-in-stock: aggancio per il plugin di notifica (Fase 3) -->
                 <span class="cr-btn cr-btn-ghost justify-center !text-xs !py-2.5 mt-1"><?= esc_html__('Avvisami quando torna', 'cardsrift'); ?></span>
             <?php endif; ?>
-        </span>
-    </a>
+        </div>
+    </div>
 <?php
 }
 
@@ -298,7 +470,7 @@ function cr_preorder_products($limit = 3)
  */
 function cr_game_hero($game)
 {
-    $gs  = str_replace('-', '_', (string) $game); // slug → nome campo (one-piece → one_piece)
+    $gs  = str_replace('-', '_', (string) $game); // slug → nome campo (es. one-piece → one_piece)
     $img = get_field("hero_{$gs}_immagine", 'option');
     $url = '';
     if (is_array($img) && !empty($img['url'])) {
@@ -396,11 +568,11 @@ function cr_placeholder_dataset()
 {
     return [
         ['name' => 'Pokémon 151 · Display',       'chip' => 'Pokémon · IT',  'price' => '89,90'],
-        ['name' => 'One Piece OP-09 · Box',        'chip' => 'One Piece · JP', 'price' => '109,00'],
+        ['name' => 'MTG Foundations · Bundle',     'chip' => 'Magic · IT',     'price' => '109,00'],
         ['name' => 'MTG Bloomburrow · Bundle',     'chip' => 'Magic · EN',     'price' => '44,90'],
         ['name' => 'Shiny Treasure ex · Box',      'chip' => 'Pokémon · JP',   'price' => '74,50'],
         ['name' => 'Charizard ex · Special Art',   'chip' => 'Pokémon · IT',   'price' => '129,00'],
-        ['name' => 'Luffy Leader · Alternate Art', 'chip' => 'One Piece · EN', 'price' => '34,90'],
+        ['name' => 'Sheoldred · Extended Art',     'chip' => 'Magic · EN',     'price' => '34,90'],
     ];
 }
 
@@ -434,14 +606,17 @@ function cr_ph_card($opts = [])
         <?php endif; ?>
         <span class="cr-well"><?= $img; ?></span>
         <span class="flex flex-col gap-2 flex-1 pt-3 px-4 pb-4">
-            <span class="cr-chip"><?= esc_html($d['chip']); ?></span>
+            <span class="flex items-center justify-between gap-2 min-h-[22px]">
+                <span class="cr-chip"><?= esc_html($d['chip']); ?></span>
+                <?php if (!$in_arrivo) : ?><span class="cr-stock cr-stock--ok !text-[11px]"><?= esc_html__('Disponibile', 'cardsrift'); ?></span><?php endif; ?>
+            </span>
             <span class="font-metropolis font-semibold text-sm leading-snug text-th-ink min-h-[2.7em]"><?= esc_html($d['name']); ?></span>
-            <span class="flex items-center justify-between gap-2 mt-auto">
-                <span class="cr-price">€ <?= esc_html($d['price']); ?></span>
+            <span class="flex items-center justify-between gap-2 mt-auto min-h-[40px]">
                 <?php if ($in_arrivo) : ?>
                     <span class="font-metropolis font-semibold text-xs uppercase tracking-wider text-th-acc"><?= esc_html(sprintf(__('Esce il %s', 'cardsrift'), '26/09')); ?></span>
                 <?php else : ?>
-                    <span class="cr-stock cr-stock--ok"><?= esc_html__('Disponibile', 'cardsrift'); ?></span>
+                    <span class="cr-price">€ <?= esc_html($d['price']); ?></span>
+                    <span class="cr-add"><?= cr_icon_cart(); // phpcs:ignore ?></span>
                 <?php endif; ?>
             </span>
         </span>
@@ -459,21 +634,25 @@ function cr_ph_pocket()
     <span class="cr-pocket" aria-hidden="true">
         <span class="cr-pocket__well"><?= $img; ?></span>
         <span class="flex flex-col gap-1 pt-2 px-0.5 pb-1">
-            <span class="flex gap-1 flex-wrap">
+            <span class="flex gap-1 flex-wrap min-h-[16px]">
                 <span class="cr-cchip cr-cchip--cond"><?= esc_html($cond); ?></span>
                 <span class="cr-cchip">IT</span>
             </span>
             <span class="font-metropolis font-semibold text-xs leading-tight text-th-ink min-h-[2.6em]"><?= esc_html($d['name']); ?></span>
-            <span class="cr-price !text-sm">€ <?= esc_html($d['price']); ?></span>
+            <span class="flex items-center justify-between gap-1.5 min-h-[32px]">
+                <span class="cr-price !text-sm">€ <?= esc_html($d['price']); ?></span>
+                <span class="cr-add cr-add--sm"><?= cr_icon_cart(); // phpcs:ignore ?></span>
+            </span>
         </span>
-        <span class="cr-pocket__pick"><?= esc_html__('Vedi carta', 'cardsrift'); ?></span>
     </span>
 <?php
 }
 
 /**
- * Tasca singola REALE (raccoglitore + listati). Variabile → chip condizione/lingua
- * (primo valore) e CTA "Scegli condizione"; semplice → "Vedi carta". Echo diretto.
+ * Tasca singola REALE (raccoglitore + listati).
+ * Stessa regola della card: niente overlay: prima "Vedi carta" copriva il prezzo
+ * proprio mentre lo si stava leggendo. Il comando di aggiunta sta accanto al
+ * prezzo, sempre visibile; il resto della tasca porta alla scheda.
  */
 function cr_pocket_card($pid)
 {
@@ -486,20 +665,29 @@ function cr_pocket_card($pid)
     $cond   = $cond ? trim(explode(',', $cond)[0]) : '';
     $lingua = $lingua ? trim(explode(',', $lingua)[0]) : '';
 ?>
-    <a class="cr-pocket" <?= cr_card_fx_attrs($pid); ?> href="<?= esc_url(get_permalink($pid)); ?>">
+    <div class="cr-pocket<?= $product->is_in_stock() ? '' : ' cr-pocket--soldout'; ?>" <?= cr_card_fx_attrs($pid); ?>>
         <span class="cr-pocket__well">
             <?= $product->get_image('woocommerce_thumbnail'); ?>
         </span>
-        <span class="flex flex-col gap-1 pt-2 px-0.5 pb-1">
-            <span class="flex gap-1 flex-wrap">
-                <?php if ($cond) : ?><span class="cr-cchip cr-cchip--cond"><?= esc_html($cond); ?></span><?php endif; ?>
-                <?php if ($lingua) : ?><span class="cr-cchip"><?= esc_html($lingua); ?></span><?php endif; ?>
+        <div class="flex flex-col gap-1 pt-2 px-0.5 pb-1">
+            <span class="flex items-center justify-between gap-1 min-h-[16px]">
+                <span class="flex gap-1 flex-wrap">
+                    <?php if ($cond) : ?><span class="cr-cchip cr-cchip--cond"><?= esc_html($cond); ?></span><?php endif; ?>
+                    <?php if ($lingua) : ?><span class="cr-cchip"><?= esc_html($lingua); ?></span><?php endif; ?>
+                </span>
+                <?php if ($product->is_in_stock()) cr_stock_line($product, true); ?>
             </span>
-            <span class="font-metropolis font-semibold text-xs leading-tight text-th-ink min-h-[2.6em]"><?= esc_html($product->get_name()); ?></span>
-            <span class="cr-price !text-sm"><?= $product->get_price_html(); ?></span>
-        </span>
-        <span class="cr-pocket__pick"><?= $product->is_type('variable') ? esc_html__('Scegli condizione', 'cardsrift') : esc_html__('Vedi carta', 'cardsrift'); ?></span>
-    </a>
+            <a class="cr-card__link font-metropolis font-semibold text-xs leading-tight text-th-ink min-h-[2.6em] no-underline" href="<?= esc_url(get_permalink($pid)); ?>"><?= esc_html($product->get_name()); ?></a>
+            <span class="flex items-center justify-between gap-1.5 min-h-[32px]">
+                <span class="cr-price !text-sm"><?= $product->get_price_html(); ?></span>
+                <?php if ($product->is_in_stock()) : ?>
+                    <?php cr_add_control($product, 'sm'); ?>
+                <?php else : ?>
+                    <span class="cr-cchip !bg-transparent !text-th-soft"><?= esc_html__('Esaurita', 'cardsrift'); ?></span>
+                <?php endif; ?>
+            </span>
+        </div>
+    </div>
 <?php
 }
 

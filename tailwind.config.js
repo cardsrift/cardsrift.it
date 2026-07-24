@@ -81,6 +81,27 @@ module.exports = {
     "./src/js/**/*.js",
     "./src/global-components/**/*.js",
   ],
+  // ⚠️ Tailwind pota anche le regole in @layer components: se una classe non compare
+  // nei file scansionati, la sua regola sparisce dal CSS. Le classi qui sotto le
+  // stampa WooCommerce (o jQuery blockUI) a runtime, quindi non sono in `src/`:
+  // senza safelist lo skin di quel markup — definito in tailwind/components/shop.css —
+  // verrebbe buttato via silenziosamente. Aggiungere qui ogni nuovo aggancio.
+  safelist: [
+    // form generati da woocommerce_form_field()
+    "form-row-first", "form-row-last", "form-row-blank", "optional",
+    "woocommerce-invalid", "woocommerce-validated",
+    "password-input", "show-password-input",
+    "woocommerce-password-strength", "woocommerce-password-hint",
+    "woocommerce-privacy-policy-text",
+    // meta di riga (carrello e ordini)
+    "wc-item-meta", "wc-item-meta-label", "variation",
+    // istruzioni del gateway bonifico nella pagina di conferma
+    "woocommerce-bacs-bank-details", "wc-bacs-bank-details", "wc-bacs-bank-details-heading",
+    // velo di caricamento degli aggiornamenti AJAX (jQuery blockUI)
+    "blockUI", "blockOverlay",
+    // importi e wrapper degli avvisi
+    "amount", "includes_tax", "woocommerce-notices-wrapper",
+  ],
   theme: {
     screens: {
       //breakpoints
@@ -100,7 +121,14 @@ module.exports = {
       full: "100%",
     },
     colors: {
+      // `colors` SOSTITUISCE la palette di Tailwind (non la estende): le parole chiave
+      // di default vanno riportate a mano, altrimenti spariscono utility come
+      // `stroke-current` — usata da tutte le icone SVG del sito (header, footer,
+      // carrello, checkout…). Finora le teneva in piedi daisyUI: togliendola senza
+      // questa riga le icone perderebbero il colore, in silenzio.
       transparent: "transparent",
+      current: "currentColor",
+      inherit: "inherit",
       black: '#1d2125',
       white: {
         DEFAULT: "#F3F4F5",
@@ -147,8 +175,11 @@ module.exports = {
       },
     },
   },
+  // daisyUI rimossa il 24/07/2026: veniva dal boilerplate iniziale e non era usata da
+  // nessun componente (il design system è tutto in primitive .cr-*). In più collideva
+  // con WooCommerce, che marca le LABEL delle checkbox con la classe `checkbox`,
+  // omonima del componente daisyUI (24×24px): schiacciava il testo delle spunte.
   plugins: [
-    require("daisyui"),
     require("@tailwindcss/typography"),
     ({ addComponents, theme }) => {
       addComponents(
@@ -185,14 +216,4 @@ module.exports = {
       );
     },
   ],
-  daisyui: {
-    themes: false, // true: all themes | false: only light + dark | array: specific themes like this ["light", "dark", "cupcake"]
-    darkTheme: "light", // name of one of the included themes for dark mode
-    base: true, // applies background color and foreground color for root element by default
-    styled: true, // include daisyUI colors and design decisions for all components
-    utils: true, // adds responsive and modifier utility classes
-    rtl: false, // rotate style direction from left-to-right to right-to-left. You also need to add dir="rtl" to your html tag and install `tailwindcss-flip` plugin for Tailwind CSS.
-    prefix: "", // prefix for daisyUI classnames (components, modifiers and responsive class names. Not colors)
-    logs: false, // Shows info about daisyUI version and used config in the console when building your CSS
-  },
 };

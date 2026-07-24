@@ -1,6 +1,6 @@
 # CardsRift
 
-Custom WordPress/WooCommerce theme for a trading card e-commerce site. Webpack 5, Tailwind CSS 3 (+ DaisyUI) + SCSS, vanilla JS.
+Custom WordPress/WooCommerce theme for a trading card e-commerce site. Webpack 5, Tailwind CSS 3 + SCSS, vanilla JS.
 
 ## Requirements
 

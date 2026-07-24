@@ -13,8 +13,23 @@
 - [ ] 🟡 Confermare che **"gratis sopra 99 €" resti disattivato** (scelta attuale).
 - [ ] 🟠 **Coupon di benvenuto**: creare in WooCommerce il coupon **`BENVENUTO5`** (percentuale **5%**, **1 uso per cliente**, **esclude i prodotti in saldo**). Il tema lo mostra già nell'email "Nuovo account" e in home (`CR_WELCOME_COUPON`).
 - [ ] 🟠 **Abilitare la registrazione**: WooCommerce → Impostazioni → Account e privacy → "Consenti ai clienti di creare un account nella pagina 'Il mio account'" **e** "…durante il checkout" (la spunta consenso marketing compare in entrambi i punti).
-- [ ] 🟡 **WooCommerce in italiano**: in locale My Account/checkout sono in **inglese** → installare/aggiornare il pacchetto lingua IT (Bacheca → Aggiornamenti, con lingua sito = Italiano).
+- [ ] 🟡 **WooCommerce in italiano**: installare il pacchetto lingua IT (Bacheca → Aggiornamenti, con lingua sito = Italiano). *(Fatto in locale il 24/07; in prod va rifatto.)*
 - [ ] 🟠 **Provare tutto il flusso d'acquisto** (carrello → checkout → pagamento → email d'ordine + email nuovo account col codice) con un gateway attivo.
+
+### 1b · Carrello e Checkout: pagine a SHORTCODE (obbligatorio)
+- [ ] 🔴 Le Pagine **Carrello** e **Checkout** devono contenere **solo** `[woocommerce_cart]` e
+      `[woocommerce_checkout]`. Se contengono i **blocchi** WooCommerce (`wp:woocommerce/cart`,
+      `wp:woocommerce/checkout`) il tema NON si applica: le pagine tornano al look di WooCommerce
+      senza dare errore. *(In locale convertite il 24/07; in prod vanno verificate.)*
+- [ ] 🟠 **Titoli visibili ai clienti**, da impostare in prod (in locale sono già in italiano):
+  - metodo di spedizione → “Spedizione tracciata” (WooCommerce → Spedizione → zona Italia);
+  - titoli e descrizioni dei gateway attivi (compaiono nelle card di pagamento del checkout);
+  - **coordinate del bonifico**, se si attiva il bonifico: senza, la pagina di conferma non mostra
+    dove pagare (WooCommerce → Pagamenti → Bonifico → Conti bancari).
+- [ ] 🟡 Testo privacy del checkout e della registrazione in italiano
+      (WooCommerce → Impostazioni → Account e privacy → “Informativa privacy”).
+- [ ] 🟡 Se un giorno si attiva **“spedizione gratuita sopra X €”**, la barra di avanzamento nel
+      carrello si accende da sola: nessuna modifica al tema.
 
 ## 2 · Legale
 - [ ] 🔴 **Condizioni di vendita / Termini & Condizioni** — generarle su **iubenda** (come Privacy/Cookie). Poi:

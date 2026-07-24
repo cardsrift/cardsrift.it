@@ -6,3 +6,4 @@ public
 src/tailwind/build
 *.log
 .playwright-mcp/
+.screenshots/

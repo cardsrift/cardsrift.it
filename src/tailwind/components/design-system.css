@@ -80,6 +80,30 @@
 	.cr-btn-glass:hover {
 		border-color: var(--cr-acc2);
 	}
+	/* §9 accessibilità: il focus da tastiera deve vedersi anche sui bottoni, non solo
+	   sui campi. Nel flusso d'acquisto è l'unico modo per sapere dove si è. */
+	.cr-btn:focus-visible {
+		outline: 2px solid var(--cr-acc2);
+		outline-offset: 3px;
+	}
+	/* stati dell'aggiunta sul pulsante grande della scheda prodotto */
+	.cr-btn__done {
+		@apply hidden items-center gap-2;
+	}
+	.cr-btn.is-loading {
+		opacity: .7;
+		pointer-events: none;
+	}
+	.cr-btn.is-done {
+		background-color: var(--cr-ok);
+		color: var(--cr-pg);
+	}
+	.cr-btn.is-done .cr-btn__label {
+		display: none;
+	}
+	.cr-btn.is-done .cr-btn__done {
+		@apply inline-flex;
+	}
 
 	/* ---- superficie glass generica (card, box form, tabella tassi) ---- */
 	.cr-glass {
@@ -128,26 +152,101 @@
 		filter: grayscale(.55);
 		opacity: .75;
 	}
-	/* quick add: appare su hover (solo prodotti semplici; i variabili portano alla PDP) */
-	.cr-qadd {
-		@apply absolute flex items-center justify-center gap-2 rounded-[9px] font-metropolis font-semibold text-xs;
-		left: 10px;
-		right: 10px;
-		bottom: 10px;
-		padding: 11px;
-		background: #1d2125;
-		color: #F3F4F5;
-		opacity: 0;
-		transform: translateY(6px);
-		transition: opacity .22s, transform .22s, background-color .22s;
+	/* Link "disteso": il titolo è il link vero, ma la zona cliccabile è tutta la card.
+	   Il comando di aggiunta gli sta sopra (z-index) e resta cliccabile. Così l'HTML
+	   è valido (nessun controllo dentro un <a>) e la tastiera raggiunge le due azioni
+	   in ordine: apri la scheda, aggiungi al carrello. */
+	.cr-card__link::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		z-index: 1;
+	}
+	.cr-card__link:focus-visible {
+		outline: 2px solid var(--cr-acc2);
+		outline-offset: 2px;
+	}
+
+	/* Comando "aggiungi al carrello": nella riga del prezzo, MAI sopra la foto.
+	   L'immagine è il prodotto — coprirla nasconde ciò che si sta comprando — e un
+	   overlay che compare solo su hover è irraggiungibile (o peggio, invisibile ma
+	   cliccabile) sui dispositivi touch. */
+	.cr-add {
+		@apply relative grid place-items-center shrink-0 rounded-full no-underline cursor-pointer;
 		z-index: 2;
+		width: 40px;
+		height: 40px;
+		border: 0;
+		background-color: var(--cr-accsoft);
+		color: var(--cr-acc);
+		transition: background-color .2s, color .2s, transform .2s;
 	}
-	.cr-card:hover .cr-qadd {
+	.cr-add--sm {
+		width: 32px;
+		height: 32px;
+	}
+	.cr-add:hover {
+		background-color: var(--cr-btn);
+		color: var(--cr-btn-fg);
+	}
+	.cr-add:focus-visible {
+		outline: 2px solid var(--cr-acc2);
+		outline-offset: 2px;
+	}
+	.cr-add__ico,
+	.cr-add__ok {
+		@apply w-[19px] h-[19px];
+		transition: opacity .2s, transform .2s;
+	}
+	.cr-add--sm .cr-add__ico,
+	.cr-add--sm .cr-add__ok {
+		@apply w-4 h-4;
+	}
+	/* stato "fatto" e "in corso": si sovrappongono all'icona, senza muovere il layout */
+	.cr-add__ok,
+	.cr-add__spin {
+		@apply absolute;
+		opacity: 0;
+	}
+	.cr-add__spin {
+		width: 16px;
+		height: 16px;
+		border-radius: 50%;
+		border: 2px solid currentColor;
+		border-top-color: transparent;
+	}
+	.cr-add.is-loading .cr-add__ico { opacity: 0; }
+	.cr-add.is-loading .cr-add__spin {
 		opacity: 1;
-		transform: none;
+		animation: cr-spin .7s linear infinite;
 	}
-	.cr-qadd:hover {
-		background: #6b5a99;
+	.cr-add.is-done {
+		background-color: var(--cr-ok);
+		color: var(--cr-pg);
+	}
+	/* niente più da aggiungere: il comando resta al suo posto (nessun salto di
+	   layout) ma è spento e non risponde */
+	.cr-add--full {
+		background-color: transparent;
+		color: var(--cr-ok);
+		cursor: default;
+		box-shadow: inset 0 0 0 1.5px var(--cr-line-s);
+	}
+	.cr-add--full:hover {
+		background-color: transparent;
+		color: var(--cr-ok);
+	}
+	.cr-add--full .cr-add__ok {
+		position: static;
+		opacity: 1;
+	}
+	.cr-add.is-done .cr-add__ico { opacity: 0; }
+	.cr-add.is-done .cr-add__ok { opacity: 1; }
+
+	/* WooCommerce infila un link "Visualizza carrello" accanto al pulsante dopo
+	   l'aggiunta: qui il posto del carrello lo prende il drawer, quel link è rumore. */
+	.added_to_cart {
+		display: none !important;
 	}
 	/* la card "top deal": una sola per griglia */
 	.cr-card--deal {
@@ -195,6 +294,9 @@
 	}
 	.cr-stock--ok { color: var(--cr-ok); }
 	.cr-stock--low { color: var(--cr-warn); }
+	/* tutte le copie disponibili sono già nel carrello di chi guarda: non è
+	   "esaurito" (non l'hai perso), è "non puoi prenderne altre" */
+	.cr-stock--incart { color: var(--cr-acc); }
 
 	/* ---- prezzo (WooCommerce stampa <del>/<ins> quando in offerta) ---- */
 	.cr-price {
@@ -269,23 +371,9 @@
 		max-height: 100%;
 		object-fit: contain;
 	}
-	.cr-pocket__pick {
-		@apply absolute rounded-lg font-metropolis font-semibold text-center;
-		left: 9px;
-		right: 9px;
-		bottom: 9px;
-		font-size: 11.5px;
-		padding: 9px;
-		background: #1d2125;
-		color: #F3F4F5;
-		opacity: 0;
-		transform: translateY(6px);
-		transition: opacity .22s, transform .22s;
-		z-index: 3;
-	}
-	.cr-pocket:hover .cr-pocket__pick {
-		opacity: 1;
-		transform: none;
+	.cr-pocket--soldout .cr-pocket__well img {
+		filter: grayscale(.55);
+		opacity: .75;
 	}
 	.cr-cchip {
 		@apply font-metropolis font-bold uppercase rounded-[5px];

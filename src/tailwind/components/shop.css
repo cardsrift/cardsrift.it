@@ -1,0 +1,875 @@
+/*
+	SHOP — primitive delle pagine transazionali (carrello, checkout, account) e
+	skin dell'HTML generato da WooCommerce (form_field, notices, shipping, gateway).
+
+	Perché un file a parte: `design-system.css` contiene i primitivi di brand usati
+	ovunque; qui vive tutto ciò che esiste SOLO nel flusso d'acquisto, più le poche
+	regole che devono agganciare markup che non scriviamo noi (`.form-row`, `.input-text`,
+	`#shipping_method`, `.wc_payment_methods`…), dove le utility Tailwind non arrivano.
+
+	Regola invariata: nessun colore hardcoded — solo i token --cr-* dei 4 temi.
+	Documentazione: docs/design-system.md · variabili: docs/design-system-tokens.md
+*/
+
+@layer components {
+
+	/* =====================================================================
+	 * 1 · SUPERFICI E RIGHE
+	 * ===================================================================== */
+
+	/* pannello: la superficie base di riepiloghi, box account, blocchi form */
+	.cr-panel {
+		@apply rounded-[20px];
+		background-color: var(--cr-surface);
+		border: 1px solid var(--cr-line);
+	}
+
+	/* riga articolo (carrello, riepilogo checkout, dettaglio ordine) */
+	.cr-line {
+		@apply flex gap-3 tb:gap-4 py-4;
+		border-bottom: 1px solid var(--cr-line);
+	}
+	.cr-line:last-child {
+		border-bottom: 0;
+	}
+
+	/* miniatura prodotto: well bianco puro come ovunque nel sito, proporzione carta */
+	.cr-thumb {
+		@apply relative grid place-items-center shrink-0 overflow-hidden rounded-[10px] bg-white-pure;
+		width: 56px;
+		aspect-ratio: 63/88;
+		padding: 5px;
+	}
+	.cr-thumb img {
+		@apply max-h-full w-auto;
+		object-fit: contain;
+	}
+	@screen tb {
+		.cr-thumb { width: 64px; }
+	}
+
+	/* rimuovi articolo: discreto finché non serve (l'errore si ripara, non si punisce) */
+	.cr-remove {
+		@apply grid place-items-center w-8 h-8 shrink-0 rounded-lg no-underline transition-colors;
+		color: var(--cr-soft);
+	}
+	.cr-remove:hover {
+		background-color: rgba(217, 83, 111, .12);
+		color: #d9536f;
+	}
+	.cr-remove svg {
+		@apply w-[15px] h-[15px] fill-transparent stroke-current;
+		stroke-width: 2;
+	}
+
+	/* riga di totale: etichetta a sinistra, valore tabellare a destra */
+	.cr-sumrow {
+		@apply flex items-baseline justify-between gap-4 text-sm py-2.5;
+		color: var(--cr-muted);
+	}
+	.cr-sumrow > :last-child {
+		@apply font-metropolis font-semibold text-right;
+		color: var(--cr-ink);
+		font-variant-numeric: tabular-nums;
+	}
+	.cr-sumrow--total {
+		@apply text-base pt-4 mt-1;
+		border-top: 1px solid var(--cr-line);
+		color: var(--cr-ink);
+	}
+	.cr-sumrow--total > :first-child {
+		@apply font-metropolis font-semibold;
+	}
+	.cr-sumrow--total > :last-child {
+		@apply !text-xl;
+		color: var(--cr-acc);
+	}
+	/* i totali WooCommerce arrivano con <strong>/<span class="amount"> dentro */
+	.cr-sumrow .amount,
+	.cr-sumrow bdi {
+		font-variant-numeric: tabular-nums;
+	}
+	.cr-sumrow small,
+	.cr-sumrow .includes_tax {
+		@apply block text-xs font-normal;
+		color: var(--cr-soft);
+	}
+
+	/* =====================================================================
+	 * 2 · STEPPER QUANTITÀ
+	 * ===================================================================== */
+
+	.cr-qty {
+		@apply inline-flex items-stretch overflow-hidden rounded-[10px];
+		border: 1px solid var(--cr-line-s);
+		background-color: var(--cr-surface);
+		height: 40px;
+	}
+	.cr-qty__btn {
+		@apply grid place-items-center w-9 shrink-0 text-base leading-none select-none cursor-pointer transition-colors;
+		color: var(--cr-muted);
+		background: transparent;
+		border: 0;
+	}
+	.cr-qty__btn:hover:not(:disabled) {
+		background-color: var(--cr-accsoft);
+		color: var(--cr-acc);
+	}
+	.cr-qty__btn:disabled {
+		opacity: .35;
+		cursor: not-allowed;
+	}
+	.cr-qty input,
+	.cr-qty .qty {
+		@apply w-10 text-center font-metropolis font-semibold text-sm;
+		background: transparent;
+		border: 0;
+		color: var(--cr-ink);
+		font-variant-numeric: tabular-nums;
+		-moz-appearance: textfield;
+		appearance: textfield;
+	}
+	.cr-qty input::-webkit-outer-spin-button,
+	.cr-qty input::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+	.cr-qty input:focus-visible {
+		outline: 2px solid var(--cr-acc2);
+		outline-offset: -2px;
+	}
+	/* Con JavaScript attivo il carrello si aggiorna da solo (components/shop.js):
+	   il pulsante resta nel markup solo come fallback senza JS. */
+	.cr-js .cr-updatecart {
+		display: none;
+	}
+	/* con JS la riga azioni resta vuota: la togliamo, a meno che un'estensione
+	   (hook woocommerce_cart_actions) non ci abbia messo qualcos'altro */
+	.cr-js .cr-cartactions:not(:has(> *:not(.cr-updatecart))) {
+		display: none;
+	}
+
+	/* prodotto a pezzo unico: la quantità è un fatto, non un campo */
+	.cr-qty--fixed {
+		@apply grid place-items-center px-3 font-metropolis font-semibold text-sm;
+		color: var(--cr-muted);
+		font-variant-numeric: tabular-nums;
+	}
+
+	/* =====================================================================
+	 * 3 · STATO ORDINE (chip semantico, coerente su tutti i temi)
+	 * ===================================================================== */
+
+	.cr-ostat {
+		@apply inline-flex items-center gap-2 rounded-full font-metropolis font-semibold uppercase w-fit whitespace-nowrap;
+		font-size: 10.5px;
+		letter-spacing: .09em;
+		padding: 5px 11px 5px 9px;
+		background-color: var(--cr-accsoft);
+		color: var(--cr-acc);
+	}
+	.cr-ostat::before {
+		content: "";
+		@apply w-[7px] h-[7px] rounded-full shrink-0;
+		background: currentColor;
+	}
+	.cr-ostat--ok {
+		background-color: rgba(47, 138, 93, .16);
+		color: var(--cr-ok);
+	}
+	.cr-ostat--wait {
+		background-color: rgba(179, 112, 28, .16);
+		color: var(--cr-warn);
+	}
+	.cr-ostat--dead {
+		background-color: var(--cr-accsoft);
+		color: var(--cr-soft);
+	}
+
+	/* =====================================================================
+	 * 4 · CARD SELEZIONABILE (spedizione, pagamento)
+	 * Il markup lo genera WooCommerce (input e label fratelli dentro <li>),
+	 * quindi lo stato "scelto" si legge col selettore :has().
+	 * ===================================================================== */
+
+	.cr-optlist {
+		@apply flex flex-col gap-2.5 list-none p-0 m-0;
+	}
+	.cr-optlist li {
+		@apply relative rounded-xl transition-colors;
+		border: 1px solid var(--cr-line-s);
+		background-color: var(--cr-surface);
+	}
+	.cr-optlist li:hover {
+		border-color: var(--cr-acc2);
+	}
+	.cr-optlist li:has(input:checked) {
+		border-color: var(--cr-acc2);
+		background-color: var(--cr-accsoft);
+		box-shadow: 0 0 0 1px var(--cr-acc2) inset;
+	}
+	.cr-optlist li > label {
+		@apply flex items-center gap-3 cursor-pointer font-metropolis font-semibold text-sm m-0;
+		color: var(--cr-ink);
+		padding: 14px 16px 14px 44px;
+	}
+	.cr-optlist li > input[type="radio"] {
+		@apply absolute cursor-pointer;
+		left: 16px;
+		top: 16px;
+	}
+	/* prezzo/etichetta a destra dentro la label (WooCommerce ci mette la <bdi>) */
+	.cr-optlist li > label .amount,
+	.cr-optlist li > label bdi {
+		@apply ml-auto pl-3;
+		color: var(--cr-acc);
+		font-variant-numeric: tabular-nums;
+	}
+	.cr-optlist li > label img {
+		@apply ml-auto max-h-6 w-auto;
+	}
+	/* descrizione del gateway: appare sotto, dentro il box */
+	.cr-optlist .payment_box {
+		@apply text-sm leading-relaxed;
+		color: var(--cr-muted);
+		padding: 0 16px 14px 44px;
+		margin: 0;
+	}
+	.cr-optlist .payment_box p:last-child {
+		margin-bottom: 0;
+	}
+
+	/* radio e checkbox: aspetto unico su tutti i temi */
+	.cr-optlist input[type="radio"],
+	.cr-form input[type="radio"],
+	.cr-check input[type="checkbox"],
+	.cr-form input[type="checkbox"] {
+		@apply w-[18px] h-[18px] shrink-0 m-0 cursor-pointer;
+		appearance: none;
+		-webkit-appearance: none;
+		border: 1.5px solid var(--cr-line-s);
+		background-color: var(--cr-surface);
+		transition: border-color .2s, background-color .2s;
+	}
+	.cr-optlist input[type="radio"],
+	.cr-form input[type="radio"] {
+		border-radius: 50%;
+	}
+	.cr-check input[type="checkbox"],
+	.cr-form input[type="checkbox"] {
+		border-radius: 5px;
+	}
+	.cr-optlist input[type="radio"]:checked,
+	.cr-form input[type="radio"]:checked {
+		border-color: var(--cr-acc2);
+		border-width: 5px;
+	}
+	.cr-check input[type="checkbox"]:checked,
+	.cr-form input[type="checkbox"]:checked {
+		background-color: var(--cr-acc2);
+		border-color: var(--cr-acc2);
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E");
+		background-size: 12px;
+		background-position: center;
+		background-repeat: no-repeat;
+	}
+	.cr-optlist input:focus-visible,
+	.cr-form input[type="radio"]:focus-visible,
+	.cr-form input[type="checkbox"]:focus-visible,
+	.cr-check input:focus-visible {
+		outline: 2px solid var(--cr-acc2);
+		outline-offset: 2px;
+	}
+
+	/* Le checkbox generate da WooCommerce (crea account, termini, consenso marketing,
+	   ricordami…) usano tutte la stessa etichetta: le vestiamo una volta sola. */
+	.cr-form label.woocommerce-form__label-for-checkbox {
+		@apply flex items-start gap-3 cursor-pointer normal-case tracking-normal font-normal text-sm leading-relaxed;
+		color: var(--cr-muted);
+		margin-bottom: 0;
+	}
+	.cr-form label.woocommerce-form__label-for-checkbox input {
+		margin-top: 2px;
+	}
+
+	/* riga con checkbox + testo (consenso marketing, termini, spedizione diversa) */
+	.cr-check {
+		@apply flex items-start gap-3 cursor-pointer text-sm leading-relaxed;
+		color: var(--cr-muted);
+	}
+	.cr-check input {
+		margin-top: 2px;
+	}
+	.cr-check a {
+		color: var(--cr-acc);
+		text-underline-offset: 3px;
+	}
+
+	/* =====================================================================
+	 * 5 · PASSI DEL FLUSSO (carrello → checkout → conferma)
+	 * ===================================================================== */
+
+	.cr-steps {
+		@apply flex items-center gap-2 tb:gap-3 flex-wrap;
+	}
+	.cr-steps__i {
+		@apply flex items-center gap-2 font-metropolis font-semibold whitespace-nowrap;
+		font-size: 12px;
+		color: var(--cr-soft);
+	}
+	.cr-steps__n {
+		@apply grid place-items-center w-[22px] h-[22px] rounded-full shrink-0;
+		font-size: 11px;
+		border: 1.5px solid currentColor;
+	}
+	.cr-steps__i--on {
+		color: var(--cr-acc);
+	}
+	.cr-steps__i--on .cr-steps__n {
+		background-color: var(--cr-acc);
+		color: var(--cr-pg);
+		border-color: var(--cr-acc);
+	}
+	.cr-steps__i--done {
+		color: var(--cr-muted);
+	}
+	.cr-steps__sep {
+		@apply w-5 tb:w-8 h-px shrink-0;
+		background-color: var(--cr-line-s);
+	}
+
+	/* =====================================================================
+	 * 6 · BARRA SPEDIZIONE GRATUITA (compare solo se la soglia è attiva)
+	 * ===================================================================== */
+
+	.cr-shipbar {
+		@apply h-1.5 w-full overflow-hidden rounded-full mt-2.5;
+		background-color: var(--cr-accsoft);
+	}
+	.cr-shipbar__fill {
+		@apply h-full rounded-full;
+		background-color: var(--cr-acc);
+		transition: width .5s ease;
+	}
+
+	/* =====================================================================
+	 * 7 · NOTICES WooCommerce
+	 * ===================================================================== */
+
+	/* L'icona è un ::before e non un <svg> perché cart.js/checkout.js rimuovono
+	   l'elemento .woocommerce-error/.woocommerce-message per intero: un wrapper
+	   esterno resterebbe orfano a schermo. */
+	.cr-notice {
+		@apply flex items-start gap-3 rounded-xl text-sm leading-relaxed list-none m-0;
+		padding: 14px 16px;
+		border: 1px solid var(--cr-line-s);
+		background-color: var(--cr-surface);
+		color: var(--cr-ink);
+	}
+	.cr-notice::before {
+		content: "";
+		@apply w-5 h-5 shrink-0 bg-no-repeat bg-center;
+		background-size: 20px;
+		margin-top: 1px;
+	}
+	/* variante lista (errori multipli): griglia, così l'icona resta in colonna 1 */
+	ul.cr-notice {
+		@apply grid;
+		grid-template-columns: auto minmax(0, 1fr);
+	}
+	ul.cr-notice::before {
+		grid-column: 1;
+		grid-row: 1;
+	}
+	ul.cr-notice > li {
+		@apply list-none;
+		grid-column: 2;
+	}
+	ul.cr-notice > li + li {
+		@apply mt-1.5;
+	}
+	.cr-notice + .cr-notice,
+	.woocommerce-notices-wrapper .cr-notice + .cr-notice {
+		@apply mt-2.5;
+	}
+	/* Aria sotto gli avvisi — ma SOLO quando ce ne sono: WooCommerce stampa comunque
+	   il contenitore, anche vuoto, quindi un margine fisso lascerebbe un buco in tutte
+	   le pagine senza messaggi (sulla scheda prodotto l'avviso finiva incollato
+	   all'immagine). */
+	.woocommerce-notices-wrapper:has(> *) {
+		@apply mb-7;
+	}
+	.cr-notice p {
+		margin: 0;
+	}
+	.cr-notice a:not(.cr-btn):not(.button) {
+		color: var(--cr-acc);
+		text-underline-offset: 3px;
+		@apply underline;
+	}
+	.cr-notice--success {
+		border-color: color-mix(in srgb, var(--cr-ok) 45%, transparent);
+	}
+	.cr-notice--success::before {
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%232f8a5d' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M8.5 12.5l2.5 2.5 4.5-5'/%3E%3C/svg%3E");
+	}
+	.cr-notice--error {
+		border-color: rgba(217, 83, 111, .5);
+	}
+	.cr-notice--error::before {
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23d9536f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 8v5M12 16.2v.1'/%3E%3C/svg%3E");
+	}
+	.cr-notice--info::before {
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238877b2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='9'/%3E%3Cpath d='M12 11v5M12 7.8v.1'/%3E%3C/svg%3E");
+	}
+	/* il bottone che WooCommerce a volte infila nel messaggio */
+	.cr-notice .button,
+	.cr-notice .woocommerce-Button {
+		@apply cr-btn cr-btn-ghost !text-xs !py-2 !px-4 mt-2 no-underline;
+	}
+	/* "Visualizza carrello" viene cucito nel messaggio quando si aggiunge un prodotto,
+	   quindi da un'altra pagina: nel carrello e nel checkout rimanda a dove sei già. */
+	.woocommerce-cart .cr-notice .button,
+	.woocommerce-checkout .cr-notice .button {
+		display: none;
+	}
+
+	/* =====================================================================
+	 * 8 · FORM WooCommerce (`woocommerce_form_field`, login, indirizzi)
+	 * Markup non nostro: lo agganciamo dallo scope .cr-form.
+	 * ===================================================================== */
+
+	.cr-form .form-row,
+	.cr-form .woocommerce-form-row {
+		@apply flex flex-col m-0;
+	}
+	.cr-form .form-row + .form-row {
+		@apply mt-4;
+	}
+	/* griglia a 2 colonne: WooCommerce marca i campi first/last/wide */
+	.cr-form__grid {
+		@apply grid grid-cols-1 tb:grid-cols-2 gap-4;
+	}
+	.cr-form__grid > .form-row {
+		@apply m-0 min-w-0;
+	}
+	.cr-form__grid > .form-row + .form-row {
+		@apply mt-0;
+	}
+	.cr-form__grid > .form-row-wide,
+	.cr-form__grid > .form-row-blank {
+		@apply tb:col-span-2;
+	}
+
+	.cr-form label {
+		@apply block font-metropolis font-semibold uppercase;
+		font-size: 11px;
+		letter-spacing: .1em;
+		color: var(--cr-muted);
+		margin-bottom: 6px;
+	}
+	.cr-form .required {
+		color: var(--cr-acc);
+		text-decoration: none;
+		border: 0;
+	}
+	.cr-form .optional {
+		@apply normal-case tracking-normal font-normal;
+		color: var(--cr-soft);
+	}
+	.cr-form input[type="text"],
+	.cr-form input[type="email"],
+	.cr-form input[type="tel"],
+	.cr-form input[type="password"],
+	.cr-form input[type="number"],
+	.cr-form input[type="url"],
+	.cr-form input.input-text,
+	.cr-form select,
+	.cr-form textarea {
+		@apply w-full rounded-[10px] text-sm;
+		border: 1px solid var(--cr-line-s);
+		background-color: var(--cr-surface);
+		color: var(--cr-ink);
+		padding: 12px 14px;
+		transition: border-color .2s, box-shadow .2s;
+	}
+	.cr-form textarea {
+		@apply resize-y;
+		min-height: 92px;
+	}
+	.cr-form select {
+		@apply appearance-none bg-no-repeat pr-10;
+		background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238877b2' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+		background-position: right 14px center;
+		background-size: 16px;
+	}
+	.cr-form ::placeholder {
+		color: var(--cr-soft);
+	}
+	.cr-form input:focus-visible,
+	.cr-form select:focus-visible,
+	.cr-form textarea:focus-visible {
+		outline: none;
+		border-color: var(--cr-acc2);
+		box-shadow: 0 0 0 3px var(--cr-accsoft);
+	}
+	/* validazione live di WooCommerce */
+	.cr-form .woocommerce-invalid input.input-text,
+	.cr-form .woocommerce-invalid select {
+		border-color: #d9536f;
+	}
+	.cr-form .woocommerce-validated input.input-text,
+	.cr-form .woocommerce-validated select {
+		border-color: color-mix(in srgb, var(--cr-ok) 60%, transparent);
+	}
+	/* Chrome autofill: senza questo il campo torna azzurro e rompe il tema */
+	.cr-form input:-webkit-autofill,
+	.cr-form input:-webkit-autofill:hover,
+	.cr-form input:-webkit-autofill:focus {
+		-webkit-text-fill-color: var(--cr-ink);
+		-webkit-box-shadow: 0 0 0 40px var(--cr-surface) inset;
+		caret-color: var(--cr-ink);
+	}
+	/* mostra/nascondi password (icona nativa WooCommerce) */
+	.cr-form .password-input {
+		@apply relative flex flex-col;
+	}
+	.cr-form .show-password-input {
+		@apply absolute cursor-pointer;
+		right: 14px;
+		top: 50%;
+		transform: translateY(-50%);
+		color: var(--cr-soft);
+	}
+	.cr-form .password-input:has(label) .show-password-input {
+		top: auto;
+		bottom: 13px;
+		transform: none;
+	}
+	.cr-form .woocommerce-password-strength {
+		@apply rounded-lg text-xs font-metropolis font-semibold text-center mt-2;
+		padding: 8px 12px;
+		background-color: var(--cr-accsoft);
+		color: var(--cr-muted);
+	}
+	.cr-form .woocommerce-password-strength.strong { color: var(--cr-ok); }
+	.cr-form .woocommerce-password-strength.short,
+	.cr-form .woocommerce-password-strength.bad { color: #d9536f; }
+	.cr-form .woocommerce-password-strength.good { color: var(--cr-warn); }
+	.cr-form .woocommerce-password-hint,
+	.cr-form span > em,
+	.cr-form .description {
+		@apply block text-xs mt-1.5 not-italic;
+		color: var(--cr-soft);
+	}
+	/* informativa privacy sopra il pulsante d'ordine (testo da WooCommerce → Avanzate) */
+	.woocommerce-privacy-policy-text {
+		@apply text-xs leading-relaxed;
+		color: var(--cr-soft);
+	}
+	.woocommerce-privacy-policy-text p {
+		margin: 0;
+	}
+	.woocommerce-privacy-policy-text a {
+		color: var(--cr-acc);
+		text-underline-offset: 3px;
+		@apply underline;
+	}
+
+	/* fieldset "cambio password" della pagina Dettagli account */
+	.cr-form fieldset {
+		@apply rounded-2xl mt-6 p-5;
+		border: 1px solid var(--cr-line);
+	}
+	.cr-form fieldset legend {
+		@apply font-metropolis font-semibold text-base px-2;
+		color: var(--cr-ink);
+	}
+
+	/* =====================================================================
+	 * 9 · NAVIGAZIONE ACCOUNT
+	 * ===================================================================== */
+
+	.cr-accnav ul {
+		@apply flex lg:flex-col gap-1.5 list-none p-0 m-0 overflow-x-auto lg:overflow-visible;
+		scrollbar-width: none;
+	}
+	.cr-accnav ul::-webkit-scrollbar {
+		display: none;
+	}
+	.cr-accnav li {
+		@apply shrink-0 lg:shrink;
+	}
+	.cr-accnav li a {
+		@apply flex items-center gap-3 rounded-xl font-metropolis font-semibold text-sm no-underline whitespace-nowrap transition-colors;
+		padding: 11px 16px;
+		color: var(--cr-muted);
+		border: 1px solid transparent;
+	}
+	.cr-accnav li a:hover {
+		background-color: var(--cr-accsoft);
+		color: var(--cr-acc);
+	}
+	.cr-accnav li.is-active a {
+		background-color: var(--cr-accsoft);
+		border-color: var(--cr-acc2);
+		color: var(--cr-acc);
+	}
+	/* fuori dallo scope .cr-accnav perché la stessa icona serve anche alle
+	   scorciatoie della bacheca */
+	.cr-accnav__ico {
+		@apply w-[18px] h-[18px] shrink-0 fill-transparent stroke-current;
+		stroke-width: 1.8;
+	}
+
+	/* =====================================================================
+	 * 10 · DETTAGLI (indirizzi formattati, note d'ordine, tabella ordine)
+	 * ===================================================================== */
+
+	.cr-address {
+		@apply not-italic text-sm leading-relaxed;
+		color: var(--cr-muted);
+	}
+	.cr-notes {
+		@apply list-none p-0 m-0 flex flex-col gap-3;
+	}
+	.cr-notes li {
+		@apply rounded-xl p-4 text-sm leading-relaxed;
+		background-color: var(--cr-accsoft);
+		color: var(--cr-ink);
+	}
+	.cr-notes .meta {
+		@apply block font-metropolis font-semibold uppercase mb-1.5;
+		font-size: 10.5px;
+		letter-spacing: .1em;
+		color: var(--cr-soft);
+	}
+	.cr-notes p:last-child {
+		margin-bottom: 0;
+	}
+
+	/* =====================================================================
+	 * 11 · EREDITÀ DI WooCommerce
+	 * Avendo tolto i CSS del plugin (`woocommerce_enqueue_styles`), le poche
+	 * utility che il suo JS dà per scontate le forniamo noi.
+	 * ===================================================================== */
+
+	/* testo per soli screen reader */
+	.screen-reader-text {
+		position: absolute !important;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		white-space: nowrap;
+		border: 0;
+	}
+
+	/* velo di caricamento durante gli aggiornamenti AJAX (jQuery blockUI):
+	   il plugin lo inietta con background bianco inline → lo riportiamo al tema */
+	.blockUI.blockOverlay {
+		background-color: var(--cr-pg) !important;
+		opacity: .5 !important;
+	}
+	.blockUI.blockOverlay::before {
+		content: "";
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 26px;
+		height: 26px;
+		margin: -13px 0 0 -13px;
+		border-radius: 50%;
+		border: 2px solid var(--cr-line-s);
+		border-top-color: var(--cr-acc);
+		animation: cr-spin .7s linear infinite;
+	}
+	@keyframes cr-spin {
+		to { transform: rotate(360deg); }
+	}
+
+	/* meta di riga generati da wc_display_item_meta / wc_get_formatted_cart_item_data:
+	   quelli che mostriamo come chip sono già stati tolti, resta ciò che aggiungono
+	   eventuali estensioni. */
+	.wc-item-meta,
+	dl.variation {
+		@apply flex flex-wrap gap-x-3 gap-y-0.5 list-none p-0 mt-1 text-xs;
+		color: var(--cr-soft);
+	}
+	.wc-item-meta li,
+	dl.variation dt,
+	dl.variation dd {
+		@apply flex items-center gap-1 m-0;
+	}
+	.wc-item-meta .wc-item-meta-label,
+	dl.variation dt {
+		@apply font-metropolis font-semibold;
+	}
+	.wc-item-meta li p,
+	dl.variation dd p {
+		@apply m-0;
+	}
+
+	/* istruzioni del gateway nella pagina di conferma (es. coordinate bonifico):
+	   sono l'informazione operativa più importante della pagina. */
+	.woocommerce-bacs-bank-details {
+		@apply rounded-[20px] p-5 lg:p-6;
+		background-color: var(--cr-accsoft);
+		border: 1px solid var(--cr-line-s);
+	}
+	.woocommerce-bacs-bank-details h2,
+	.woocommerce-bacs-bank-details .wc-bacs-bank-details-heading {
+		@apply font-metropolis font-semibold !text-lg mb-3;
+		color: var(--cr-ink);
+	}
+	.woocommerce-bacs-bank-details h3 {
+		@apply font-metropolis font-semibold !text-base mt-4 mb-2;
+		color: var(--cr-ink);
+	}
+	.wc-bacs-bank-details {
+		@apply grid grid-cols-1 tb:grid-cols-2 gap-x-6 gap-y-2 list-none p-0 m-0 text-sm;
+		color: var(--cr-muted);
+	}
+	.wc-bacs-bank-details li {
+		@apply flex flex-wrap items-baseline gap-2;
+	}
+	.wc-bacs-bank-details li strong {
+		@apply font-metropolis font-semibold;
+		color: var(--cr-ink);
+		font-variant-numeric: tabular-nums;
+	}
+
+	/* =====================================================================
+	 * 12 · DRAWER DEL CARRELLO
+	 * Il recap che entra da destra dopo l'aggiunta: conferma cosa è entrato,
+	 * lascia correggere quantità e rimuovere senza uscire dalla pagina, e offre
+	 * due strade avanti. Il carrello vero resta il posto dove si applicano i
+	 * codici sconto e si vede la spedizione.
+	 * ===================================================================== */
+
+	.cr-drawer {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+	}
+	.cr-drawer[hidden] {
+		display: none;
+	}
+	.cr-drawer__scrim {
+		position: absolute;
+		inset: 0;
+		background: rgba(29, 33, 37, .5);
+		backdrop-filter: blur(2px);
+		opacity: 0;
+		transition: opacity .3s ease;
+	}
+	.cr-drawer__panel {
+		@apply flex flex-col;
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		width: min(410px, 100vw);
+		background-color: var(--cr-pg);
+		color: var(--cr-ink);
+		box-shadow: -18px 0 50px rgba(0, 0, 0, .28);
+		transform: translateX(100%);
+		transition: transform .34s cubic-bezier(.32, .72, 0, 1);
+	}
+	.cr-drawer.is-open .cr-drawer__scrim {
+		opacity: 1;
+	}
+	.cr-drawer.is-open .cr-drawer__panel {
+		transform: none;
+	}
+	.cr-drawer__head {
+		@apply flex items-center justify-between gap-3 shrink-0 px-5 py-4;
+		border-bottom: 1px solid var(--cr-line);
+	}
+	.cr-drawer__x {
+		@apply grid place-items-center w-9 h-9 shrink-0 rounded-full cursor-pointer transition-colors;
+		border: 0;
+		background: transparent;
+		color: var(--cr-muted);
+	}
+	.cr-drawer__x:hover {
+		background-color: var(--cr-accsoft);
+		color: var(--cr-acc);
+	}
+	.cr-drawer__x svg {
+		@apply w-[18px] h-[18px];
+	}
+	.cr-drawer__content {
+		@apply flex flex-col flex-1 min-h-0;
+	}
+	/* avviso in cima al pannello (es. "prodotto esaurito"): sta FUORI da __content
+	   perché i frammenti AJAX sostituiscono quello, e l'avviso deve restare */
+	.cr-drawer__alert {
+		@apply shrink-0 px-5 pt-4;
+	}
+	.cr-drawer__alert[hidden] {
+		display: none;
+	}
+	.cr-drawer .cr-line:last-child {
+		border-bottom: 0;
+	}
+	/* stepper compatto: nel drawer lo spazio è quello che è */
+	.cr-qty--mini {
+		height: 32px;
+	}
+	.cr-qty--mini .cr-qty__btn {
+		@apply w-7;
+	}
+	.cr-qty--mini input,
+	.cr-qty--mini .qty {
+		@apply w-8 text-xs;
+	}
+	/* aggiornamento in corso: si vede che sta succedendo qualcosa e non si clicca due volte */
+	.cr-drawer.is-busy .cr-drawer__content {
+		opacity: .55;
+		pointer-events: none;
+	}
+	/* riga appena aggiunta: si nota, ma non urla — il verde pieno era troppo
+	   squillante per il registro del brand, basta una tinta */
+	.cr-line__new {
+		display: none;
+		@apply w-fit mt-1.5 rounded font-metropolis font-bold uppercase;
+		font-size: 9.5px;
+		letter-spacing: .08em;
+		padding: 2.5px 7px;
+		background-color: rgba(47, 138, 93, .14);
+		color: var(--cr-ok);
+	}
+	.cr-line.is-new {
+		background-color: var(--cr-accsoft);
+		border-radius: 12px;
+		margin-inline: -8px;
+		padding-inline: 8px;
+	}
+	.cr-line.is-new .cr-line__new {
+		display: block;
+	}
+
+	/* con il drawer aperto la pagina sotto non deve scorrere */
+	.cr-noscroll {
+		overflow: hidden;
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.cr-drawer__panel,
+		.cr-drawer__scrim {
+			transition: none;
+		}
+	}
+
+	/* barra sticky mobile (totale + CTA sempre a portata di pollice) */
+	.cr-stickybar {
+		@apply fixed bottom-0 left-0 right-0 z-40 flex items-center gap-3 lg:hidden;
+		padding: 12px 16px calc(12px + env(safe-area-inset-bottom));
+		background-color: var(--cr-surface);
+		border-top: 1px solid var(--cr-line-s);
+		box-shadow: 0 -8px 28px rgba(0, 0, 0, .18);
+	}
+}

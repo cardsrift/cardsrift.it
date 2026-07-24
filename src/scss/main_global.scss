@@ -1,7 +1,8 @@
 /*
-	SCSS LEGACY — solo skin delle pagine WooCommerce vanilla + header.
-	Verrà sostituito pezzo per pezzo in Fase 2 (PLP/PDP custom).
-	Tutte le novità va scritto in Tailwind: token in tailwind/components/themes.css,
+	SCSS LEGACY — quel che resta della skin delle pagine WooCommerce vanilla + header.
+	Carrello, checkout e account NON sono più qui: hanno override propri in
+	src/wp-theme/woocommerce/ e sono vestiti da tailwind/components/shop.css.
+	Tutte le novità vanno scritte in Tailwind: token in tailwind/components/themes.css,
 	primitive in tailwind/components/design-system.css (vedi docs/design-system.md).
 */
 @import "reset";
@@ -10,5 +11,3 @@
 @import "header";
 @import "single-product";
 @import "category-page";
-@import "my-account";
-@import "cart";

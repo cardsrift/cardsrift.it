@@ -19,7 +19,7 @@ return [
 		'pattern'     => true,
 		'eyebrow'     => __('Chi siamo', 'cardsrift'),
 		'titolo'      => __('Un negozio di carte collezionabili tenuto da chi le colleziona', 'cardsrift'),
-		'sottotitolo' => __('CardsRift è la mia collezione diventata negozio: Pokémon, One Piece e Magic, sealed e singole, controllate una a una e spedite come vorrei riceverle io. Il sito è nuovo, ma le carte le spedisco già da un po’ — con il 100% di valutazioni positive su Cardmarket.', 'cardsrift'),
+		'sottotitolo' => __('CardsRift è la mia collezione diventata negozio: Pokémon e Magic, sealed e singole, controllate una a una e spedite come vorrei riceverle io. Il sito è nuovo, ma le carte le spedisco già da un po’ — con il 100% di valutazioni positive su Cardmarket.', 'cardsrift'),
 	],
 
 	// 2 · La storia — l'unico punto in cui compare il nome
@@ -69,7 +69,7 @@ return [
 			['domanda' => __('Le carte sono originali?', 'cardsrift'),               'risposta' => __('Sempre. Tratto solo prodotto autentico: sealed e singole verificate una a una. Le carte di valore le trovi fotografate fronte e retro nella scheda.', 'cardsrift')],
 			['domanda' => __('Come giudichi le condizioni?', 'cardsrift'),           'risposta' => __('Uso la scala di Cardmarket — da Mint a Poor — applicata per difetto. Se una carta è Light Played la chiamo così. Trovi ogni grado spiegato nella <a href="/guida-alle-condizioni">guida alle condizioni</a>.', 'cardsrift')],
 			['domanda' => __('Come spedisci, e in quanto tempo?', 'cardsrift'),       'risposta' => __('Spedizione tracciata in 24/48h in tutta Italia. Ogni carta parte imballata secondo il suo valore: sleeve, top loader o rinforzo, poi busta o scatola rigida.', 'cardsrift')],
-			['domanda' => __('Vendi solo Pokémon, One Piece e Magic?', 'cardsrift'),  'risposta' => __('Per ora sì: sono i giochi che conosco meglio e su cui posso garantire davvero. Gli altri arriveranno con calma.', 'cardsrift')],
+			['domanda' => __('Vendi solo Pokémon e Magic?', 'cardsrift'),  'risposta' => __('Per ora sì: sono i giochi che conosco meglio e su cui posso garantire davvero. Gli altri arriveranno con calma.', 'cardsrift')],
 			['domanda' => __('Posso vendervi le mie carte?', 'cardsrift'),           'risposta' => __('Sì. Le valuto sui prezzi correnti di Cardmarket e ti faccio un’offerta. Trovi tutti i dettagli nella <a href="/compriamo-le-tue-carte">pagina dedicata</a>.', 'cardsrift')],
 			['domanda' => __('Chi c’è dietro CardsRift?', 'cardsrift'),              'risposta' => __('Una persona sola, non un magazzino: un collezionista che apre, controlla e imballa ogni ordine di persona.', 'cardsrift')],
 		],

@@ -10,7 +10,7 @@
 /** Descrizione di riserva (brand line), usata dove non c'è nulla di più specifico. */
 function cr_seo_default_description()
 {
-	return __('Il tuo portale per il collezionismo: carte Pokémon, One Piece e Magic controllate a mano, con spedizione tracciata e condizioni oneste.', 'cardsrift');
+	return __('Il tuo portale per il collezionismo: carte Pokémon e Magic controllate a mano, con spedizione tracciata e condizioni oneste.', 'cardsrift');
 }
 
 /** Meta per-slug: 'title' (per il tag <title>) + 'description'. Estendibile pagina per pagina. */
@@ -18,12 +18,12 @@ function cr_seo_map()
 {
 	return [
 		'chi-siamo' => [
-			'title'       => __('Chi siamo · CardsRift — carte Pokémon, One Piece e Magic', 'cardsrift'),
-			'description' => __('CardsRift è carte Pokémon, One Piece e Magic controllate a mano, con il 100% di valutazioni positive su Cardmarket: spedizione tracciata e condizioni dette come stanno.', 'cardsrift'),
+			'title'       => __('Chi siamo · CardsRift — carte Pokémon e Magic', 'cardsrift'),
+			'description' => __('CardsRift è carte Pokémon e Magic controllate a mano, con il 100% di valutazioni positive su Cardmarket: spedizione tracciata e condizioni dette come stanno.', 'cardsrift'),
 		],
 		'compriamo-le-tue-carte' => [
-			'title'       => __('Compriamo le tue carte · CardsRift — vendi Pokémon, One Piece e Magic', 'cardsrift'),
-			'description' => __('Vendi le tue carte Pokémon, One Piece e Magic. Valutiamo singole, sealed e bulk sui prezzi di Cardmarket: offerta scritta senza impegno, pagamento tracciato in 24/48h.', 'cardsrift'),
+			'title'       => __('Compriamo le tue carte · CardsRift — vendi Pokémon e Magic', 'cardsrift'),
+			'description' => __('Vendi le tue carte Pokémon e Magic. Valutiamo singole, sealed e bulk sui prezzi di Cardmarket: offerta scritta senza impegno, pagamento tracciato in 24/48h.', 'cardsrift'),
 		],
 		'guida-alle-condizioni' => [
 			'title'       => __('Guida alle condizioni delle carte · CardsRift — la scala Cardmarket', 'cardsrift'),
@@ -38,7 +38,7 @@ function cr_seo_map()
 			'description' => __('Come contattare CardsRift: scrivici su Telegram, per email o su Instagram. Scegli il canale che preferisci, di solito rispondiamo entro un giorno.', 'cardsrift'),
 		],
 		'faq' => [
-			'title'       => __('Domande frequenti · CardsRift — carte Pokémon, One Piece e Magic', 'cardsrift'),
+			'title'       => __('Domande frequenti · CardsRift — carte Pokémon e Magic', 'cardsrift'),
 			'description' => __('Le risposte alle domande più comuni: originalità, condizioni, spedizioni, resi e come vendere le tue carte. Tutto quello che serve prima di ordinare su CardsRift.', 'cardsrift'),
 		],
 	];

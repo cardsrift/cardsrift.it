@@ -119,7 +119,7 @@ $demo_ids = function_exists('wc_get_products') ? wc_get_products(['status' => 'p
 		<form class="cr-glass rounded-[20px] shadow-th max-w-[720px] p-7 mt-5" onsubmit="return false">
 			<div class="grid sm:grid-cols-2 gap-4 mb-4">
 				<div><label class="cr-label" for="ds-n">Nome</label><input class="cr-input" id="ds-n" type="text" placeholder="Il tuo nome"></div>
-				<div><label class="cr-label" for="ds-s">Select</label><select class="cr-select" id="ds-s"><option>Pokémon</option><option>One Piece</option><option>Magic</option></select></div>
+				<div><label class="cr-label" for="ds-s">Select</label><select class="cr-select" id="ds-s"><option>Pokémon</option><option>Magic</option></select></div>
 			</div>
 			<label class="cr-label" for="ds-t">Note</label>
 			<textarea class="cr-textarea mb-4" id="ds-t" placeholder="Testo…"></textarea>

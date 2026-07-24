@@ -24,14 +24,20 @@ if (!defined('ABSPATH')) {
 	exit;
 }
 
-define('CR_ROUTING_VER', '1');                       // bump per forzare il flush delle rewrite
-define('CR_GAMES', ['magic', 'pokemon', 'one-piece']); // slug gioco (== termini product_cat)
+// Bump per forzare il flush delle rewrite. Portato a '2' il 25/07/2026 togliendo One Piece:
+// le regole vecchie restano in database finché non si rigenerano, quindi /one-piece/
+// continuerebbe a rispondere anche dopo averlo tolto da CR_GAMES.
+define('CR_ROUTING_VER', '2');
+// Slug gioco (== termini product_cat). One Piece tolto il 25/07/2026: non è ancora
+// in vendita. Per riattivarlo basta rimetterlo qui (rotte, menu, landing e campi ACF
+// dell'hero di gioco si generano da questa lista) e ripristinare il copy.
+define('CR_GAMES', ['magic', 'pokemon']);
 define('CR_TIPI_CARTE', ['sealed', 'singole']);        // tipi per-gioco (l'ordine è Sealed → Singole)
 
 /** Etichetta display di un gioco (lo slug resta invariato per URL/tassonomia). */
 function cr_game_label($slug)
 {
-	$map = ['magic' => 'Magic: The Gathering', 'pokemon' => 'Pokémon', 'one-piece' => 'One Piece'];
+	$map = ['magic' => 'Magic: The Gathering', 'pokemon' => 'Pokémon'];
 	return $map[$slug] ?? ucfirst((string) $slug);
 }
 

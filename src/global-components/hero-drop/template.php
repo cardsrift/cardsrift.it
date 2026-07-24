@@ -56,14 +56,15 @@ $pos = [
 					<?php foreach ($ventaglio as $i => $slot) :
 						$pid = is_object($slot['prodotto'] ?? null) ? $slot['prodotto']->ID : (int) ($slot['prodotto'] ?? 0);
 						if (!$pid) continue;
-						$img = get_the_post_thumbnail_url($pid, 'woocommerce_thumbnail');
+						// Stessa API delle card: le foto sono URL remoti del plugin di sync,
+						// non allegati della libreria media (vedi cr_product_has_image).
+						$cr_p = wc_get_product($pid);
+						$img  = $cr_p ? $cr_p->get_image('woocommerce_single', ['class' => 'w-full h-full object-contain']) : '';
 						$etichetta = cr_product_chip($pid);
 					?>
 						<div class="absolute w-[150px] sm:w-[215px] aspect-[4/5] <?= esc_attr($pos[$i] ?? ''); ?>">
 							<div class="w-full h-full bg-white-pure rounded-2xl p-3.5 shadow-th overflow-hidden" data-cr-holo>
-								<?php if ($img) : ?>
-									<img class="w-full h-full object-contain" src="<?= esc_url($img); ?>" alt="">
-								<?php endif; ?>
+								<?= $img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 							</div>
 							<?php if ($etichetta) : ?>
 								<span class="absolute -bottom-3 left-1/2 -translate-x-1/2 <?= $tema === 'dark' ? 'bg-purple-deep' : 'bg-black'; ?> text-white font-metropolis font-bold text-xs rounded-full px-3.5 py-1 whitespace-nowrap"><?= esc_html($etichetta); ?></span>

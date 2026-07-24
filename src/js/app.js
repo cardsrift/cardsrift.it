@@ -5,6 +5,7 @@ import { calcViewportHeight, documentReady, pageLoad } from './utils';
 // ------------------- imports###
 
 import Header from './components/header';
+import shop from './components/shop';
 import globalComponents from './global-components';
 import initEffects from './utils/effects';
 
@@ -13,6 +14,7 @@ window.$ = $;
 
 const readyFunc = () => {
 	Header();
+	shop();
 	initEffects();
 };
 

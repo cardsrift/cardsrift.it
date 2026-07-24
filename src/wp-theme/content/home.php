@@ -21,7 +21,7 @@ return [
 		'tema'        => 'dark',
 		'eyebrow'     => __('Il tuo portale per il collezionismo', 'cardsrift'),
 		'titolo'      => __("Le carte che cerchi,\nscelte una per una.", 'cardsrift'),
-		'sottotitolo' => __('Sealed, singole e accessori per Pokémon, One Piece e Magic. Le controlliamo una per una e le imballiamo come se restassero da noi.', 'cardsrift'),
+		'sottotitolo' => __('Sealed, singole e accessori per Pokémon e Magic. Le controlliamo una per una e le imballiamo come se restassero da noi.', 'cardsrift'),
 		'cta_label'   => __('Scopri i giochi', 'cardsrift'),
 		'cta_url'     => '#giochi', // ancora alle righe per-gioco qui sotto (niente catalogo globale)
 		'cta2_label'  => __('Come lavoriamo', 'cardsrift'),
@@ -64,17 +64,9 @@ return [
 		'link_label' => __('Entra', 'cardsrift'),
 		'link_url'   => '/pokemon/',
 	],
-	[
-		'comp'       => 'griglia-prodotti',
-		'tema'       => 'light',
-		'sorgente'   => 'recenti',
-		'gioco'      => 'one-piece',
-		'colonne'    => 4,
-		'eyebrow'    => __('One Piece', 'cardsrift'),
-		'titolo'     => __('Novità One Piece', 'cardsrift'),
-		'link_label' => __('Entra', 'cardsrift'),
-		'link_url'   => '/one-piece/',
-	],
+	// ⚠️ Qui stava la riga One Piece: tolta il 25/07/2026 perché non lo vendiamo ancora.
+	// Per rimetterla: ripristinare questa sezione e riaggiungere 'one-piece' a CR_GAMES
+	// (includes/routing.php), da cui dipendono rotte, menu e landing.
 
 	// 6 · In arrivo — automatico (prodotti con "data di uscita", ordinati per data)
 	[

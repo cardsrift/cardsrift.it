@@ -39,8 +39,9 @@ function cr_load_manifest($slug)
 }
 
 /**
- * True se la pagina corrente è composta dal builder (homepage o pagina con manifest):
- * quelle sezioni sono full-bleed e NON vanno avvolte nel .container legacy (vedi header.php).
+ * True se la pagina corrente rende sezioni FULL-BLEED (`.cr-sec` a tutta larghezza) e quindi NON va
+ * avvolta nel `.container` legacy (vedi header.php): homepage, pagine con manifest, rotte gioco/prodotto,
+ * 404 e le pagine transazionali WooCommerce (carrello/checkout/account), tutte ridisegnate sul design system.
  */
 function cr_is_builder_page()
 {
@@ -49,6 +50,13 @@ function cr_is_builder_page()
 	}
 	// rotte gioco-scoped, accessori e pagina prodotto: sezioni full-bleed come la home
 	if (get_query_var('cr_game') || get_query_var('cr_tipo') || is_singular('product')) {
+		return true;
+	}
+	// 404 e pagine transazionali WooCommerce: anch'esse full-bleed sul design system
+	if (is_404()) {
+		return true;
+	}
+	if (function_exists('is_cart') && (is_cart() || is_checkout() || is_account_page())) {
 		return true;
 	}
 	$id = get_queried_object_id();

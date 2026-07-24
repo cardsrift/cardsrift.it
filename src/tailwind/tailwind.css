@@ -8,13 +8,15 @@ Theme Name: Wp Zero
 	themes.css        → token del design system (4 temi, --cr-*)
 	layout.css        → utilities legacy layout/menu
 	design-system.css → primitive .cr-* (bottoni, card, badge, form…)
-	Gli SCSS in src/scss/ sono SOLO skin legacy WooCommerce + header (fino a Fase 2).
+	shop.css          → primitive del flusso d'acquisto + skin dell'HTML di WooCommerce
+	Gli SCSS in src/scss/ sono SOLO skin legacy header (fino a Fase 2).
 */
 @import "./components/base.css";
 @import "./components/fonts.css";
 @import "./components/themes.css";
 @import "./components/layout.css";
 @import "./components/design-system.css";
+@import "./components/shop.css";
 
 
 

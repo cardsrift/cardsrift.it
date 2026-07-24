@@ -14,19 +14,49 @@ $vetrina  = array_slice(array_filter((array) ($c['vetrina'] ?? [])), 0, 3);
 $trust    = is_array($c['trust'] ?? null) ? $c['trust'] : [];
 $rotazioni = ['-rotate-6 left-[5%] top-[13%] z-[2]', 'rotate-2 left-[35%] top-[2%] z-[3] scale-110', 'rotate-[8deg] left-[63%] top-[26%] z-[1]'];
 
-// Vetrina: prodotti reali (3 post_object da ACF) o, se vuota, placeholder in sviluppo.
+/**
+ * Vetrina: 3 prodotti scelti a mano (post_object da ACF).
+ *
+ * ⚠️ Il campo conserva gli ID anche quando i prodotti spariscono — ed è successo:
+ * dopo una re-importazione del catalogo i tre ID scelti non esistevano più e l'hero
+ * mostrava tre carte BIANCHE, perché il template si fidava del dato senza verificarlo.
+ * Qui si tiene solo ciò che esiste davvero, è pubblicato e ha un'immagine; i posti
+ * rimasti scoperti si riempiono da soli con i prodotti più recenti. L'hero è la prima
+ * cosa che si vede: non può dipendere dal fatto che qualcuno ricordi di aggiornarlo.
+ */
 $showcase = [];
-if ($vetrina) {
-	foreach ($vetrina as $slot) {
-		$pid = is_object($slot) ? $slot->ID : (int) $slot;
-		if ($pid) {
-			$showcase[] = ['img' => get_the_post_thumbnail_url($pid, 'woocommerce_thumbnail'), 'label' => cr_product_chip($pid)];
-		}
+$used     = [];
+$cr_img_class = ['class' => 'w-full h-full object-contain'];
+
+/** Aggiunge un prodotto alla vetrina, se esiste ed ha una foto vera. */
+$cr_add = function ($pid) use (&$showcase, &$used, $cr_img_class) {
+	$product = $pid ? wc_get_product($pid) : null;
+	if (!$product || $product->get_status() !== 'publish' || !cr_product_has_image($product)) {
+		return;
 	}
-} elseif (CR_PLACEHOLDER) {
-	$ph_img = function_exists('wc_placeholder_img_src') ? wc_placeholder_img_src('woocommerce_thumbnail') : '';
-	foreach (['151 · IT', 'OP-10 · JP', 'MTG · EN'] as $ph_label) {
-		$showcase[] = ['img' => $ph_img, 'label' => $ph_label];
+	$used[]     = (int) $pid;
+	$showcase[] = ['img' => $product->get_image('woocommerce_thumbnail', $cr_img_class), 'label' => cr_product_chip($pid)];
+};
+
+foreach ($vetrina as $slot) {
+	$cr_add(is_object($slot) ? $slot->ID : (int) $slot);
+}
+
+// Ripiego automatico: i posti scoperti li prendono i prodotti più recenti con foto.
+if (count($showcase) < 3 && function_exists('wc_get_products')) {
+	foreach (wc_get_products(['status' => 'publish', 'limit' => 20, 'exclude' => $used, 'orderby' => 'date', 'order' => 'DESC', 'return' => 'ids']) as $pid) {
+		if (count($showcase) >= 3) {
+			break;
+		}
+		$cr_add($pid);
+	}
+}
+
+// Ultima spiaggia (negozio ancora vuoto, solo in sviluppo): i placeholder.
+if (!$showcase && CR_PLACEHOLDER) {
+	$ph = function_exists('wc_placeholder_img') ? wc_placeholder_img('woocommerce_thumbnail', $cr_img_class) : '';
+	foreach (['151 · IT', 'MTG · EN', 'Pokémon · IT'] as $ph_label) {
+		$showcase[] = ['img' => $ph, 'label' => $ph_label];
 	}
 }
 ?>
@@ -72,9 +102,9 @@ if ($vetrina) {
 					<?php foreach ($showcase as $i => $s) : ?>
 						<div class="hero-vetrina__card absolute w-[47%] max-w-[255px] aspect-[5/6] <?= esc_attr($rotazioni[$i] ?? ''); ?>" data-cr-tilt>
 								<div class="relative w-full h-full bg-white-pure rounded-2xl p-4 shadow-th border border-th-line overflow-hidden">
-							<?php if ($s['img']) : ?>
-								<img class="w-full h-full object-contain" src="<?= esc_url($s['img']); ?>" alt="">
-							<?php endif; ?>
+							<?php // markup dell'immagine già pronto: viene da $product->get_image(),
+							// la stessa API delle card (le foto sono URL remoti del plugin di sync) ?>
+							<?= $s['img']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 								<span class="cr-glare"></span>
 							</div>
 							<?php if ($s['label']) : ?>

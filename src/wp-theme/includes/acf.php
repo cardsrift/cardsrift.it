@@ -26,7 +26,7 @@ function cr_register_game_hero_fields()
     if (!function_exists('acf_add_local_field_group')) {
         return;
     }
-    $games  = defined('CR_GAMES') ? CR_GAMES : ['magic', 'pokemon', 'one-piece'];
+    $games  = defined('CR_GAMES') ? CR_GAMES : ['magic', 'pokemon'];
     $fields = [[
         'key'       => 'field_cr_hero_intro',
         'type'      => 'message',

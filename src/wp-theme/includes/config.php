@@ -44,5 +44,5 @@ if (!defined('CR_HEADER_THEME'))        define('CR_HEADER_THEME', 'light');
 if (!defined('CR_PLACEHOLDER'))         define('CR_PLACEHOLDER', true);
 
 // Categorie prodotto "di tipo" (Singole/Sealed/Accessori): NON sono giochi. Servono al tema per
-// distinguere il termine gioco (Pokémon/Magic/One Piece) dal tipo — senza dipendere dal plugin sync.
+// distinguere il termine gioco (Pokémon/Magic) dal tipo — senza dipendere dal plugin sync.
 if (!defined('CR_CAT_TIPO'))            define('CR_CAT_TIPO', ['singole', 'sealed', 'accessori']);

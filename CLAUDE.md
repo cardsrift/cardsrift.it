@@ -44,11 +44,12 @@ L'engine è `includes/page-builder.php`:
 
 ### Component wiring is manual
 
-Webpack copies only the **PHP** from `global-components/`. For a component's JS to ship, register it in `src/js/global-components.js`. Styles: **Tailwind-first** — utilities nel template + primitive condivise in `src/tailwind/components/design-system.css`; SCSS (`src/scss/`) è SOLO legacy (skin WooCommerce + header, fino a Fase 2) — non aggiungere SCSS nuovi.
+Webpack copies only the **PHP** from `global-components/`. For a component's JS to ship, register it in `src/js/global-components.js`. Styles: **Tailwind-first** — utilities nel template + primitive condivise in `src/tailwind/components/design-system.css` (e `shop.css` per il flusso d'acquisto); SCSS (`src/scss/`) è SOLO legacy (header, PDP e listato vanilla, fino a Fase 2) — non aggiungere SCSS nuovi.
 
 ### Styling
 
-Hybrid system: **Tailwind CSS** (with DaisyUI, `themes: false`) for utilities/layout + **SCSS** for complex component styles.
+Hybrid system: **Tailwind CSS** for utilities/layout + **SCSS** for legacy component styles.
+*(DaisyUI era nel boilerplate iniziale ma non veniva usata da nessun componente: rimossa il 24/07/2026 — vedi `docs/rework-fase-1.md` §3f.)*
 
 - Tailwind content globs scan only `src/wp-theme`, `src/global-components`, and `src/js` — Tailwind classes anywhere else get purged.
 - Custom breakpoints: xs(375), sm(640), tb(768), md(960), lg(1024), xl(1280), 2xl(1600), 3xl(1800). `tb` and `md` are **not** aliases.
@@ -71,9 +72,62 @@ jQuery (WordPress's copy — webpack `externals` maps `jquery` to the global `jQ
 ### WordPress/WooCommerce
 
 - ACF Pro for custom fields; "Theme Options" options page (header logos etc. come from option fields). ACF JSON save/load is redirected to `public/acf-json` (untracked); manual exports live in `/acf/`.
-- WooCommerce standard product tabs and gallery zoom/lightbox are removed via `functions.php` filters; the product page is the theme's own `single-product.php`. There are **no** WC template overrides — if you add any, they go in `wp-theme/woocommerce/single-product/...` (NO `templates/` level in between, or WooCommerce never loads them).
+- WooCommerce standard product tabs and gallery zoom/lightbox are removed via `functions.php` filters; the product page is the theme's own `single-product.php`.
 - Cache-busting: asset version = `filemtime()` of the built file (`script_and_style.php`) — updates automatically on every build/deploy
 - PHP→JS bridge: `phpVars` object (baseUrl, permalink, templateDir, lang) localized in `script_and_style.php`
+
+### Flusso d'acquisto: carrello → checkout → account (dal 24/07/2026)
+
+Le tre pagine transazionali sono **override PHP di WooCommerce** in `src/wp-theme/woocommerce/`
+(niente livello `templates/` in mezzo, o WooCommerce non li carica). Logica condivisa in
+`includes/shop.php`, vestito in `src/tailwind/components/shop.css`, comportamenti in
+`src/js/components/shop.js`.
+
+- **Carrello e Checkout usano gli SHORTCODE classici** (`[woocommerce_cart]`, `[woocommerce_checkout]`),
+  non i blocchi: i blocchi non sono sovrascrivibili da template PHP. Se qualcuno rimette i blocchi
+  in quelle pagine, tutti gli override smettono di applicarsi (la pagina non dà errore: torna
+  semplicemente al look di WooCommerce).
+- **Classi da NON rimuovere** dagli override: `woocommerce-cart-form`, `woocommerce-cart-form__contents`,
+  `cart_item`, `product-remove`, `cart_totals`, `wc-empty-cart-message`, `woocommerce-checkout`,
+  `woocommerce-checkout-review-order-table`, `woocommerce-checkout-payment`, `#place_order`,
+  `#shipping_method`, `woocommerce-error/-message/-info`. Sono i selettori con cui `cart.js` e
+  `checkout.js` sostituiscono i frammenti in AJAX: toglierle spegne gli aggiornamenti in silenzio.
+- I CSS di WooCommerce sono **dequeue-ati** (`woocommerce_enqueue_styles` → array vuoto), insieme a
+  select2/selectWoo (tendine native). Le utility che il suo JS dà per scontate (`.screen-reader-text`,
+  overlay blockUI) sono in `shop.css`.
+- **Identità della carta**: condizione/lingua/foil compaiono come chip in ogni riga (carrello,
+  riepilogo, ordine) via `cr_item_chips_html()`, e vengono salvati come meta di riga all'acquisto
+  (`cr_order_item_card_meta`) — così l'ordine resta leggibile anche se il prodotto cambia.
+- **Aggiunta al carrello** (§3g del doc di fase): il comando `.cr-add` sta nella riga del prezzo e
+  **non copre mai la foto**; la card è un `<div>` con link "disteso" sul titolo (`.cr-card__link`),
+  mai un `<a>` che avvolge controlli. All'aggiunta si apre il **drawer** (`cr_cart_drawer()` +
+  override `cart/mini-cart.php`, aggiornato come frammento AJAX), da cui si cambiano quantità e si
+  rimuove: endpoint nostro `wc-ajax=cr_set_qty`, perché WooCommerce non ne ha uno per il mini-carrello.
+  ⚠️ I tasti − / + dello stepper vanno registrati globalmente, non solo sulla pagina carrello.
+  ⚠️ In caso di errore WooCommerce reindirizzerebbe alla scheda prodotto: il redirect è disinnescato
+  (`woocommerce_cart_redirect_after_error`) e il motivo arriva dall'endpoint `wc-ajax=cr_notices`.
+  ⚠️ Il click è protetto da un listener in **fase di cattura**: WooCommerce ascolta su `document.body`,
+  quindi è l'unico punto da cui si può fermare un doppio invio.
+- **Disponibilità**: usare `cr_stock_left()` (scorte − quantità già nel carrello), non
+  `get_stock_quantity()`, ovunque si mostri o si limiti la quantità acquistabile.
+- ⚠️ **Foto prodotto**: NON stanno nella libreria media, arrivano dal plugin di sync come URL remoti
+  (`_ct_image` / `_ct_image_full`) iniettati via `woocommerce_product_get_image`. Quindi
+  `has_post_thumbnail()` e `get_the_post_thumbnail_url()` risultano **vuoti**: usare sempre
+  `$product->get_image()`, e `cr_product_has_image()` per sapere se una foto esiste.
+  `cr_full_res_image()` forza la versione 960px anche nei listati (il plugin lì darebbe 180px).
+- La barra "spedizione gratuita" (`cr_free_shipping_bar()`) si accende **da sola** se in
+  WooCommerce → Spedizione esiste un metodo *free_shipping* attivo con importo minimo.
+
+⚠️ **Tailwind pota anche `@layer components`**: una regola che aggancia markup generato da
+WooCommerce (`.woocommerce-privacy-policy-text`, `.wc-item-meta`, `.blockUI`…) sparisce dal CSS
+perché quella classe non compare in `src/`. Ogni nuovo aggancio va aggiunto al **`safelist`** in
+`tailwind.config.js`, altrimenti si perde silenziosamente al build.
+
+⚠️ **Attenzione ai nomi di classe generici**: WooCommerce marca il suo markup con classi comuni
+(`checkbox`, `input-text`, `button`, `form-row`…). È così che daisyUI — presente nel boilerplate ma
+mai usata — rompeva le spunte del checkout: il suo componente `.checkbox` (24×24px) colpiva le
+*label* di WooCommerce. daisyUI è stata rimossa; se in futuro si aggiunge una libreria di componenti,
+verificare le collisioni proprio su queste pagine.
 
 ## Naming Conventions
 
@@ -91,6 +145,11 @@ Never commit, push, or create PRs — the user handles all git operations. Code 
 
 ## Config Files
 
-- `tailwind.config.js` — Custom breakpoints, colors, DaisyUI, container/typography plugins
+- `tailwind.config.js` — Custom breakpoints, colors, container/typography plugins, `safelist` per il markup generato da WooCommerce.
+  ⚠️ `theme.colors` **sostituisce** la palette di Tailwind: `transparent`/`current`/`inherit` sono riportate a mano.
+  Toglierle fa sparire `stroke-current` (tutte le icone SVG) **senza alcun errore di build**.
+- `postcss.config.js` — ⚠️ `css-mqpacker` gira con `{ sort: true }`, e non è opzionale: raggruppa le media
+  query nell'ordine in cui le incontra, quindi senza `sort` il breakpoint `sm` può finire dopo `lg` e
+  sovrascriverlo (sintomo: `lg:grid-cols-4` ignorato, griglie a 2 colonne su desktop).
 - `.eslintrc` — Airbnb config; `no-console` and `no-unused-vars` are off; tab indent, single quotes
 - All builds run with `NODE_ENV=wp` — webpack's `isProduction` check and `GLOBAL_VARS.projectDevStatus` are effectively dead code
