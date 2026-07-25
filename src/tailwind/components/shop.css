@@ -53,9 +53,11 @@
 		@apply grid place-items-center w-8 h-8 shrink-0 rounded-lg no-underline transition-colors;
 		color: var(--cr-soft);
 	}
-	.cr-remove:hover {
-		background-color: rgba(217, 83, 111, .12);
-		color: #d9536f;
+	@media (hover: hover) {
+		.cr-remove:hover {
+			background-color: rgba(217, 83, 111, .12);
+			color: #d9536f;
+		}
 	}
 	.cr-remove svg {
 		@apply w-[15px] h-[15px] fill-transparent stroke-current;
@@ -111,9 +113,11 @@
 		background: transparent;
 		border: 0;
 	}
-	.cr-qty__btn:hover:not(:disabled) {
-		background-color: var(--cr-accsoft);
-		color: var(--cr-acc);
+	@media (hover: hover) {
+		.cr-qty__btn:hover:not(:disabled) {
+			background-color: var(--cr-accsoft);
+			color: var(--cr-acc);
+		}
 	}
 	.cr-qty__btn:disabled {
 		opacity: .35;
@@ -771,7 +775,11 @@
 		top: 0;
 		right: 0;
 		bottom: 0;
-		width: min(410px, 100vw);
+		/* 92vw e non 100: su telefono serve una striscia di scrim tappabile, altrimenti
+		   il gesto "tocco fuori per chiudere" non ha dove atterrare (verificato: a 390px
+		   non chiudeva, a 768 sì) e resta solo la ✕. */
+		width: min(410px, 92vw);
+		padding-bottom: env(safe-area-inset-bottom);
 		background-color: var(--cr-pg);
 		color: var(--cr-ink);
 		box-shadow: -18px 0 50px rgba(0, 0, 0, .28);
@@ -852,8 +860,16 @@
 		display: block;
 	}
 
-	/* con il drawer aperto la pagina sotto non deve scorrere */
+	/* Con un pannello aperto (drawer del carrello, menu mobile) la pagina sotto non
+	   deve scorrere. Su <html> e non su <body>: su iOS il blocco sul solo body non
+	   ferma il rimbalzo dello sfondo. `overscroll-behavior` chiude lo scroll chaining
+	   dal pannello alla pagina. Un'unica classe per entrambi i pannelli: prima erano
+	   due tecniche diverse, e la seconda era quella che su iPhone non teneva. */
 	.cr-noscroll {
+		overflow: hidden;
+		overscroll-behavior: none;
+	}
+	.cr-noscroll body {
 		overflow: hidden;
 	}
 
@@ -871,5 +887,102 @@
 		background-color: var(--cr-surface);
 		border-top: 1px solid var(--cr-line-s);
 		box-shadow: 0 -8px 28px rgba(0, 0, 0, .18);
+	}
+
+	/* Spazio riservato in fondo al DOCUMENTO, non a metà pagina.
+	   Prima lo spaziatore stava dentro cart.php, cioè prima del footer: la barra
+	   finiva sopra le icone di pagamento e la riga Privacy/Cookie (verificato a schermo).
+	   La classe la mette cr_body_stickybar_class() in includes/shop.php. */
+	.cr-has-stickybar footer {
+		padding-bottom: calc(84px + env(safe-area-inset-bottom));
+	}
+	@media (min-width: 1024px) {
+		.cr-has-stickybar footer {
+			padding-bottom: 0;
+		}
+	}
+
+	/* Barra d'acquisto della scheda prodotto: scompare mentre la buy-box vera è a
+	   schermo (la classe la toglie shop.js). Senza JavaScript resta sempre visibile
+	   ed è un'ancora che porta al pulsante. */
+	.cr-buybar {
+		transition: transform .28s cubic-bezier(.32, .72, 0, 1), opacity .28s ease;
+	}
+	.cr-buybar.is-hidden {
+		transform: translateY(110%);
+		opacity: 0;
+		pointer-events: none;
+	}
+	@media (prefers-reduced-motion: reduce) {
+		.cr-buybar {
+			transition: none;
+		}
+	}
+}
+
+/*
+	ZOOM AUTOMATICO DI iOS — l'unica regola che governa la taglia dei campi sul touch.
+
+	Safari su iPhone/iPad ingrandisce la pagina appena si tocca un campo con font
+	minore di 16px, e non la rimpicciolisce più da solo: si resta a navigare storti
+	finché non si pizzica indietro. Colpiva TUTTI i campi del checkout, la quantità
+	del carrello, il coupon, i filtri del listato, il login e la ricerca dell'header.
+
+	Il vincolo è il tipo di puntatore, non la larghezza: un iPad in orizzontale è
+	1024px CSS — cioè `lg`, cioè "desktop" per i breakpoint — ma resta touch. Con una
+	media query di larghezza tornava a 14px proprio lì.
+
+	⚠️ FUORI da @layer components di proposito: Tailwind pota le regole di quel layer
+	quando la classe non compare in src/, e questi selettori agganciano anche markup
+	generato da WooCommerce. Stesso accorgimento dell'accordion in layout.css.
+*/
+@media (pointer: coarse) {
+
+	/* `:not([type="hidden"])` non è un filtro: serve a pareggiare la specificità delle
+	   regole qui sopra, che agganciano i campi per attributo (`.cr-form input[type="text"]`,
+	   `.cr-form input.input-text`). A parità vince l'ultima scritta, cioè questa. */
+	.cr-input,
+	.cr-select,
+	.cr-textarea,
+	.cr-qty input,
+	.cr-qty .qty,
+	.cr-form input:not([type="hidden"]),
+	.cr-form select,
+	.cr-form textarea,
+	[data-cr-suggest] input[type="search"] {
+		font-size: 16px;
+	}
+
+	/* lo stepper compatto del drawer regge il 16px solo allargando un filo la casella */
+	.cr-qty--mini input,
+	.cr-qty--mini .qty {
+		width: 2.5rem;
+	}
+
+	/* BERSAGLI — col dito servono ~44px. Le misure da mouse restano quelle di prima. */
+	[data-cr-cart-toggle],
+	[data-cr-menu-toggle],
+	.cr-remove,
+	.cr-drawer__x {
+		width: 2.75rem;
+		height: 2.75rem;
+	}
+
+	.cr-qty {
+		height: 44px;
+	}
+	.cr-qty__btn {
+		width: 2.75rem;
+	}
+	.cr-qty input,
+	.cr-qty .qty {
+		width: 2.75rem;
+	}
+
+	.cr-qty--mini {
+		height: 40px;
+	}
+	.cr-qty--mini .cr-qty__btn {
+		width: 2.5rem;
 	}
 }

@@ -126,6 +126,33 @@ function cr_product_has_image($product)
 }
 
 /**
+ * Le foto di listato si caricano pigramente, sempre.
+ *
+ * Misurato su telefono: un listato di singole scarica ~1,5 MB di sole foto. Il
+ * caricamento differito c'era già, ma solo su una parte delle immagini (24 su 29 nel
+ * listato, 3 su 8 nel sealed): dipendeva da chi generava l'`<img>`, e quelle iniettate
+ * dal plugin di sync uscivano senza attributo. Qui lo si mette a tutte, insieme a
+ * `decoding="async"` — la decodifica di un JPEG da 960px blocca il thread principale
+ * mentre si scorre. La foto grande della scheda prodotto è esclusa: è il contenuto
+ * principale della pagina e differirla peggiorerebbe l'LCP.
+ *
+ * @param string $html markup dell'immagine
+ */
+function cr_lazy_image($html)
+{
+    if (!is_string($html) || $html === '') {
+        return $html;
+    }
+    if (strpos($html, 'loading=') === false) {
+        $html = str_replace('<img ', '<img loading="lazy" ', $html);
+    }
+    if (strpos($html, 'decoding=') === false) {
+        $html = str_replace('<img ', '<img decoding="async" ', $html);
+    }
+    return $html;
+}
+
+/**
  * QUALITÀ DELLE FOTO — usa sempre la versione piena di CardTrader.
  *
  * Il plugin di sync serve l'anteprima (**180×180**) a tutte le size tranne quelle
@@ -208,13 +235,23 @@ function cr_stock_line($product, $small = false)
         printf('<span class="cr-stock cr-stock--incart%s" data-cr-stock-for="%d">%s</span>', $cls, $product->get_id(), esc_html__('Tutto nel carrello', 'cardsrift'));
         return;
     }
+    // Sulle SINGOLE avere un pezzo solo è la norma, non un allarme: sono carte usate,
+    // ne esiste una copia per condizione e lingua. Marcarle tutte come "scorta bassa"
+    // tingeva di giallo l'intero listato e faceva sembrare il negozio vuoto invece che
+    // curato — e un avviso ripetuto su ogni riga smette comunque di dire qualcosa.
+    // L'urgenza resta dov'è un'informazione vera: sul sigillato, che si riassortisce.
+    $unique = function_exists('cr_product_tipo_slug') && cr_product_tipo_slug($product->get_id()) === 'singole';
+
     printf(
-        '<span class="cr-stock %s%s" data-cr-stock-for="%d" data-cr-left="%d">%s</span>',
-        $left <= 3 ? 'cr-stock--low' : 'cr-stock--ok',
+        '<span class="cr-stock %s%s" data-cr-stock-for="%d" data-cr-left="%d"%s>%s</span>',
+        (!$unique && $left <= 3) ? 'cr-stock--low' : 'cr-stock--ok',
         $cls,
         $product->get_id(),
         $left,
-        esc_html($left === 1 ? __('Ultimo pezzo', 'cardsrift') : sprintf(_n('%d disponibile', '%d disponibili', $left, 'cardsrift'), $left))
+        // lo legge components/shop.js: dopo un'aggiunta in AJAX ricalcola la riga e
+        // senza questo tornerebbe a colorarla di giallo
+        $unique ? ' data-cr-unique="1"' : '',
+        esc_html(sprintf(_n('%d disponibile', '%d disponibili', $left, 'cardsrift'), $left))
     );
 }
 
@@ -348,11 +385,11 @@ function cr_product_card($product_id, $opts = [])
         <?php endif; ?>
 
         <?php // il well resta libero: niente sopra la foto ?>
-        <span class="cr-well"><?= $product->get_image('woocommerce_thumbnail'); ?></span>
+        <span class="cr-well"><?= cr_lazy_image($product->get_image('woocommerce_thumbnail')); ?></span>
 
         <div class="flex flex-col gap-2 flex-1 pt-3 px-4 pb-4">
 
-            <div class="flex items-center justify-between gap-2 min-h-[22px]">
+            <div class="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 min-h-[22px]">
                 <?php if ($chip) : ?><span class="cr-chip"><?= esc_html($chip); ?></span><?php endif; ?>
                 <?php if (!$in_arrivo && $in_stock) cr_stock_line($product, true); ?>
             </div>
@@ -606,7 +643,7 @@ function cr_ph_card($opts = [])
         <?php endif; ?>
         <span class="cr-well"><?= $img; ?></span>
         <span class="flex flex-col gap-2 flex-1 pt-3 px-4 pb-4">
-            <span class="flex items-center justify-between gap-2 min-h-[22px]">
+            <span class="flex flex-wrap items-center justify-between gap-x-2 gap-y-1 min-h-[22px]">
                 <span class="cr-chip"><?= esc_html($d['chip']); ?></span>
                 <?php if (!$in_arrivo) : ?><span class="cr-stock cr-stock--ok !text-[11px]"><?= esc_html__('Disponibile', 'cardsrift'); ?></span><?php endif; ?>
             </span>
@@ -639,6 +676,9 @@ function cr_ph_pocket()
                 <span class="cr-cchip">IT</span>
             </span>
             <span class="font-metropolis font-semibold text-xs leading-tight text-th-ink min-h-[2.6em]"><?= esc_html($d['name']); ?></span>
+            <span class="flex items-center min-h-[16px]">
+                <span class="cr-stock cr-stock--ok !text-[11px]"><?= esc_html__('Disponibile', 'cardsrift'); ?></span>
+            </span>
             <span class="flex items-center justify-between gap-1.5 min-h-[32px]">
                 <span class="cr-price !text-sm">€ <?= esc_html($d['price']); ?></span>
                 <span class="cr-add cr-add--sm"><?= cr_icon_cart(); // phpcs:ignore ?></span>
@@ -667,17 +707,20 @@ function cr_pocket_card($pid)
 ?>
     <div class="cr-pocket<?= $product->is_in_stock() ? '' : ' cr-pocket--soldout'; ?>" <?= cr_card_fx_attrs($pid); ?>>
         <span class="cr-pocket__well">
-            <?= $product->get_image('woocommerce_thumbnail'); ?>
+            <?= cr_lazy_image($product->get_image('woocommerce_thumbnail')); ?>
         </span>
+        <?php // tre righe distinte — chip, nome, disponibilità — invece di chip e
+        // disponibilità appaiati: nella tasca stretta si contendevano la stessa riga ?>
         <div class="flex flex-col gap-1 pt-2 px-0.5 pb-1">
-            <span class="flex items-center justify-between gap-1 min-h-[16px]">
-                <span class="flex gap-1 flex-wrap">
-                    <?php if ($cond) : ?><span class="cr-cchip cr-cchip--cond"><?= esc_html($cond); ?></span><?php endif; ?>
-                    <?php if ($lingua) : ?><span class="cr-cchip"><?= esc_html($lingua); ?></span><?php endif; ?>
-                </span>
-                <?php if ($product->is_in_stock()) cr_stock_line($product, true); ?>
+            <span class="flex gap-1 flex-wrap min-h-[16px]">
+                <?php if ($cond) : ?><span class="cr-cchip cr-cchip--cond"><?= esc_html($cond); ?></span><?php endif; ?>
+                <?php if ($lingua) : ?><span class="cr-cchip"><?= esc_html($lingua); ?></span><?php endif; ?>
             </span>
             <a class="cr-card__link font-metropolis font-semibold text-xs leading-tight text-th-ink min-h-[2.6em] no-underline" href="<?= esc_url(get_permalink($pid)); ?>"><?= esc_html($product->get_name()); ?></a>
+            <?php // min-h anche da esaurita: senza, le tasche della griglia si sfalsano ?>
+            <span class="flex items-center min-h-[16px]">
+                <?php if ($product->is_in_stock()) cr_stock_line($product, true); ?>
+            </span>
             <span class="flex items-center justify-between gap-1.5 min-h-[32px]">
                 <span class="cr-price !text-sm"><?= $product->get_price_html(); ?></span>
                 <?php if ($product->is_in_stock()) : ?>

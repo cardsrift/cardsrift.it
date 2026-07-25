@@ -1,78 +1,23 @@
-header {
+/*
+	Quel che resta dell'header in SCSS: solo la ritrazione allo scroll, che ha
+	bisogno di un valore (-100%) che Tailwind non esprime. Tutto il resto —
+	due righe, tendine, menu mobile — è Tailwind nel template (header.php) e
+	un pugno di righe in src/js/components/header.js.
+
+	Le vecchie regole di .mainMenu / .main-menu / .toggleMenu sono state tolte
+	insieme a nav-menu.php: agganciavano markup che non esiste più.
+*/
+
+.cr-header {
+	// Ritrazione allo scroll con `transform`, non con `top`: `top` è una proprietà di
+	// layout e la si stava animando proprio mentre la pagina scorre — sui telefoni è
+	// il modo più rapido per perdere frame. `translateY(-100%)` resta sulla GPU.
 	&.header_scrolled {
-		top: -100%;
+		transform: translateY(-100%);
 	}
 
-	.mainMenu {
-		transition: transform .3s ease;
-
-
-		&.menuOpen {
-			.main_menu__list {
-				transition: transform .3s ease;
-
-				transform: translateX(0) !important;
-			}
-		}
-
-		@media screen and (max-width: 1024px) {
-			transform: translateX(-120%);
-
-			&.menuOpen {
-				transform: translateX(0);
-			}
-		}
-	}
-
-
-	.menuOpen {
-
-		.main-menu {
-			ul {
-				@media screen and (max-width: 1024px) {
-					position: relative;
-				}
-			}
-
-			&::before {
-				content: "";
-				position: absolute;
-				width: 300vw;
-				top: -50%;
-				left: -135%;
-				right: 0;
-				bottom: 0;
-				z-index: 0;
-				background: url(/src/images/logo/colored-icon.svg) 0 0 repeat;
-				transform: rotate(140deg);
-				background-repeat: no-repeat;
-
-				@media screen and (min-width: 481px) {
-					top: -245%;
-					left: -225%;
-					bottom: -46%;
-				}
-
-				@media screen and (min-width: 1024px) {
-					display: none;
-
-				}
-			}
-		}
-	}
-
-	.logo-black {
-		display: none;
-	}
-
-	.overflow-y-hidden & {
-		.logo-original {
-			display: none;
-		}
-
-		.logo-black {
-			display: block;
-		}
+	@media (prefers-reduced-motion: reduce) {
+		transition: none;
 	}
 }
 

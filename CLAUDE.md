@@ -76,6 +76,34 @@ jQuery (WordPress's copy — webpack `externals` maps `jquery` to the global `jQ
 - Cache-busting: asset version = `filemtime()` of the built file (`script_and_style.php`) — updates automatically on every build/deploy
 - PHP→JS bridge: `phpVars` object (baseUrl, permalink, templateDir, lang) localized in `script_and_style.php`
 
+### Header, navigazione e ricerca (dal 25/07/2026)
+
+Header a **due righe** (`header.php`): riga servizio 34px (solo desktop) + riga negozio 76px.
+Il menu **non viene dai menu di WordPress** — quelli sono stati rimossi, `register_nav_menu` incluso:
+si genera da `CR_GAMES × CR_TIPI_CARTE` via `cr_nav_games()` (`includes/nav.php`), così un gioco nuovo
+compare da solo in barra, nel menu mobile e nei filtri di ricerca. In barra si usa
+`cr_game_label_short()`. Le tendine desktop sono **CSS puro** (`group-hover` / `group-focus-within`);
+il JS in `header.js` fa solo ritrazione allo scroll, pannello mobile e altezza dell'accordion.
+Menu mobile sempre **dark** (`data-th="dark"` annidato) anche con barra chiara.
+
+- ⚠️ `--header-h-desktop` è **110px** (34+76), mobile 75 (`tailwind/components/layout.css`): da lì
+  dipendono il padding del `.wrapper`, gli `scroll-pt` e ogni colonna `sticky` di carrello,
+  checkout, account e scheda prodotto. Cambiare l'altezza dell'header significa cambiare quella.
+- ⚠️ **`.base` non ha gutter** (tolto da `_utils.scss`): il gutter lo mette chi sta dentro, con
+  `tw-container tw-section`. Rimetterlo lì fa 24+24 e disallinea di nuovo l'header dalla pagina.
+  Il fallback di `page.php` ha un contenitore proprio **perché da lì passano carrello, checkout e
+  conferma d'ordine**, che sono pagine con shortcode: togliendolo perdono il margine.
+- **Ricerca**: solo prodotti (`cr_scope_search`), ristretta al gioco corrente col parametro
+  ⚠️ **`cr_g`** — mai `cr_game`, che è una query var del routing e la trasformerebbe in un archivio.
+  Pagina risultati `search.php`; tendina di suggerimenti su `wc-ajax=cr_suggest`, che risponde con
+  **HTML già pronto** (come i frammenti del mini-carrello), cerca **solo nel titolo** e legge le
+  miniature da `_ct_image` — non da `$product->get_image()`, che `cr_full_res_image()` porterebbe
+  a 960px.
+- ⚠️ **`.cr-chip` nasce già con fondo `accsoft` e testo `acc`**: uno stato "attivo" fatto con quegli
+  stessi token è invisibile, e `hover:border-*` colora un bordo che la primitiva non ha. Per il
+  selezionato usare la pill piena (`bg-th-acc text-th-pg`), per l'hover un `ring-inset`. Le utility
+  battono la primitiva **senza `!important`** (`@layer utilities` viene dopo `@layer components`).
+
 ### Flusso d'acquisto: carrello → checkout → account (dal 24/07/2026)
 
 Le tre pagine transazionali sono **override PHP di WooCommerce** in `src/wp-theme/woocommerce/`
@@ -129,6 +157,71 @@ mai usata — rompeva le spunte del checkout: il suo componente `.checkbox` (24�
 *label* di WooCommerce. daisyUI è stata rimossa; se in futuro si aggiunge una libreria di componenti,
 verificare le collisioni proprio su queste pagine.
 
+### Mobile e tablet (audit 25/07/2026)
+
+Il negozio si usa soprattutto dal telefono. Quello che segue è la roba che *non* si deduce
+guardando il codice, e che si rompe di nuovo se la si tocca senza sapere perché c'è.
+
+- ⚠️ **La taglia dei campi e dei bersagli la decide il PUNTATORE, non la larghezza.** In fondo a
+  `tailwind/components/shop.css` c'è un unico blocco `@media (pointer: coarse)` che porta i campi
+  a **16px** e i comandi a **44px**. È **fuori da `@layer components`** di proposito (Tailwind lo
+  poterebbe: aggancia anche markup WooCommerce). Non riportarlo a un breakpoint di larghezza:
+  **un iPad in orizzontale è 1024px CSS — cioè `lg`, cioè "desktop" — ma resta touch**, e lì
+  tornerebbero il campo a 14px (Safari iOS zooma da solo sotto i 16 e non torna più indietro) e
+  i bersagli a 32-40px. `:not([type="hidden"])` nel selettore non filtra niente: pareggia la
+  specificità delle regole `.cr-form input[type="…"]` scritte sopra.
+- ⚠️ **`!w-auto` su una `<select>` allarga la pagina.** Sulle espansioni Magic l'opzione più lunga
+  è di 60 caratteri: la select misurava 427px, il viewport diventava 451 e il browser
+  **rimpiccioliva tutto il listato all'86%** — senza errori, senza scroll orizzontale, solo tutto
+  più piccolo. Nei filtri (`partials/listing.php`) la larghezza è vincolata fino a `tb`.
+- ⚠️ **Lo spazio per la barra fissa lo riserva il FOOTER**, non uno spaziatore in pagina:
+  `body.cr-has-stickybar` (da `cr_body_stickybar_class()` in `includes/shop.php`) →
+  `.cr-has-stickybar footer { padding-bottom }` in `shop.css`. Con lo spaziatore dentro `cart.php`
+  la barra copriva comunque le icone di pagamento, che stanno *dopo*, nel footer.
+- ⚠️ **`viewport-fit=cover` nel meta viewport serve**: senza, `env(safe-area-inset-*)` vale 0 e
+  tutto il CSS già scritto per la home-indicator degli iPhone non fa niente.
+- ⚠️ **Il menu mobile sta FUORI da `<header>`**. L'header si ritrae con `transform`, e un antenato
+  trasformato diventa il blocco contenitore dei discendenti `position: fixed`: rimettendo il
+  pannello dentro, si ancorerebbe alla barra da 76px invece che allo schermo.
+- **Griglie prodotto: 2 colonne già sul telefono** (design-system §4). I componenti della home
+  erano a `grid-cols-1` e mostravano un prodotto per schermata. Scala: `2 → tb:3 → lg:4` (tasche
+  singole `2 → sm:3 → tb:4 → lg:6`).
+- **`tb`(768) è il livello tablet**: griglie, footer a 2 colonne, blocchi a due colonne, PDP a due
+  colonne. Carrello e checkout restano a colonna singola fino a `lg`: a 768 il riepilogo da 380px
+  lascerebbe 316px alle righe.
+- **Filtri del listato**: `<details open>` + `listingFilters.js` che lo richiude **solo** su
+  schermo stretto e **solo** se nessun filtro è attivo. Parte aperto nel markup perché senza
+  JavaScript deve restare com'era.
+- **Barra d'acquisto della PDP** (`.cr-buybar`, `lg:hidden`): non ricrea l'aggiunta, inoltra il
+  tocco al pulsante vero dentro `#cr-buybox`. Senza JS resta un'ancora che porta alla buy-box.
+- `hoverOnlyWhenSupported: true` in `tailwind.config.js` → ogni `hover:*` esce dentro
+  `@media (hover: hover)`; le primitive `.cr-*` con `:hover` sono avvolte a mano. Su touch il
+  `:hover` restava "appiccicato" dopo il tap.
+- `html { overflow-x: clip }` (in `themes.css`) è una rete di sicurezza: **`clip`, non `hidden`** —
+  `hidden` su `html`/`body` crea un contenitore di scroll e spegne i `position: sticky` di
+  carrello, checkout e scheda prodotto.
+- **Limiti accettati, non dimenticanze**: le foto restano quelle piene (960px, ~1,5 MB per listato
+  di singole) con solo il lazy-load reso uniforme — scelta esplicita per la qualità; le tendine
+  desktop del catalogo si attivano a `lg`, quindi su un tablet touch a 1024px il tap sul gioco
+  porta alla landing invece di aprire il pannello (nessun vicolo cieco: la landing ha le due porte).
+
+### ⚠️ Sync CardTrader: le scritture partono solo dalla produzione
+
+`cardsrift-sync` è una sincronizzazione **a due vie**: `add_action('woocommerce_product_set_stock', …)`
+accoda un push che fa `PUT products/{id}` su CardTrader con la quantità locale. Le inserzioni
+sono reali, e il token API vive nel database — quindi anche l'installazione locale ce l'ha.
+Un ordine di prova in locale riscrive quello che hai davvero in vendita (successo il 25/07/2026).
+
+Dal 25/07/2026 c'è `crs_ct_writes_allowed()` (`includes/cardtrader.php`): fuori dalla produzione
+**le letture restano libere** (servono a import e aggancio blueprint, che si lavorano in locale)
+e **POST/PUT/DELETE vengono respinti** — nel transport `crs_ct_send()`, che è il punto obbligato,
+più un'uscita anticipata su hook stock, push a blocchi, autopricer e cancellazione da cestino.
+La pagina CardTrader in wp-admin mostra un avviso, così il push non sembra rotto.
+
+⚠️ **`wp_get_environment_type()` da solo non basta**: senza `WP_ENVIRONMENT_TYPE` in wp-config
+il core risponde `production` anche su localhost (verificato qui). Il controllo che regge è
+l'host del sito. Per forzare un push da locale: `define('CRS_CT_ALLOW_WRITES', true)`.
+
 ## Naming Conventions
 
 | Type | Convention | Example |
@@ -140,6 +233,12 @@ verificare le collisioni proprio su queste pagine.
 ## Git Workflow
 
 Never commit, push, or create PRs — the user handles all git operations. Code review happens in VS Code.
+
+**Il database locale sale UNA VOLTA SOLA, al lancio — poi mai più.** Dopo la prima messa online la
+produzione è l'unica fonte di verità del DB: ci vivono ordini, clienti e giacenze reali, e un import
+dal locale li cancellerebbe. Se servono dati veri in sviluppo si porta una copia **giù** (prod →
+locale), mai su. `scripts/deploy.sh` è già sicuro (mirror del solo tema, niente DB): il rischio è
+solo manuale — `wp db export` + import, o un plugin di migrazione. Non si fa. Vedi `docs/go-live.md`.
 
 **Never write to production, ever, without an explicit go-ahead in the user's own words** — no `npm run deploy`, `scripts/deploy.sh`, or any FTP write (`mirror`, `put`, `rm`) toward the Aruba server. This holds even during incidents: if production is broken, diagnose read-only, propose the exact command, and WAIT for the user to approve or run it themselves. Read-only FTP operations (`cls`, listings) are fine. The `/deploy-theme` skill wraps deploys with a dry-run-first flow.
 

@@ -7,6 +7,7 @@ include('includes/helpers.php');
 include('includes/config.php');
 include('includes/rework.php');
 include('includes/routing.php');
+include('includes/nav.php');
 include('includes/page-builder.php');
 include('includes/seo.php');
 include('includes/account.php');
@@ -26,7 +27,8 @@ function cr_theme_setup()
 
 	add_theme_support('title-tag'); // <title> gestito da WordPress (rimosso wp_title() da header.php)
 
-	register_nav_menu('header', __('Header', 'cardsrift'));
+	// Nessuna location di menu: dal 25/07/2026 la navigazione si genera da CR_GAMES ×
+	// CR_TIPI_CARTE (includes/nav.php), non dai menu di WordPress.
 }
 
 

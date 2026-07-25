@@ -29,6 +29,34 @@ defined('ABSPATH') || exit;
 add_filter('woocommerce_enqueue_styles', '__return_empty_array');
 
 /**
+ * Segnala alle pagine che in fondo c'è una barra fissa (carrello con articoli, scheda
+ * prodotto acquistabile), così il footer può riservarle spazio — vedi `.cr-has-stickybar`
+ * in shop.css. Prima lo spazio lo metteva uno spaziatore dentro cart.php, cioè PRIMA del
+ * footer: la barra finiva sopra le icone di pagamento e la riga Privacy/Cookie.
+ */
+add_filter('body_class', 'cr_body_stickybar_class');
+function cr_body_stickybar_class($classes)
+{
+	if (is_admin() || !function_exists('is_cart')) {
+		return $classes;
+	}
+	$cart_full = is_cart() && WC()->cart && !WC()->cart->is_empty();
+	$buyable   = false;
+	if (is_product()) {
+		$p = wc_get_product(get_the_ID());
+		// stessa condizione della barra in single-product.php: se non c'è nulla da
+		// comprare (in arrivo, esaurito, già tutto nel carrello) la barra non esce
+		$buyable = $p && $p->is_in_stock() && $p->is_purchasable()
+			&& !get_field('data_uscita', $p->get_id())
+			&& cr_stock_left($p) !== 0;
+	}
+	if ($cart_full || $buyable) {
+		$classes[] = 'cr-has-stickybar';
+	}
+	return $classes;
+}
+
+/**
  * selectWoo/select2: i menu a tendina restano nativi — più leggeri, accessibili e
  * con il picker di sistema su mobile. `wc-country-select` resta caricato: senza
  * selectWoo salta solo l'abbellimento, mentre l'aggiornamento del campo Provincia
@@ -625,7 +653,7 @@ function cr_cart_drawer()
 		data-cr-error-title="<?php esc_attr_e('Non l’abbiamo aggiunto', 'cardsrift'); ?>"
 		<?php // testi per l'aggiornamento della disponibilità senza ricaricare (components/shop.js) ?>
 		data-cr-txt-incart="<?php esc_attr_e('Tutto nel carrello', 'cardsrift'); ?>"
-		data-cr-txt-last="<?php esc_attr_e('Ultimo pezzo', 'cardsrift'); ?>"
+		data-cr-txt-one="<?php esc_attr_e('%d disponibile', 'cardsrift'); ?>"
 		data-cr-txt-left="<?php esc_attr_e('%d disponibili', 'cardsrift'); ?>"
 		data-cr-qty-nonce="<?= esc_attr(wp_create_nonce('cr-set-qty')); ?>"
 		hidden>

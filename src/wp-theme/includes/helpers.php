@@ -20,54 +20,12 @@ function debug($var, $absolute = false)
     }
 }
 
-// Show Menu in appereance
-
-add_theme_support('menus');
-
-
-/**
- * Get nav menu items by location
- *
- * @param $location The menu location id
- */
-function get_nav_menu_items_by_location($location, $args = [])
-{
-
-    // Get all locations
-    $locations = get_nav_menu_locations();
-
-    // Get object id by location
-    $object = wp_get_nav_menu_object($locations[$location]);
-
-    // Get menu items by menu name
-    $menu_items = wp_get_nav_menu_items($object->name, $args);
-
-    // Return menu post objects
-    return $menu_items;
-}
-
-// Sort del menu di wordpress in un array ordinato
-function sort_wp_nav($location)
-{
-  $results = [];
-  $array = get_nav_menu_items_by_location($location);
-  for ($i = 0; $i < count($array); $i++) {
-    if ($array[$i]->menu_item_parent == 0) {
-      $results[] = (array)$array[$i];
-    } else {
-      iterHierarchy($results, $array[$i]);
-    }
-  }
-  return $results;
-}
-function iterHierarchy(&$results, $item)
-{
-  for ($i = 0; $i < count($results); $i++) {
-    if ($results[$i]['ID'] == $item->menu_item_parent) {
-      $results[$i]['children'][] = (array)$item;
-      return;
-    } elseif (isset($results[$i]['children'])) {
-      iterHierarchy($results[$i]['children'], $item);
-    }
-  }
-}
+/*
+	I menu di WordPress non alimentano più niente: la navigazione dell'header si genera
+	da CR_GAMES × CR_TIPI_CARTE (includes/nav.php) e il footer ha il copy in codice.
+	Tolti il 25/07/2026 insieme a nav-menu.php: `add_theme_support('menus')`,
+	`register_nav_menu('header')` e i lettori `sort_wp_nav()` /
+	`get_nav_menu_items_by_location()` / `iterHierarchy()`.
+	Per rimettere un menu gestito da wp-admin servono di nuovo il theme support e la
+	location — ma prima chiedersi se il menu deve davvero essere un dato del DB.
+*/

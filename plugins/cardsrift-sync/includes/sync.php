@@ -464,6 +464,10 @@ function crs_ct_on_product_removed($post_id)
 	if (get_post_type($post_id) !== 'product' || !crs_ct_configured()) {
 		return;
 	}
+	// niente cancellazioni di inserzioni vere da un'installazione locale
+	if (!crs_ct_writes_allowed()) {
+		return;
+	}
 	if (!get_post_meta($post_id, CRS_META_CT_PRODUCT, true)) {
 		return;
 	}
@@ -499,6 +503,13 @@ function crs_ct_push_suppress($on = null)
 function crs_ct_on_stock_change($product)
 {
 	if (crs_ct_push_suppress() || !crs_ct_configured()) {
+		return;
+	}
+	// Fuori dalla produzione non si accoda nemmeno: la scrittura sarebbe comunque
+	// respinta da crs_ct_send(), ma così la coda non si riempie di push destinati a
+	// fallire ogni volta che in locale si fa un ordine di prova. Vedi
+	// crs_ct_writes_allowed() in includes/cardtrader.php.
+	if (!crs_ct_writes_allowed()) {
 		return;
 	}
 	$pid = is_object($product) ? (int) $product->get_id() : (int) $product;
@@ -649,6 +660,9 @@ function crs_ct_push_start()
 {
 	if (!crs_ct_configured()) {
 		return 0;
+	}
+	if (!crs_ct_writes_allowed()) {
+		return 0; // l'avviso lo mostra la pagina impostazioni (admin.php)
 	}
 	$job = get_option('crs_ct_push_job');
 	if ($job && (time() - (int) ($job['started'] ?? 0)) < 6 * HOUR_IN_SECONDS) {
@@ -1565,6 +1579,9 @@ function crs_ct_autoprice_start()
 {
 	if (!crs_ct_configured() || !crs_ct_user_id()) {
 		return 0; // token assente o /info fallita (myuser=0) → non prezzare (M4)
+	}
+	if (!crs_ct_writes_allowed()) {
+		return 0;
 	}
 	$job = get_option('crs_ct_ap_job');
 	if ($job && (time() - (int) ($job['started'] ?? 0)) < 6 * HOUR_IN_SECONDS) {

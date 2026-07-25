@@ -15,10 +15,25 @@ $manifest = $slug ? cr_load_manifest($slug) : [];
 if ($manifest) {
 	cr_render_page($slug);
 } else {
-	// fallback: pagina classica (contenuto dell'editor)
+	// Fallback: pagina classica (contenuto dell'editor). Il contenitore sta qui perché
+	// .base non ha più gutter e una pagina scritta nell'editor resterebbe a filo schermo.
+	//
+	// ⚠️ ECCEZIONE: carrello, checkout e conferma d'ordine passano di qui (sono pagine
+	// con shortcode) ma i loro override portano GIÀ il proprio `tw-container tw-section`
+	// (cr_shop_open_section, checkout/thankyou.php). Avvolgerli faceva 24+24 = 48px di
+	// margine laterale su telefono, e teneva le sezioni `cr-sec` — la banda lilla della
+	// conferma — lontane dal bordo dello schermo invece che a tutta larghezza.
+	$cr_own_layout = function_exists('is_cart') && (is_cart() || is_checkout() || is_account_page());
+
+	if (!$cr_own_layout) {
+		echo '<div class="tw-container tw-section">';
+	}
 	while (have_posts()) : the_post();
 		the_content();
 	endwhile;
+	if (!$cr_own_layout) {
+		echo '</div>';
+	}
 }
 ?>
 

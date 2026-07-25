@@ -77,7 +77,7 @@ Scala font: quella esistente in `tailwind.config.js` (xxs 10 → 9xl 80). Non ag
 | `.cr-qadd` | quick-add su hover (semplici AJAX; variabili → PDP) |
 | `.cr-chip` / `.cr-cchip(--cond)` | chip gioco·lingua / chip condizione (NM/LP/MP/HP) |
 | `.cr-badge--sale/pre/out/top` | badge semantici fissi |
-| `.cr-stock--ok/low` | stato scorte col pallino |
+| `.cr-stock--ok/low` | stato scorte col pallino. ⚠️ **`--low` non si usa sulle singole**: avere un pezzo solo lì è la norma (una copia per condizione e lingua), e marcare tutto il listato come scorta bassa lo faceva sembrare vuoto invece che curato. Testo unico su tutta la scala — "1 disponibile", "2 disponibili" — mai "ultimo pezzo". L'allarme resta sul sigillato, che si riassortisce. La regola vive in `cr_stock_line()` (`includes/rework.php`), è ripetuta nel carrello (`woocommerce/cart/cart.php`) e rispecchiata dopo le aggiunte AJAX in `js/components/shop.js` via `data-cr-unique` |
 | `.cr-price` | prezzo accent; `del/ins` WooCommerce gestiti |
 | `.cr-ticker` | marquee: pausa su hover, spento con reduced-motion |
 | `.cr-pocket` (+`__well/__pick`) | tasca raccoglitore con riflesso plastica |

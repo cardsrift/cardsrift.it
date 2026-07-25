@@ -1,7 +1,13 @@
+/*
+	.base è solo un contenitore di larghezza: NON aggiunge gutter.
+	Il gutter lo mette chi sta dentro, con `tw-container tw-section` — altrimenti si
+	somma a quello dei template (24 + 24) e il contenuto non è più allineato
+	all'header, che di gutter ne ha uno solo. Le pagine classiche (carrello,
+	checkout, conferma d'ordine) lo ricevono dal wrapper in page.php.
+*/
 .base {
     max-width: $container_full;
     margin: 0 auto;
-    padding: 0 1.5rem;
 
     .woocommerce-breadcrumb {
 

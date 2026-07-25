@@ -17,7 +17,10 @@ if (!defined('CR_BUY_BULK_MTG'))        define('CR_BUY_BULK_MTG', '5 €/kg');  
 if (!defined('CR_BUY_BULK_POKEMON'))    define('CR_BUY_BULK_POKEMON', '6 €/kg'); // bulk Pokémon, comuni/non comuni sfuse a peso
 
 // Spedizioni & resi — allineare a WooCommerce → Impostazioni → Spedizione.
-if (!defined('CR_SHIP_IT_COST'))        define('CR_SHIP_IT_COST', '10,90 €');   // tariffa fissa Italia, Poste Italiane (⚠️ allinea a WooCommerce → Spedizione, ora 8,90)
+if (!defined('CR_SHIP_IT_COST'))        define('CR_SHIP_IT_COST', '10,90 €');   // tariffa fissa Italia (allineata a WooCommerce → Spedizione, verificato 25/07/2026)
+// ⚠️ Si vende e si spedisce SOLO in Italia (WooCommerce → Generale → "Vendita a").
+// La pagina Spedizioni e resi dice "in Europa su richiesta": è il contatto manuale, non una zona attiva.
+// Aprendo una zona UE, aggiornare qui, nella pagina e nelle Condizioni di vendita su iubenda.
 if (!defined('CR_TERMS_URL'))           define('CR_TERMS_URL', '');             // Condizioni di vendita (iubenda) — SEGNAPOSTO da generare
 
 // Reputazione Cardmarket — àncora di fiducia: sito nuovo, ma storico venditore verificabile.

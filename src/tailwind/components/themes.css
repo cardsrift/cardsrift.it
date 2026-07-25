@@ -20,6 +20,22 @@
 		font-family: 'adelle-sans', 'Helvetica Neue', sans-serif;
 	}
 
+	/*
+		RETE DI SICUREZZA MOBILE.
+		- text-size-adjust: iOS Safari in orizzontale ingrandisce da solo il corpo del
+		  testo di certi blocchi, e lo fa a caso: la scala tipografica del design system
+		  smette di valere.
+		- overflow-x: clip su <html>: oggi nessuna pagina sborda (verificato a 360/390/
+		  768/1024), ma la protezione è delegata a ogni componente che usa elementi
+		  ruotati o assoluti. `clip` e non `hidden`: `hidden` su html/body creerebbe un
+		  contenitore di scroll e romperebbe `position: sticky` di carrello e checkout.
+	*/
+	html {
+		-webkit-text-size-adjust: 100%;
+		text-size-adjust: 100%;
+		overflow-x: clip;
+	}
+
 	/* ---- TEMA SCURO (base del sito) ---- */
 	[data-th="dark"] {
 		--cr-pg: #1d2125;

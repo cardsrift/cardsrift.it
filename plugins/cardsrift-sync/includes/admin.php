@@ -67,6 +67,23 @@ function crs_page_ct()
 		<h1>CardTrader — Connessione</h1>
 		<p>Import delle <strong>tue inserzioni</strong> CardTrader (stock, prezzo, condizione, foil, immagine) come prodotti WooCommerce. Prima serve il token API.</p>
 
+		<?php // Senza questo avviso, "push" e autopricer sembrano rotti invece che protetti. ?>
+		<?php if (!crs_ct_writes_allowed()) : ?>
+			<div class="notice notice-warning inline" style="margin:14px 0">
+				<p><strong>Sei fuori dalla produzione: le scritture verso CardTrader sono spente.</strong></p>
+				<p>
+					Import, lettura e aggancio dei blueprint funzionano normalmente. Non partono invece
+					<em>crea / aggiorna / cancella inserzione</em> e l'autopricer: le inserzioni sono reali, e
+					un ordine di prova qui cambierebbe quello che hai davvero in vendita.
+				</p>
+				<p class="description">
+					Rilevato: <code><?php echo esc_html((string) wp_parse_url(home_url(), PHP_URL_HOST)); ?></code><?php
+					echo function_exists('wp_get_environment_type') ? ' · ambiente <code>' . esc_html(wp_get_environment_type()) . '</code>' : '';
+					?>. Per forzare l'invio da qui: <code>define('CRS_CT_ALLOW_WRITES', true);</code> in <code>wp-config.php</code>.
+				</p>
+			</div>
+		<?php endif; ?>
+
 		<h2>1 · Token API</h2>
 		<p class="description">Lo trovi nei <em>settings</em> del tuo profilo CardTrader (serve un account con accesso API). Resta salvato nel database del sito, mai nel codice.</p>
 		<form method="post">

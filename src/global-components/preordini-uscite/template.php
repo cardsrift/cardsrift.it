@@ -33,7 +33,7 @@ $cards = array_slice($ids, 0, 3);
 				<?php endif; ?>
 			</div>
 
-			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-4" data-fx-stagger>
+			<div class="grid grid-cols-2 tb:grid-cols-3 gap-3 lg:gap-4" data-fx-stagger>
 				<?php if ($ph) : ?>
 					<?php for ($k = 0; $k < 3; $k++) cr_ph_card(['in_arrivo' => true]); ?>
 				<?php else : ?>
@@ -52,10 +52,10 @@ $cards = array_slice($ids, 0, 3);
 						foreach (cr_placeholder_dataset() as $j => $d) :
 							$gioco = explode(' · ', $d['chip'])[0];
 						?>
-							<span class="grid grid-cols-[72px_54px_1fr] lg:grid-cols-[120px_88px_1fr] gap-3 lg:gap-5 items-baseline py-4 px-2 w-full border-b border-th-lines last:border-b-0">
-								<span class="font-metropolis font-semibold text-xxs uppercase tracking-[0.14em] text-th-soft truncate"><?= esc_html($gioco); ?></span>
-								<span class="font-bylon text-sm text-th-acc"><?= esc_html($ph_dates[$j % count($ph_dates)]); ?></span>
-								<span class="font-metropolis font-medium !text-base text-th-ink truncate"><?= esc_html($d['name']); ?></span>
+							<span class="grid grid-cols-[54px_1fr] tb:grid-cols-[120px_88px_1fr] gap-x-3 gap-y-0.5 lg:gap-5 tb:items-baseline py-4 px-2 w-full border-b border-th-lines last:border-b-0">
+								<span class="font-metropolis font-semibold text-xxs uppercase tracking-[0.14em] text-th-soft truncate max-tb:col-start-2 max-tb:row-start-2"><?= esc_html($gioco); ?></span>
+								<span class="font-bylon text-sm text-th-acc max-tb:col-start-1 max-tb:row-start-1 max-tb:row-span-2 max-tb:self-center"><?= esc_html($ph_dates[$j % count($ph_dates)]); ?></span>
+								<span class="font-metropolis font-medium !text-base text-th-ink line-clamp-2 tb:line-clamp-1 max-tb:col-start-2 max-tb:row-start-1"><?= esc_html($d['name']); ?></span>
 							</span>
 						<?php endforeach; ?>
 					<?php else : ?>
@@ -65,10 +65,12 @@ $cards = array_slice($ids, 0, 3);
 							$data  = cr_format_uscita(get_field('data_uscita', $pid));
 							$gioco = cr_product_game($pid);
 						?>
-							<a class="grid grid-cols-[72px_54px_1fr] lg:grid-cols-[120px_88px_1fr] gap-3 lg:gap-5 items-baseline py-4 px-2 w-full border-b border-th-lines last:border-b-0 no-underline transition-all hover:bg-th-accsoft" href="<?= esc_url(get_permalink($pid)); ?>">
-								<span class="font-metropolis font-semibold text-xxs uppercase tracking-[0.14em] text-th-soft truncate"><?= esc_html($gioco); ?></span>
-								<span class="font-bylon text-sm text-th-acc"><?= esc_html($data ?: '—'); ?></span>
-								<h3 class="font-metropolis font-medium !text-base text-th-ink truncate"><?= esc_html($product->get_name()); ?></h3>
+							<?php // su telefono la riga diventa due piani: data a sinistra, titolo su due righe e gioco sotto.
+							// A tre colonne fisse il titolo restava in ~190px e finiva quasi sempre troncato. ?>
+							<a class="grid grid-cols-[54px_1fr] tb:grid-cols-[120px_88px_1fr] gap-x-3 gap-y-0.5 lg:gap-5 tb:items-baseline py-4 px-2 w-full border-b border-th-lines last:border-b-0 no-underline transition-all hover:bg-th-accsoft" href="<?= esc_url(get_permalink($pid)); ?>">
+								<span class="font-metropolis font-semibold text-xxs uppercase tracking-[0.14em] text-th-soft truncate max-tb:col-start-2 max-tb:row-start-2"><?= esc_html($gioco); ?></span>
+								<span class="font-bylon text-sm text-th-acc max-tb:col-start-1 max-tb:row-start-1 max-tb:row-span-2 max-tb:self-center"><?= esc_html($data ?: '—'); ?></span>
+								<h3 class="font-metropolis font-medium !text-base text-th-ink line-clamp-2 tb:line-clamp-1 max-tb:col-start-2 max-tb:row-start-1"><?= esc_html($product->get_name()); ?></h3>
 							</a>
 						<?php endforeach; ?>
 					<?php endif; ?>

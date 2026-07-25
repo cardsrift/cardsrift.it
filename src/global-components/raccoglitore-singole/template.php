@@ -36,7 +36,7 @@ if (!$ids && !$ph) {
 
 			<!-- il foglio del raccoglitore: glass sopra il fondo di sezione -->
 			<div class="cr-glass rounded-[20px] p-4 lg:p-5 shadow-th">
-				<div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-6 gap-3" data-fx-stagger>
+				<div class="grid grid-cols-2 sm:grid-cols-3 tb:grid-cols-4 lg:grid-cols-6 gap-3" data-fx-stagger>
 					<?php if ($ph) : ?>
 						<?php for ($k = 0; $k < 6; $k++) cr_ph_pocket(); ?>
 					<?php else : ?>

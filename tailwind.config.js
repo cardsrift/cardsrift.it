@@ -72,6 +72,12 @@ const themeTypography = {
 
 
 module.exports = {
+  // hoverOnlyWhenSupported: ogni `hover:*` esce dentro @media (hover: hover).
+  // Su touch il browser applica :hover al tocco e ce lo lascia fino al tocco
+  // successivo altrove: card che restano illuminate, bottoni che sembrano premuti.
+  future: {
+    hoverOnlyWhenSupported: true,
+  },
   corePlugins: {
     container: false,
   },

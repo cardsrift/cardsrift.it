@@ -5,6 +5,8 @@ import { calcViewportHeight, documentReady, pageLoad } from './utils';
 // ------------------- imports###
 
 import Header from './components/header';
+import listingFilters from './components/listingFilters';
+import searchSuggest from './components/searchSuggest';
 import shop from './components/shop';
 import globalComponents from './global-components';
 import initEffects from './utils/effects';
@@ -14,6 +16,8 @@ window.$ = $;
 
 const readyFunc = () => {
 	Header();
+	searchSuggest();
+	listingFilters();
 	shop();
 	initEffects();
 };

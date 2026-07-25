@@ -53,7 +53,12 @@ sotto sono **superati** da questo modello. Le altre pagine (Chi siamo, Bulk) res
 - [ ] **② Setup prodotti** (attributi condizione/lingua, singles variabili, offerte, preordini) — § 3a.2
 - [ ] **③ Comporre homepage + creare pagine** (regia base “Notte”) — § 3a.3
 - [ ] **④ QA visivo**: confronto col mockup (artifact vista 1) su desktop/mobile
-- [ ] **⑤ Header/footer restyle** (ricerca, contatore carrello, footer ACF options) — § 3b
+- [x] **⑤ Header a due righe + ricerca** (25/07/2026): header ricostruito sulla direzione B
+      (riga servizio + riga negozio), menu mobile dark, ricerca prodotti vera con `search.php`,
+      navigazione generata da `CR_GAMES` × `CR_TIPI_CARTE`. Allineamento header↔pagina risolto
+      alla radice (due cause, non una). — § 3b
+      ↳ *resta fuori*: il footer con contenuti da ACF Options — superato dalla svolta del 17/07,
+      il copy del footer sta in codice e ci resta.
 - [ ] **⑥ Componenti pagina Bulk** (processo, tassi, form) — § 3c
 - [ ] **⑦ Fase effetti**, sezione per sezione — § 3d
 - [x] **Flusso d'acquisto ridisegnato** (24/07/2026): carrello, checkout, conferma d'ordine e area
@@ -73,6 +78,8 @@ sotto sono **superati** da questo modello. Le altre pagine (Chi siamo, Bulk) res
 3. Galleria 47 componenti con ID → https://claude.ai/code/artifact/3e029992-8703-410f-b474-9fb488972f98
 4. **Riferimento ufficiale**: homepage assemblata + pagina Bulk + design system →
    https://claude.ai/code/artifact/a2a0df61-9150-43ef-a103-80fdf03c28b7
+5. Header, tre direzioni a confronto (prototipi vivi) — scelta la **B, doppia barra** →
+   https://claude.ai/code/artifact/412d1d9f-a600-4f72-ab40-a783f1928ca1
 
 ## ❓ Domande aperte (aspettano il cliente)
 
@@ -172,10 +179,11 @@ sotto sono **superati** da questo modello. Le altre pagine (Chi siamo, Bulk) res
    Il progetto/Chi siamo, Come imballiamo, Spedizioni e resi, Guida alle condizioni, FAQ.
 
 ### 3b · Header & footer (tema, non ACF)
-- Header: aggiungere **icona ricerca** (product search), **contatore carrello** via cart fragments
-  (`wc_get_cart_url()`, `.cart-contents-count`), tema scuro coerente. Restyle di `header.php`/`nav-menu.php`.
-- Footer: riscrivere `global-components/footer/template.php` sul design FOOT-2
-  (4 colonne, motto, social, pagamenti, P.IVA) con contenuti da **ACF Options** (oggi hardcoded).
+- **Header: fatto** il 25/07/2026 — vedi § 3i. Contatore carrello via cart fragments
+  (`cr_cart_badge()` + `.cart-contents-count`) già in piedi dal flusso d'acquisto.
+- **Footer: fatto** nella forma FOOT-2 (4 colonne, motto, social, pagamenti, P.IVA) ma con il
+  **copy in codice**, non da ACF Options: la svolta del 17/07 ha ribaltato quella richiesta —
+  il backend tiene solo i dati DB (qui: il logo). Non riportarlo su ACF.
 
 ### 3c · Pagina Bulk (componenti aggiuntivi)
 - `bulk_processo` (3 step + badge fiducia + CTA WhatsApp), `bulk_tassi` (tabella Contanti/Credito
@@ -452,6 +460,89 @@ Per riattivarlo basta rimetterlo in `CR_GAMES` e ripristinare la sezione nel man
 segnati da commenti nel codice). Nessun prodotto usava quella categoria.
 Rinominato in locale il termine `pokemon` da "Pokemon" a "**Pokémon**" (il chip mostra il nome del
 termine): ⚠️ da rifare in produzione.
+
+### 3i · Header a due righe, menu mobile dark, ricerca (25/07/2026)
+
+Scelta la **direzione B** fra le tre proposte (artifact 5): una riga di servizio sopra, il negozio
+sotto. Il vecchio header era un game-switcher e basta — metà del sito (buylist, chi siamo, FAQ,
+spedizioni, condizioni, contatti) si raggiungeva solo dal footer, e su telefono **l'account non si
+raggiungeva affatto**.
+
+**Struttura.** Riga 1 (34px, solo desktop): promessa di spedizione — nascosta sotto i 1280px per non
+affollare a 1024 — reputazione Cardmarket da `CR_CM_URL`/`CR_CM_POSITIVE`, pagine di assistenza,
+account. Riga 2 (76px): logo, giochi con le loro due porte, Accessori, buylist, ricerca, carrello.
+⚠️ `--header-h-desktop` passa da 90 a **110px** (34+76): da lì dipendono il padding del `.wrapper`,
+gli `scroll-pt` e ogni colonna `sticky` di carrello, checkout, account e scheda prodotto. Su telefono
+resta 75: la riga di servizio non c'è, scende nel menu.
+
+**Il menu si genera dal codice**, non da wp-admin: `cr_nav_games()` in `includes/nav.php` compone
+`CR_GAMES × CR_TIPI_CARTE`, quindi un gioco nuovo compare da solo in barra, nel menu mobile e nei
+filtri di ricerca. In barra si usa `cr_game_label_short()` — "Magic: The Gathering" per esteso si
+mangia mezza riga. Le tendine si aprono **senza JavaScript** (`group-hover` + `group-focus-within`)
+e l'accordion mobile è un `<details>` nativo: al JS restano solo la ritrazione allo scroll e
+l'apertura del pannello. **Menu mobile sempre dark** (`data-th="dark"` annidato) anche con la barra
+chiara: si legge come uno strato sopra la pagina.
+
+**Ricerca** (prima l'icona portava alla home e `search.php` non esisteva). Cerca solo prodotti
+(`cr_scope_search`). Se parti da dentro un gioco arriva già ristretta a quello, con i chip in cima
+per cambiare ambito. La regola anti-misto regge in forma esplicita: ogni risultato porta il chip del
+suo gioco e i chip filtrano. Dalla home, dove non c'è contesto, cerca in tutto il catalogo.
+⚠️ Il filtro usa **`cr_g`, non `cr_game`**: quest'ultimo è una query var del routing e trasformerebbe
+la ricerca in un archivio di gioco. Per sicurezza `cr_scope_main_query()` e `cr_guard_no_mixed()`
+escono subito su `is_search()`.
+
+**Tendina di suggerimenti** (`wc-ajax=cr_suggest`, stesso schema degli endpoint del carrello).
+Da 2 caratteri, 180ms di attesa, risposte in cache e richiesta precedente annullata: 11 battute
+veloci = **1 richiesta**. Risponde con **HTML già pronto** come i frammenti del mini-carrello, così
+il markup resta in PHP. Schema combobox completo (frecce, Invio, Esc, `aria-activedescendant`).
+⚠️ Le miniature leggono `_ct_image` **direttamente**, non `$product->get_image()`: quel metodo è
+filtrato da `cr_full_res_image()`, che servirebbe la 960px — sei righe farebbero ~800KB a battuta.
+⚠️ I suggerimenti cercano **solo nel titolo** (filtro `posts_search` attivato da `cr_suggest`):
+la ricerca piena guarda anche la descrizione, ma in una tendina un risultato che corrisponde nel
+testo nascosto sembra un errore.
+
+**Stati visibili — due trappole della stessa famiglia**, trovate perché "non si capiva cosa fosse
+attivo":
+- `.cr-chip` nasce **già** con `background: accsoft` e `color: acc`. Un "attivo" fatto con
+  `!bg-th-accsoft !text-th-acc` è **identico allo stato normale**, e `border-th-acc` colora un bordo
+  che la primitiva non ha. Il filtro attivo ora è una pill **piena** (`bg-th-acc text-th-pg`) con
+  spunta e `aria-current`, il conteggio dice "N risultati in Pokémon" e l'occhiello cambia. Stessa
+  ragione per cui l'hover dei chip di navigazione usa un `ring-inset` e non `hover:border-*`
+  (corretto in `search.php` e `404.php`).
+- Le utility Tailwind battono `.cr-chip` **senza `!important`**: `@layer utilities` viene dopo
+  `@layer components`. Se serve un `!`, di solito il problema è un altro.
+⚠️ La durata di transizione di default del progetto è **400ms**: su uno stato che segue la tastiera
+(riga selezionata nella tendina) arriva dopo il tasto successivo — lì va messo `duration-200`.
+
+**Movimento dell'accordion mobile.** `<details>` apre di scatto e non è transizionabile: il click sul
+`summary` lo pilota `header.js` — `open` regge il rendering, `.is-open` guida
+`grid-template-rows: 0fr→1fr` (l'unico modo di transire verso un'altezza "auto" senza misurarla in
+JS), e in chiusura `open` si toglie **solo a transizione finita**. Le voci entrano poi a scaletta
+(`cr-acc-in`, 45ms l'una).
+⚠️ Il collasso vale solo sotto `.cr-js`, classe che il JS mette **solo** se non c'è
+`prefers-reduced-motion`: senza JavaScript o con motion ridotto `<details>` resta nativo, altrimenti
+il contenuto resterebbe schiacciato a zero.
+⚠️ Niente padding sul corpo dell'accordion: il padding è del box e finisce nel minimo automatico
+della riga anche con `overflow: hidden`, lasciando un sedimento visibile da chiuso. Lo spazio in
+fondo lo dà il margine dell'ultima voce, che è contenuto e viene tagliato.
+
+**Allineamento header↔pagina: le cause erano due.** La prima nota (l'header usava `tw-container`
+senza `tw-section`). La seconda è saltata fuori solo misurando: **`.base` aggiungeva 24px di suo**
+(`padding: 0 1.5rem` in `_utils.scss`), quindi le pagine non-builder avevano il contenuto a 48px
+contro i 24 dell'header. Ora `.base` è solo un contenitore di larghezza e il gutter lo mette chi sta
+dentro. ⚠️ Il fallback di `page.php` ha un `tw-container tw-section` proprio **perché da lì passano
+carrello, checkout e conferma d'ordine**, che sono pagine con shortcode e non hanno contenitore:
+togliere quel wrapper glielo fa perdere. Verificato su 11 pagine × 5 larghezze.
+
+**File**: `header.php` (riscritto) · `includes/nav.php` e `search.php` (nuovi) ·
+`js/components/searchSuggest.js` (nuovo) · `js/components/header.js` (riscritto) ·
+`routing.php`, `page.php`, `functions.php`, `404.php` · `layout.css`, `_header.scss`, `_utils.scss`.
+
+**Rimosso**: `nav-menu.php` (non incluso da nessuna parte), `sort_wp_nav()` +
+`get_nav_menu_items_by_location()` + `iterHierarchy()`, `add_theme_support('menus')`,
+`register_nav_menu('header')`, le regole SCSS di `.mainMenu`/`.main-menu` e le utility
+`.hamburgerOpen`/`.menuActive`/`.itemActive` — agganciavano markup che non esiste più.
+Di `_header.scss` resta solo `.header_scrolled`.
 
 ## 4 · Vincoli operativi
 - **MAI** commit/push/deploy senza ok esplicito del cliente (vedi CLAUDE.md).

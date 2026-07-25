@@ -41,6 +41,16 @@ function cr_game_label($slug)
 	return $map[$slug] ?? ucfirst((string) $slug);
 }
 
+/**
+ * Etichetta corta, per i posti stretti: barra dell'header, menu mobile, placeholder
+ * della ricerca. "Magic: The Gathering" per esteso mangia mezza barra.
+ */
+function cr_game_label_short($slug)
+{
+	$map = ['magic' => 'Magic'];
+	return $map[$slug] ?? cr_game_label($slug);
+}
+
 /** Etichetta display di un tipo. */
 function cr_tipo_label($slug)
 {
@@ -90,6 +100,11 @@ add_action('pre_get_posts', 'cr_scope_main_query');
 function cr_scope_main_query($q)
 {
 	if (is_admin() || !$q->is_main_query()) {
+		return;
+	}
+	// La ricerca ha il suo scoping (cr_scope_search in includes/nav.php): se qualcuno
+	// arriva con ?s=…&cr_game=… non deve trasformarsi in un archivio di gioco.
+	if ($q->is_search()) {
 		return;
 	}
 	$game = $q->get('cr_game');
@@ -207,6 +222,13 @@ function cr_guard_no_mixed()
 		return;
 	}
 
+	// La ricerca è una vista globale ma richiesta esplicitamente: i giochi non si
+	// mescolano per sbaglio, perché ogni risultato porta il chip del suo gioco e i
+	// chip in cima filtrano (search.php). Quindi non va reindirizzata.
+	if (is_search()) {
+		return;
+	}
+
 	// /shop e archivio prodotti globale → home
 	if (function_exists('is_shop') && (is_shop() || is_post_type_archive('product'))) {
 		wp_safe_redirect(home_url('/'), 302);
@@ -315,7 +337,12 @@ function cr_render_game_subnav()
 	<div class="cr-subnav bg-th-sur2 border-b border-th-line" data-th="<?= esc_attr($ht); ?>">
 		<div class="tw-container tw-section">
 			<div class="flex items-center gap-2 py-2.5 font-metropolis text-sm overflow-x-auto">
-				<a class="font-bylon uppercase tracking-[.16em] text-xs text-th-acc no-underline whitespace-nowrap mr-2" href="<?= esc_url(home_url('/' . $game . '/')); ?>"><?= esc_html(cr_game_label($game)); ?> ›</a>
+				<?php // etichetta corta su telefono: "Magic: The Gathering ›" da solo occupava 255px
+				// dei 342 disponibili e spingeva fuori vista proprio la voce attiva. ?>
+				<a class="font-bylon uppercase tracking-[.16em] text-xs text-th-acc no-underline whitespace-nowrap mr-2" href="<?= esc_url(home_url('/' . $game . '/')); ?>">
+					<span class="tb:hidden"><?= esc_html(cr_game_label_short($game)); ?></span>
+					<span class="hidden tb:inline"><?= esc_html(cr_game_label($game)); ?></span> ›
+				</a>
 				<?php foreach ($tipi as $t) : $is = ($t === $tipo); ?>
 					<a class="font-semibold px-3 py-1.5 rounded-lg whitespace-nowrap transition-colors <?= $is ? 'bg-th-accsoft text-th-acc' : 'text-th-muted hover:text-th-ink'; ?>" href="<?= esc_url(home_url('/' . $game . '/' . $t . '/')); ?>"><?= esc_html(cr_tipo_label($t)); ?></a>
 				<?php endforeach; ?>

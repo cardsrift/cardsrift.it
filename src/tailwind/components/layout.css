@@ -1,6 +1,10 @@
 :root {
+	/* Header a due righe (header.php): su desktop 110 = 34 riga servizio + 76 riga negozio.
+	   Su telefono la riga di servizio non c'è (scende nel menu), quindi resta 75.
+	   Da queste variabili dipendono il padding del .wrapper, gli scroll-pt e tutte le
+	   colonne sticky (carrello, checkout, account, scheda prodotto): cambiarle qui basta. */
 	--header-h-mobile: 75px;
-	--header-h-desktop: 90px;
+	--header-h-desktop: 110px;
 	--full-screen: calc(var(--vh, 1vh) * 100);
 }
 
@@ -24,23 +28,70 @@ body {
 
 @layer utilities {
 
-	.hamburgerOpen .space-y-2 .hamburgerLine:nth-of-type(1) {
-		@apply rotate-45 origin-left
+	/* <details> del menu mobile: niente triangolino di sistema, il chevron è nostro */
+	summary::-webkit-details-marker {
+		display: none;
+	}
+}
+
+/*
+	APERTURA DELL'ACCORDION (menu mobile, header.php).
+	Due movimenti insieme: il pannello cresce in altezza e le voci entrano una dopo
+	l'altra. Fuori da @layer components di proposito: così Tailwind non può potarle.
+
+	L'altezza si anima con grid-template-rows 0fr→1fr, l'unico modo di transire verso
+	un'altezza "auto" senza misurarla in JavaScript. Il collasso vale SOLO sotto .cr-js,
+	classe che header.js mette solo quando piloterà lui l'apertura: senza JavaScript —
+	o con prefers-reduced-motion — <details> resta nativo e il contenuto si vede sempre.
+	⚠️ Il figlio del wrapper deve avere overflow:hidden e min-height:0, altrimenti il
+	contenuto sborda dalla riga della griglia e la transizione non si vede.
+*/
+.cr-js .cr-acc__wrap {
+	display: grid;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows .34s cubic-bezier(.2, .7, .3, 1);
+}
+
+.cr-js .cr-acc__wrap>* {
+	overflow: hidden;
+	min-height: 0;
+}
+
+.cr-js .cr-acc.is-open .cr-acc__wrap {
+	grid-template-rows: 1fr;
+}
+@keyframes cr-acc-in {
+	from {
+		opacity: 0;
+		transform: translateY(-8px);
 	}
 
-	.hamburgerOpen .space-y-2 .hamburgerLine:nth-of-type(2) {
-		@apply opacity-0
+	to {
+		opacity: 1;
+		transform: none;
+	}
+}
+
+.cr-acc[open] .cr-acc__body>* {
+	animation: cr-acc-in .32s cubic-bezier(.2, .7, .3, 1) both;
+}
+
+/* scaletta: ogni voce parte poco dopo la precedente (le porte sono 2 + "Tutto il gioco") */
+.cr-acc[open] .cr-acc__body>*:nth-child(2) {
+	animation-delay: .045s;
+}
+
+.cr-acc[open] .cr-acc__body>*:nth-child(3) {
+	animation-delay: .09s;
+}
+
+/* il chevron gira comunque: è un feedback, non una decorazione */
+@media (prefers-reduced-motion: reduce) {
+	.cr-acc[open] .cr-acc__body>* {
+		animation: none;
 	}
 
-	.hamburgerOpen .space-y-2 .hamburgerLine:nth-of-type(3) {
-		@apply -rotate-45 origin-left translate-y-[2.5px]
-	}
-
-	.menuActive+ul {
-		@apply flex
-	}
-
-	.itemActive>ul {
-		@apply flex lg:p-5
+	.cr-js .cr-acc__wrap {
+		transition: none;
 	}
 }

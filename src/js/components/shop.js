@@ -219,7 +219,7 @@ const updateStock = (root, productId, added) => {
 	if (!root || !productId) return;
 	const txt = {
 		incart: root.getAttribute('data-cr-txt-incart') || '',
-		last: root.getAttribute('data-cr-txt-last') || '',
+		one: root.getAttribute('data-cr-txt-one') || '%d',
 		left: root.getAttribute('data-cr-txt-left') || '%d',
 	};
 
@@ -235,8 +235,10 @@ const updateStock = (root, productId, added) => {
 			el.textContent = txt.incart;
 		} else {
 			el.setAttribute('data-cr-left', String(now));
-			el.classList.add(now <= 3 ? 'cr-stock--low' : 'cr-stock--ok');
-			el.textContent = now === 1 ? txt.last : txt.left.replace('%d', String(now));
+			// data-cr-unique = singola: un pezzo solo è la norma, non scorta bassa
+			// (stessa regola di cr_stock_line() in includes/rework.php)
+			el.classList.add(now <= 3 && !el.hasAttribute('data-cr-unique') ? 'cr-stock--low' : 'cr-stock--ok');
+			el.textContent = (now === 1 ? txt.one : txt.left).replace('%d', String(now));
 		}
 
 		if (now === 0) {
@@ -411,6 +413,57 @@ const addToCart = (drawer) => {
 };
 
 /* =========================================================================
+ * BARRA D'ACQUISTO della scheda prodotto (solo telefono/tablet)
+ *
+ * Misurato su iPhone: il pulsante vero cade sempre sotto la piega, e scendendo a
+ * leggere condizione ed espansione lo si perde. La barra non ricrea l'aggiunta:
+ * inoltra il tocco al pulsante vero, così quantità, AJAX ed errori restano una
+ * cosa sola. Senza JavaScript resta un'ancora che porta alla buy-box.
+ * ========================================================================= */
+
+const buyBar = () => {
+	const bar = document.querySelector('[data-cr-buybar]');
+	if (!bar) return;
+	const form = document.getElementById('cr-buybox');
+	const real = form && form.querySelector('.single_add_to_cart_button');
+	if (!real) return;
+
+	bar.querySelector('[data-cr-buy]').addEventListener('click', (e) => {
+		e.preventDefault();
+		real.click();
+	});
+
+	// finché la buy-box vera è a schermo la barra si toglie di mezzo
+	if (!('IntersectionObserver' in window)) return;
+	const watcher = new window.IntersectionObserver(([entry]) => {
+		bar.classList.toggle('is-hidden', entry.isIntersecting);
+	}, { rootMargin: '-16px 0px 0px 0px' });
+	watcher.observe(form);
+};
+
+/**
+ * Miniature della scheda prodotto: cambiano la foto grande invece di aprire il JPEG
+ * grezzo in una scheda nuova. Su telefono uscire dal sito per vedere un'immagine —
+ * e doverci tornare col tasto indietro — è il modo peggiore di guardare una carta.
+ * Senza JavaScript i link restano quelli di prima.
+ */
+const gallery = () => {
+	const strip = document.querySelector('[data-cr-gallery]');
+	if (!strip) return;
+	const main = document.querySelector('[data-cr-gallery-main]');
+	if (!main) return;
+
+	strip.addEventListener('click', (e) => {
+		const link = e.target.closest('[data-cr-shot]');
+		if (!link || !link.dataset.crShot) return;
+		e.preventDefault();
+		main.removeAttribute('srcset');
+		main.src = link.dataset.crShot;
+		strip.querySelectorAll('[data-cr-shot]').forEach((a) => a.classList.toggle('border-th-acc', a === link));
+	});
+};
+
+/* =========================================================================
  * avvio
  * ========================================================================= */
 
@@ -425,6 +478,7 @@ const shop = () => {
 	drawerQuantity(drawer);
 	addToCart(drawer);
 	syncQtyButtons();
+	buyBar();
 };
 
 export default shop;

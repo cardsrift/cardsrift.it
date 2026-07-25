@@ -30,6 +30,66 @@ function crs_ct_configured()
 	return crs_ct_token() !== '';
 }
 
+/**
+ * LE SCRITTURE VERSO CARDTRADER PARTONO SOLO DALLA PRODUZIONE.
+ *
+ * Le inserzioni su CardTrader sono reali: un push cambia quantità e prezzo di quello che
+ * è davvero in vendita. Ma `woocommerce_product_set_stock` scatta a ogni variazione di
+ * scorta — anche quella di un ordine di prova fatto in locale — e il push parte da solo.
+ * È già successo: una sessione di test in locale ha riscritto le quantità di due
+ * inserzioni vere (25/07/2026).
+ *
+ * Regola: le LETTURE restano libere ovunque (servono all'import e all'aggancio dei
+ * blueprint, che si lavorano in locale); le SCRITTURE — POST/PUT/DELETE, cioè crea,
+ * aggiorna, cancella inserzione — passano solo dal sito online.
+ *
+ * L'ordine dei controlli è pensato per non fallire in nessuna delle due direzioni:
+ *   1. `CRS_CT_ALLOW_WRITES` in wp-config: se c'è, decide lei (serve a testare un push
+ *      in locale di proposito, o a fermare tutto in produzione durante una migrazione).
+ *   2. `wp_get_environment_type()`: local/development/staging → bloccato.
+ *      ⚠️ Non ci si può appoggiare da solo: senza WP_ENVIRONMENT_TYPE il core risponde
+ *      'production' anche sul portatile.
+ *   3. L'host del sito: localhost, IP privati, .local/.test/.localhost, e le porte di
+ *      MAMP. È il controllo che ha coperto il caso vero, dove nessuno aveva configurato
+ *      niente.
+ *
+ * @return bool
+ */
+function crs_ct_writes_allowed()
+{
+	if (defined('CRS_CT_ALLOW_WRITES')) {
+		return (bool) CRS_CT_ALLOW_WRITES;
+	}
+	if (function_exists('wp_get_environment_type') && in_array(wp_get_environment_type(), ['local', 'development', 'staging'], true)) {
+		return false;
+	}
+	$host = strtolower((string) wp_parse_url(home_url(), PHP_URL_HOST));
+	if ($host === '' || $host === 'localhost' || $host === '127.0.0.1' || $host === '::1') {
+		return false;
+	}
+	if (preg_match('/\.(local|test|localhost|dev|invalid|example)$/', $host)) {
+		return false;
+	}
+	// reti private (10.x, 172.16-31.x, 192.168.x)
+	if (preg_match('/^(10\.|127\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)/', $host)) {
+		return false;
+	}
+	return true;
+}
+
+/**
+ * Perché una scrittura è stata rifiutata — testo per i log e per l'avviso in wp-admin.
+ * Dice sempre da dove si sta scrivendo: senza, "bloccata" sembra un errore di token.
+ */
+function crs_ct_writes_blocked_reason()
+{
+	return sprintf(
+		'scrittura verso CardTrader bloccata: le inserzioni si toccano solo dal sito online (qui: %s%s). Per forzare: define(\'CRS_CT_ALLOW_WRITES\', true) in wp-config.php.',
+		(string) wp_parse_url(home_url(), PHP_URL_HOST),
+		function_exists('wp_get_environment_type') ? ', ambiente ' . wp_get_environment_type() : ''
+	);
+}
+
 /** Sbuccia le risposte-lista che alcuni endpoint incapsulano in {"array":[...]}. */
 function crs_ct_arr($d)
 {
@@ -63,6 +123,15 @@ function crs_ct_send($method, $path, $body = null, $timeout = 30)
 {
 	if (crs_ct_token() === '') {
 		return [false, null, 'Token API non configurato.'];
+	}
+	// Il punto obbligato: qualunque strada porti qui (push singolo dallo stock, push a
+	// blocchi, autopricer, cancellazione da cestino), fuori dalla produzione la scrittura
+	// non parte. Torna un errore normale, quindi chi chiama NON aggiorna `_ct_stock`:
+	// l'ancora del delta resta l'ultima quantità davvero nota su CardTrader.
+	if (strtoupper($method) !== 'GET' && !crs_ct_writes_allowed()) {
+		$why = crs_ct_writes_blocked_reason();
+		error_log('[cardsrift-sync] ' . strtoupper($method) . ' ' . $path . ' — ' . $why);
+		return [false, null, $why];
 	}
 	$args = [
 		'method'  => strtoupper($method),

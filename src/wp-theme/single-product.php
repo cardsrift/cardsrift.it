@@ -90,23 +90,37 @@ while (have_posts()) : the_post();
 		<div class="tw-container tw-section">
 			<div class="py-8 lg:py-12">
 
-				<!-- breadcrumb -->
+				<?php
+				// BREADCRUMB — su telefono il percorso completo andava su due righe e il nome
+				// della carta restava tagliato a 40vw (≈144px): non diceva niente e non serviva
+				// a tornare indietro. Lì mostriamo solo il passo indietro; il percorso intero
+				// resta da tablet in su (e in JSON-LD per i motori, più sotto).
+				$cr_back = ($tipo_slug && $game_slug)
+					? ['label' => $tipo_label, 'url' => home_url('/' . $game_slug . '/' . $tipo_slug . '/')]
+					: ($game_slug ? ['label' => $game_label, 'url' => home_url('/' . $game_slug . '/')] : ['label' => __('Home', 'cardsrift'), 'url' => home_url('/')]);
+				?>
 				<nav class="cr-eyebrow !text-th-soft !tracking-[.16em] mb-6 flex flex-wrap items-center" aria-label="<?php esc_attr_e('Percorso', 'cardsrift'); ?>">
-					<a class="no-underline hover:text-th-acc transition-colors" href="<?= esc_url(home_url('/')); ?>"><?php esc_html_e('Home', 'cardsrift'); ?></a>
-					<?php if ($game_slug) : ?>
-						<span class="opacity-40 px-1.5">/</span>
-						<a class="no-underline hover:text-th-acc transition-colors" href="<?= esc_url(home_url('/' . $game_slug . '/')); ?>"><?= esc_html($game_label); ?></a>
-					<?php endif; ?>
-					<?php if ($tipo_slug && $game_slug) : ?>
-						<span class="opacity-40 px-1.5">/</span>
-						<a class="no-underline hover:text-th-acc transition-colors" href="<?= esc_url(home_url('/' . $game_slug . '/' . $tipo_slug . '/')); ?>"><?= esc_html($tipo_label); ?></a>
-					<?php endif; ?>
-					<span class="opacity-40 px-1.5">/</span><span class="text-th-acc truncate max-w-[40vw]"><?= esc_html($product->get_name()); ?></span>
+					<a class="tb:hidden inline-flex items-center gap-1.5 no-underline text-th-acc py-1" href="<?= esc_url($cr_back['url']); ?>">
+						<span aria-hidden="true">‹</span><?= esc_html($cr_back['label']); ?>
+					</a>
+					<span class="hidden tb:contents">
+						<a class="no-underline hover:text-th-acc transition-colors" href="<?= esc_url(home_url('/')); ?>"><?php esc_html_e('Home', 'cardsrift'); ?></a>
+						<?php if ($game_slug) : ?>
+							<span class="opacity-40 px-1.5">/</span>
+							<a class="no-underline hover:text-th-acc transition-colors" href="<?= esc_url(home_url('/' . $game_slug . '/')); ?>"><?= esc_html($game_label); ?></a>
+						<?php endif; ?>
+						<?php if ($tipo_slug && $game_slug) : ?>
+							<span class="opacity-40 px-1.5">/</span>
+							<a class="no-underline hover:text-th-acc transition-colors" href="<?= esc_url(home_url('/' . $game_slug . '/' . $tipo_slug . '/')); ?>"><?= esc_html($tipo_label); ?></a>
+						<?php endif; ?>
+						<span class="opacity-40 px-1.5">/</span><span class="text-th-acc truncate max-w-[40vw]"><?= esc_html($product->get_name()); ?></span>
+					</span>
 				</nav>
 
 				<?php if (function_exists('woocommerce_output_all_notices')) woocommerce_output_all_notices(); ?>
 
-				<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-start">
+				<?php // due colonne già da tablet: a colonna singola il prezzo finiva oltre la piega anche su iPad ?>
+				<div class="grid grid-cols-1 tb:grid-cols-2 gap-8 lg:gap-12 items-start">
 
 					<!-- ========== GALLERIA ========== -->
 					<div class="lg:sticky lg:top-[calc(var(--header-h-desktop)+1.5rem)]">
@@ -118,12 +132,15 @@ while (have_posts()) : the_post();
 							<?php elseif ($product->is_on_sale()) : ?>
 								<span class="cr-badge cr-badge--sale"><?php esc_html_e('Offerta', 'cardsrift'); ?></span>
 							<?php endif; ?>
-							<?= $product->get_image('woocommerce_single', ['class' => 'max-h-[300px] lg:max-h-[460px] w-auto object-contain']); ?>
+							<?php // foto principale: è il contenuto della pagina, si carica subito e con priorità ?>
+							<?= str_replace('<img ', '<img data-cr-gallery-main fetchpriority="high" decoding="async" ', $product->get_image('woocommerce_single', ['class' => 'max-h-[300px] lg:max-h-[460px] w-auto object-contain'])); ?>
 						</div>
 						<?php if ($gallery) : ?>
-							<div class="grid grid-cols-5 gap-2 mt-2">
+							<?php // le miniature cambiano la foto grande qui accanto; senza JavaScript
+							// restano link alla foto piena (il comportamento di prima) ?>
+							<div class="grid grid-cols-5 gap-2 mt-2" data-cr-gallery>
 								<?php foreach (array_slice(array_merge([$product->get_image_id()], $gallery), 0, 5) as $img_id) : ?>
-									<a href="<?= esc_url(wp_get_attachment_url($img_id)); ?>" target="_blank" rel="noopener" class="grid place-items-center bg-white-pure rounded-lg p-2 aspect-square border border-th-line hover:border-th-acc transition-colors">
+									<a href="<?= esc_url(wp_get_attachment_url($img_id)); ?>" target="_blank" rel="noopener" data-cr-shot="<?= esc_url(wp_get_attachment_image_url($img_id, 'woocommerce_single')); ?>" class="grid place-items-center bg-white-pure rounded-lg p-2 aspect-square border border-th-line hover:border-th-acc transition-colors">
 										<?= wp_get_attachment_image($img_id, 'woocommerce_gallery_thumbnail', false, ['class' => 'max-h-full w-auto object-contain']); ?>
 									</a>
 								<?php endforeach; ?>
@@ -185,7 +202,7 @@ while (have_posts()) : the_post();
 							// il massimo è ciò che resta DAVVERO, non le scorte a magazzino
 							$cr_left = cr_stock_left($product);
 							?>
-							<form class="cart flex items-stretch gap-3" action="<?= esc_url(apply_filters('woocommerce_add_to_cart_form_action', $product->get_permalink())); ?>" method="post">
+							<form id="cr-buybox" class="cart flex items-stretch gap-3" action="<?= esc_url(apply_filters('woocommerce_add_to_cart_form_action', $product->get_permalink())); ?>" method="post">
 								<input type="number" name="quantity" value="1" min="1" <?= $cr_left !== null ? 'max="' . esc_attr($cr_left) . '"' : ''; ?> step="1" class="cr-input !w-20 text-center font-semibold" aria-label="<?php esc_attr_e('Quantità', 'cardsrift'); ?>">
 								<button type="submit" name="add-to-cart" value="<?= esc_attr($pid); ?>" class="cr-btn cr-btn-solid flex-1 justify-center single_add_to_cart_button<?= esc_attr($cr_ajax); ?>" data-product_id="<?= esc_attr($pid); ?>" data-quantity="1">
 									<span class="cr-btn__label"><?php esc_html_e('Aggiungi al carrello', 'cardsrift'); ?></span>
@@ -271,6 +288,25 @@ while (have_posts()) : the_post();
 				</div>
 			</div>
 		</section>
+	<?php endif; ?>
+
+	<?php
+	/**
+	 * BARRA D'ACQUISTO (solo telefono/tablet).
+	 * Misurato su iPhone: titolo a y≈650, prezzo a y≈740 → il pulsante vero cade sempre
+	 * sotto la piega, e scendendo a leggere condizione/espansione lo si perde. La barra
+	 * NON duplica la logica: il tocco fa scattare il pulsante vero (quantità, AJAX,
+	 * errori restano suoi). Senza JavaScript resta un'ancora che porta alla buy-box.
+	 */
+	?>
+	<?php if (!$in_arrivo && $in_stock && $product->is_purchasable() && cr_stock_left($product) !== 0) : ?>
+		<div class="cr-stickybar cr-buybar" data-cr-buybar data-th="<?= esc_attr(defined('CR_HEADER_THEME') ? CR_HEADER_THEME : 'light'); ?>">
+			<span class="min-w-0 flex-1">
+				<span class="block font-metropolis font-semibold text-sm text-th-ink truncate"><?= esc_html($product->get_name()); ?></span>
+				<span class="cr-price !text-base"><?= $product->get_price_html(); ?></span>
+			</span>
+			<a class="cr-btn cr-btn-solid shrink-0" href="#cr-buybox" data-cr-buy><?php esc_html_e('Aggiungi', 'cardsrift'); ?></a>
+		</div>
 	<?php endif; ?>
 
 	<?php

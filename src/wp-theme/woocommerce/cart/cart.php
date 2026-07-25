@@ -144,12 +144,24 @@ do_action('woocommerce_before_cart'); ?>
 								</div>
 							</div>
 
-							<?php // pezzo unico o scorta agli sgoccioli: dirlo qui evita la delusione al checkout ?>
+							<?php
+							// Scorta agli sgoccioli: dirlo qui evita la delusione al checkout e
+							// spiega perché il "+" è spento. Stessa regola del listato
+							// (cr_stock_line() in includes/rework.php): sulle SINGOLE un pezzo
+							// solo è la norma — sono carte usate, ne esiste una copia per
+							// condizione e lingua — quindi la riga resta neutra e usa le stesse
+							// parole della scheda. L'allarme resta sul sigillato, che si riassortisce.
+							$cr_unique = function_exists('cr_product_tipo_slug') && cr_product_tipo_slug($_product->get_id()) === 'singole';
+							?>
 							<?php if ($stock !== null && $stock <= 3) : ?>
-								<span class="cr-stock cr-stock--low mt-2.5">
-									<?= $stock === 1
-										? esc_html__('Ultimo pezzo disponibile', 'cardsrift')
-										: esc_html(sprintf(__('Restano %d pezzi', 'cardsrift'), $stock)); ?>
+								<span class="cr-stock <?= $cr_unique ? 'cr-stock--ok' : 'cr-stock--low'; ?> mt-2.5">
+									<?php if ($cr_unique) : ?>
+										<?= esc_html(sprintf(_n('%d disponibile', '%d disponibili', $stock, 'cardsrift'), $stock)); ?>
+									<?php else : ?>
+										<?= $stock === 1
+											? esc_html__('Ultimo pezzo disponibile', 'cardsrift')
+											: esc_html(sprintf(__('Restano %d pezzi', 'cardsrift'), $stock)); ?>
+									<?php endif; ?>
 								</span>
 							<?php endif; ?>
 
@@ -209,8 +221,8 @@ do_action('woocommerce_before_cart'); ?>
 	<?php do_action('woocommerce_cart_collaterals'); ?>
 </div>
 
-<?php // spazio per la barra fissa mobile: nessun contenuto deve finirci sotto ?>
-<div class="h-20 lg:hidden" aria-hidden="true"></div>
+<?php // lo spazio per la barra fissa lo riserva ora il FOOTER (.cr-has-stickybar in shop.css):
+// qui era a metà pagina e la barra copriva comunque le icone di pagamento in fondo. ?>
 
 <?php
 do_action('woocommerce_after_cart');

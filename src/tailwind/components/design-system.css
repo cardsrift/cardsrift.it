@@ -59,8 +59,10 @@
 		background-color: var(--cr-btn);
 		color: var(--cr-btn-fg);
 	}
-	.cr-btn-solid:hover {
-		background-color: var(--cr-btn-h);
+	@media (hover: hover) {
+		.cr-btn-solid:hover {
+			background-color: var(--cr-btn-h);
+		}
 	}
 	.cr-btn-ghost {
 		background: transparent;
@@ -68,8 +70,10 @@
 		color: var(--cr-ghost);
 		padding: 12.5px 26.5px;
 	}
-	.cr-btn-ghost:hover {
-		background-color: var(--cr-accsoft);
+	@media (hover: hover) {
+		.cr-btn-ghost:hover {
+			background-color: var(--cr-accsoft);
+		}
 	}
 	.cr-btn-glass {
 		background-color: var(--cr-glass);
@@ -77,8 +81,10 @@
 		border: 1px solid var(--cr-glass-line);
 		color: var(--cr-ink);
 	}
-	.cr-btn-glass:hover {
-		border-color: var(--cr-acc2);
+	@media (hover: hover) {
+		.cr-btn-glass:hover {
+			border-color: var(--cr-acc2);
+		}
 	}
 	/* §9 accessibilità: il focus da tastiera deve vedersi anche sui bottoni, non solo
 	   sui campi. Nel flusso d'acquisto è l'unico modo per sapere dove si è. */
@@ -121,16 +127,20 @@
 		   una transition su quelli intercetterebbe ogni update per-frame di GSAP e lo farebbe strisciare. */
 		transition: box-shadow .3s ease, border-color .3s ease;
 	}
-	.cr-card:hover {
-		box-shadow: var(--cr-shadow);
-		border-color: var(--cr-acc2);
+	@media (hover: hover) {
+		.cr-card:hover {
+			box-shadow: var(--cr-shadow);
+			border-color: var(--cr-acc2);
+		}
 	}
 	/* le card NON-tilt (es. canali-contatto) usano il lift CSS → serve loro la transition su transform */
 	.cr-card:not([data-cr-tilt]) {
 		transition: box-shadow .3s ease, border-color .3s ease, transform .3s ease;
 	}
-	.cr-card:not([data-cr-tilt]):hover {
-		transform: translateY(-4px);
+	@media (hover: hover) {
+		.cr-card:not([data-cr-tilt]):hover {
+			transform: translateY(-4px);
+		}
 	}
 	.cr-card--glass {
 		background-color: var(--cr-glass);
@@ -185,9 +195,24 @@
 		width: 32px;
 		height: 32px;
 	}
-	.cr-add:hover {
-		background-color: var(--cr-btn);
-		color: var(--cr-btn-fg);
+	/* Col dito il bersaglio cresce: è l'unico comando della card e sulle griglie a due
+	   colonne cade vicino al bordo. Il vincolo è il PUNTATORE, non la larghezza: un iPad
+	   in orizzontale è 1024px CSS — cioè "desktop" per i breakpoint — ma resta touch. */
+	@media (pointer: coarse) {
+		.cr-add {
+			width: 44px;
+			height: 44px;
+		}
+		.cr-add--sm {
+			width: 40px;
+			height: 40px;
+		}
+	}
+	@media (hover: hover) {
+		.cr-add:hover {
+			background-color: var(--cr-btn);
+			color: var(--cr-btn-fg);
+		}
 	}
 	.cr-add:focus-visible {
 		outline: 2px solid var(--cr-acc2);
@@ -232,9 +257,11 @@
 		cursor: default;
 		box-shadow: inset 0 0 0 1.5px var(--cr-line-s);
 	}
-	.cr-add--full:hover {
-		background-color: transparent;
-		color: var(--cr-ok);
+	@media (hover: hover) {
+		.cr-add--full:hover {
+			background-color: transparent;
+			color: var(--cr-ok);
+		}
 	}
 	.cr-add--full .cr-add__ok {
 		position: static;
@@ -258,8 +285,11 @@
 	}
 
 	/* ---- chip (gioco · lingua) e badge semantici (fissi su tutti i temi) ---- */
+	/* max-w-full + troncamento: su una card a due colonne (~165px) un chip lungo
+	   ("POKÉMON · JP") andava a capo dentro sé stesso e spingeva la disponibilità
+	   fuori dalla card, che è overflow-hidden. */
 	.cr-chip {
-		@apply font-metropolis font-bold uppercase rounded-full w-fit;
+		@apply font-metropolis font-bold uppercase rounded-full w-fit max-w-full whitespace-nowrap overflow-hidden text-ellipsis;
 		font-size: 10.5px;
 		letter-spacing: .08em;
 		padding: 4px 10px;
@@ -356,16 +386,22 @@
 		border-radius: 14px 14px 0 0;
 		z-index: 2;
 	}
-	.cr-pocket:hover {
-		border-color: var(--cr-acc2);
+	@media (hover: hover) {
+		.cr-pocket:hover {
+			border-color: var(--cr-acc2);
+		}
 	}
-	.cr-pocket:not([data-cr-tilt]):hover {
-		transform: translateY(-3px);
+	@media (hover: hover) {
+		.cr-pocket:not([data-cr-tilt]):hover {
+			transform: translateY(-3px);
+		}
 	}
+	/* Nessun padding: la scansione ha la stessa proporzione della tasca (63:88), quindi
+	   riempie il well esattamente. I 7px lasciavano una cornice bianca che faceva
+	   sembrare la carta più piccola di quanto è. */
 	.cr-pocket__well {
 		@apply grid place-items-center rounded-lg bg-white-pure;
 		aspect-ratio: 63/88;
-		padding: 7px;
 	}
 	.cr-pocket__well img {
 		max-height: 100%;
@@ -377,9 +413,11 @@
 	}
 	.cr-cchip {
 		@apply font-metropolis font-bold uppercase rounded-[5px];
-		font-size: 9.5px;
+		/* era 9.5px: sulle tasche è il chip della CONDIZIONE, cioè l'informazione che
+		   distingue una carta da 5€ da una da 50 — su telefono va letta senza sforzo */
+		font-size: 10.5px;
 		letter-spacing: .06em;
-		padding: 2.5px 7px;
+		padding: 3px 7px;
 		background-color: var(--cr-accsoft);
 		color: var(--cr-acc);
 	}
@@ -457,9 +495,11 @@
 		color: var(--cr-ink);
 		border: 1px solid var(--cr-line-s);
 	}
-	.cr-pagenav a.page-numbers:hover {
-		background-color: var(--cr-accsoft);
-		border-color: var(--cr-acc2);
+	@media (hover: hover) {
+		.cr-pagenav a.page-numbers:hover {
+			background-color: var(--cr-accsoft);
+			border-color: var(--cr-acc2);
+		}
 	}
 	.cr-pagenav .page-numbers.current {
 		background-color: var(--cr-btn);

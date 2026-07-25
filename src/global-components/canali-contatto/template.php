@@ -43,7 +43,7 @@ $icons = [
 				</div>
 			<?php endif; ?>
 
-			<div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+			<div class="grid gap-5 sm:grid-cols-2 tb:grid-cols-3">
 				<?php foreach ($voci as $v) :
 					$ico = $icons[$v['icona'] ?? 'mail'] ?? $icons['mail'];
 					$ext = !empty($v['esterno']);

@@ -14,7 +14,8 @@ $tpl = get_template_directory_uri();
 	<div class="tw-container tw-section">
 		<div class="py-14 lg:py-16">
 
-			<div class="grid gap-10 lg:gap-8 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
+			<?php // tb: due colonne — su iPad in verticale quattro blocchi impilati erano mezzo schermo di scroll ?>
+			<div class="grid gap-10 tb:gap-8 tb:grid-cols-2 lg:grid-cols-[1.5fr_1fr_1fr_1fr]">
 
 				<!-- Brand -->
 				<div>
@@ -29,10 +30,10 @@ $tpl = get_template_directory_uri();
 						<?= esc_html__('Il tuo portale per il collezionismo: carte controllate una a una, protette e spedite in 24/48h.', 'cardsrift'); ?>
 					</p>
 					<div class="flex gap-3 mt-6">
-						<a href="https://www.instagram.com/cardsrift/" target="_blank" rel="noopener" aria-label="Instagram" class="w-9 h-9 grid place-items-center rounded-full border border-th-line text-th-ink hover:text-th-acc hover:border-th-acc transition-colors">
+						<a href="https://www.instagram.com/cardsrift/" target="_blank" rel="noopener" aria-label="Instagram" class="w-11 h-11 lg:w-9 lg:h-9 grid place-items-center rounded-full border border-th-line text-th-ink hover:text-th-acc hover:border-th-acc transition-colors">
 							<svg class="w-4 h-4 stroke-current fill-transparent" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1" fill="currentColor" stroke="none"/></svg>
 						</a>
-						<a href="<?= esc_url(CR_TELEGRAM_URL); ?>" target="_blank" rel="noopener" aria-label="Telegram" class="w-9 h-9 grid place-items-center rounded-full border border-th-line text-th-ink hover:text-th-acc hover:border-th-acc transition-colors">
+						<a href="<?= esc_url(CR_TELEGRAM_URL); ?>" target="_blank" rel="noopener" aria-label="Telegram" class="w-11 h-11 lg:w-9 lg:h-9 grid place-items-center rounded-full border border-th-line text-th-ink hover:text-th-acc hover:border-th-acc transition-colors">
 							<svg class="w-4 h-4 stroke-current fill-transparent" viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>
 						</a>
 					</div>
