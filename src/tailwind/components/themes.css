@@ -48,6 +48,7 @@
 		--cr-line-s: rgba(243, 244, 245, .20);
 		--cr-acc: #b6a9d9;
 		--cr-acc2: #8877b2;
+		--cr-focus: #8877b2;
 		--cr-accsoft: rgba(136, 119, 178, .18);
 		--cr-glass: rgba(38, 43, 50, .55);
 		--cr-glass-line: rgba(243, 244, 245, .15);
@@ -74,6 +75,7 @@
 		--cr-line-s: rgba(29, 33, 37, .20);
 		--cr-acc: #6b5a99;
 		--cr-acc2: #8877b2;
+		--cr-focus: #8877b2;
 		--cr-accsoft: rgba(136, 119, 178, .13);
 		--cr-glass: rgba(255, 255, 255, .6);
 		--cr-glass-line: rgba(29, 33, 37, .13);
@@ -100,6 +102,10 @@
 		--cr-line-s: rgba(255, 255, 255, .34);
 		--cr-acc: #ffffff;
 		--cr-acc2: #d8cfee;
+		/* Solo l'anello di focus da tastiera: l'acc2 pastello su viola pieno fa 2,64:1,
+		   sotto il minimo 3:1, ed è di fatto invisibile. Il nero di marca ne fa 3,94
+		   e migliora ancora sulle superfici chiare. Nessun altro colore cambia. */
+		--cr-focus: #1d2125;
 		--cr-accsoft: rgba(255, 255, 255, .16);
 		--cr-glass: rgba(255, 255, 255, .15);
 		--cr-glass-line: rgba(255, 255, 255, .32);
@@ -126,6 +132,8 @@
 		--cr-line-s: rgba(29, 33, 37, .26);
 		--cr-acc: #4d3f73;
 		--cr-acc2: #6b5a99;
+		/* Come sopra: 2,72:1 sul fondo lilla chiaro → 7,45:1 col nero di marca. */
+		--cr-focus: #1d2125;
 		--cr-accsoft: rgba(255, 255, 255, .38);
 		--cr-glass: rgba(255, 255, 255, .44);
 		--cr-glass-line: rgba(255, 255, 255, .62);

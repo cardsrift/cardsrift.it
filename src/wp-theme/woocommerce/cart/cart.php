@@ -43,7 +43,10 @@ do_action('woocommerce_before_cart'); ?>
 		<form class="woocommerce-cart-form" action="<?= esc_url(wc_get_cart_url()); ?>" method="post">
 			<?php do_action('woocommerce_before_cart_table'); ?>
 
-			<div class="woocommerce-cart-form__contents cr-panel px-4 tb:px-6">
+			<?php // role="list"/"listitem" invece di <ul>/<li>: dà a chi usa uno screen reader
+			// l'annuncio "elenco di N elementi" e la navigazione per riga, senza cambiare
+			// un tag che cart.js sostituisce in AJAX (le classi qui sopra sono i suoi agganci). ?>
+			<div class="woocommerce-cart-form__contents cr-panel px-4 tb:px-6" role="list">
 				<?php do_action('woocommerce_before_cart_contents'); ?>
 
 				<?php
@@ -63,7 +66,7 @@ do_action('woocommerce_before_cart'); ?>
 					$min       = $_product->is_sold_individually() ? 1 : 0;
 					$thumb     = apply_filters('woocommerce_cart_item_thumbnail', $_product->get_image('woocommerce_thumbnail'), $cart_item, $cart_item_key);
 				?>
-					<div class="cr-line woocommerce-cart-form__cart-item <?= esc_attr(apply_filters('woocommerce_cart_item_class', 'cart_item', $cart_item, $cart_item_key)); ?>">
+					<div class="cr-line woocommerce-cart-form__cart-item <?= esc_attr(apply_filters('woocommerce_cart_item_class', 'cart_item', $cart_item, $cart_item_key)); ?>" role="listitem">
 
 						<!-- miniatura -->
 						<?php if ($permalink) : ?>
@@ -128,9 +131,9 @@ do_action('woocommerce_before_cart'); ?>
 									<?= apply_filters('woocommerce_cart_item_quantity', $qty_input, $cart_item_key, $cart_item); // phpcs:ignore ?>
 								<?php else : ?>
 									<div class="cr-qty">
-										<button type="button" class="cr-qty__btn" data-cr-qty="-" aria-label="<?php esc_attr_e('Diminuisci', 'cardsrift'); ?>">−</button>
+										<button type="button" class="cr-qty__btn" data-cr-qty="-" aria-label="<?= esc_attr(sprintf(__('Diminuisci quantità di %s', 'cardsrift'), wp_strip_all_tags($product_name))); ?>">−</button>
 										<?= apply_filters('woocommerce_cart_item_quantity', $qty_input, $cart_item_key, $cart_item); // phpcs:ignore ?>
-										<button type="button" class="cr-qty__btn" data-cr-qty="+" aria-label="<?php esc_attr_e('Aumenta', 'cardsrift'); ?>">+</button>
+										<button type="button" class="cr-qty__btn" data-cr-qty="+" aria-label="<?= esc_attr(sprintf(__('Aumenta quantità di %s', 'cardsrift'), wp_strip_all_tags($product_name))); ?>">+</button>
 									</div>
 								<?php endif; ?>
 

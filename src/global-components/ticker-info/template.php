@@ -23,6 +23,15 @@ $dur        = max(30, (int) round($items_half * 6));  // ~6s per voce → veloci
 ?>
 
 <div class="cr-sec ticker-info" data-th="<?= esc_attr($tema); ?>">
+	<?php // Le voci non sono decorazione ("Appena aggiunto: …", "In offerta: …"): con
+	// aria-hidden sull'intera striscia sparivano per chi usa uno screen reader.
+	// Qui escono UNA volta sola, in chiaro; il nastro animato — che le ripete una
+	// ventina di volte per riempire lo schermo — resta nascosto agli assistivi. ?>
+	<ul class="sr-only">
+		<?php foreach ($voci as $v) : ?>
+			<li><?= esc_html(trim(($v['testo'] ?? '') . (!empty($v['evidenzia']) ? ' — ' . $v['evidenzia'] : ''))); ?></li>
+		<?php endforeach; ?>
+	</ul>
 	<div class="cr-ticker" aria-hidden="true">
 		<div class="cr-ticker__track" style="animation-duration: <?= (int) $dur; ?>s">
 			<?php for ($half = 0; $half < 2; $half++) : ?>

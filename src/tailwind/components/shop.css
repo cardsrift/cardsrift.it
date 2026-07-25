@@ -139,7 +139,8 @@
 		margin: 0;
 	}
 	.cr-qty input:focus-visible {
-		outline: 2px solid var(--cr-acc2);
+		outline: 2px solid;
+		outline-color: var(--cr-focus, var(--cr-acc2));
 		outline-offset: -2px;
 	}
 	/* Con JavaScript attivo il carrello si aggiorna da solo (components/shop.js):
@@ -281,7 +282,8 @@
 	.cr-form input[type="radio"]:focus-visible,
 	.cr-form input[type="checkbox"]:focus-visible,
 	.cr-check input:focus-visible {
-		outline: 2px solid var(--cr-acc2);
+		outline: 2px solid;
+		outline-color: var(--cr-focus, var(--cr-acc2));
 		outline-offset: 2px;
 	}
 

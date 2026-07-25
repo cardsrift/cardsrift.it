@@ -15,7 +15,9 @@ if (!$notices) {
 }
 ?>
 <?php foreach ($notices as $notice) : ?>
-	<div class="woocommerce-info cr-notice cr-notice--info"<?= wc_get_notice_data_attr($notice); // phpcs:ignore ?>>
+	<?php // role="status" (non "alert": non è un errore) — così anche gli avvisi iniettati
+	// via AJAX dopo il caricamento vengono annunciati, come già fanno error e success. ?>
+	<div class="woocommerce-info cr-notice cr-notice--info" role="status"<?= wc_get_notice_data_attr($notice); // phpcs:ignore ?>>
 		<?= wc_kses_notice($notice['notice']); ?>
 	</div>
 <?php endforeach; ?>

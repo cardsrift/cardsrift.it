@@ -133,12 +133,19 @@ const cartDrawer = () => {
 		alertBox.hidden = !html;
 	};
 
+	// il contenuto di pagina sotto al drawer: coperto agli occhi, va tolto anche alla
+	// tastiera e allo screen reader. La trappola sul Tab qui sotto non basta — chi
+	// naviga col cursore virtuale (frecce, rotore) leggerebbe comunque quello che sta
+	// dietro al pannello. Stesso trattamento del menu mobile (header.js).
+	const page = document.querySelector('.wrapper');
+
 	const open = (heading) => {
 		clearTimeout(closeTimer);
 		lastFocus = document.activeElement;
 		if (title) title.textContent = heading || defaultTitle;
 		root.hidden = false;
 		document.documentElement.classList.add('cr-noscroll');
+		if (page) page.setAttribute('inert', '');
 		// doppio rAF: il pannello deve essere in pagina PRIMA che parta la transizione
 		window.requestAnimationFrame(() => window.requestAnimationFrame(() => root.classList.add('is-open')));
 		const first = visible()[0];
@@ -149,6 +156,7 @@ const cartDrawer = () => {
 		if (root.hidden) return;
 		root.classList.remove('is-open');
 		document.documentElement.classList.remove('cr-noscroll');
+		if (page) page.removeAttribute('inert');
 		// il timer copre anche prefers-reduced-motion, dove transitionend non arriva
 		closeTimer = setTimeout(() => { root.hidden = true; }, 340);
 		if (lastFocus && lastFocus.focus) lastFocus.focus();

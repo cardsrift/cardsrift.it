@@ -9,6 +9,14 @@
 	<meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE">
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="format-detection" content="telephone=no">
+	<?php // Il testo di corpo dipende da un foglio di stile su un altro dominio: senza
+	// preconnect il browser scopre l'host solo quando incontra il <link>, e paga
+	// DNS + TLS prima di poter disegnare una riga di testo. ?>
+	<link rel="preconnect" href="https://use.typekit.net" crossorigin>
+	<link rel="preconnect" href="https://p.typekit.net" crossorigin>
+	<?php // Metropolis Bold veste ogni h1/h2 del sito (le utility .tw-h*): precaricarlo
+	// evita che il titolo principale arrivi dopo il resto della pagina. ?>
+	<link rel="preload" as="font" type="font/woff2" href="<?= esc_url(get_template_directory_uri() . '/assets/fonts/Metropolis-Bold.woff2'); ?>" crossorigin>
 	<?php wp_head(); ?>
 	<meta name="msapplication-TileColor" content="#ffffff">
 	<meta name="theme-color" content="#ffffff">
@@ -21,6 +29,13 @@
 
 
 <body <?= body_class();?>>
+
+	<?php // SALTO AL CONTENUTO — primo elemento tabbabile della pagina. Invisibile finché
+	// non lo si raggiunge col tasto Tab: senza, chi naviga da tastiera deve attraversare
+	// due righe di header e tutto il menu a ogni cambio di pagina.
+	// data-th="dark" sull'ancora stessa: fuori da una sezione i token th-* non avrebbero
+	// un valore e il riquadro uscirebbe trasparente. ?>
+	<a href="#main-content" data-th="dark" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[1000] focus:px-4 focus:py-3 focus:rounded-xl focus:no-underline focus:font-metropolis focus:font-semibold focus:bg-th-pg focus:text-th-ink focus:shadow-th focus:outline focus:outline-2 focus:outline-offset-2 focus:outline-th-acc"><?= esc_html__('Salta al contenuto', 'cardsrift'); ?></a>
 
 	<?php
 	// HEADER A DUE RIGHE (direzione B):
@@ -240,4 +255,7 @@
 
 	<div class="wrapper pt-[var(--header-h-mobile)] lg:pt-[var(--header-h-desktop)]">
 		<?php if (function_exists('cr_render_game_subnav')) cr_render_game_subnav(); ?>
-			<div class="base <?= function_exists('cr_is_builder_page') && cr_is_builder_page() ? '!max-w-none !px-0' : 'container'; ?>">
+			<?php // id="main-content": bersaglio del salto al contenuto. Sta qui e non su un
+			// <main> di pagina perché .base è l'unico contenitore presente su OGNI vista
+			// (home, pagine-manifest, carrello, checkout), e così l'ancora non si duplica. ?>
+			<div id="main-content" class="base <?= function_exists('cr_is_builder_page') && cr_is_builder_page() ? '!max-w-none !px-0' : 'container'; ?>">

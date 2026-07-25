@@ -622,13 +622,63 @@ function crs_ct_push_run($opts = [])
 	return $counts;
 }
 
+/** Prefisso della nota `_ct_review` scritta da un push fallito. Deve restare in TESTA alla nota:
+ *  è da lì che crs_ct_push_outcome() riconosce le proprie note e non tocca quelle dell'autopricer. */
+const CRS_PUSH_FAIL = 'push fallito';
+
+/**
+ * Registra l'esito di UNA scrittura verso CardTrader.
+ *
+ * ⚠️ Perché esiste: prima l'esito veniva scartato. Una PUT/DELETE fallita (timeout, 429, 500
+ * momentaneo di CardTrader) non lasciava traccia da nessuna parte — né log, né "Da rivedere",
+ * e nemmeno nello storico di Action Scheduler, che segna l'azione "completata" perché nessuna
+ * eccezione PHP è stata sollevata. L'inserzione restava viva su CardTrader con la vecchia
+ * quantità: si finisce per vendere una carta che non c'è più.
+ *
+ * ⚠️ `_ct_review` è condiviso con l'autopricer ("nessun dato di mercato", "gioco non mappato"):
+ * qui si scrive e si cancella SOLO la nota che inizia con CRS_PUSH_FAIL, mai le sue.
+ *
+ * @param int    $pid
+ * @param array  $r      esito di crs_ct_create/update/delete_product()
+ * @param string $label  cosa restituire se è andata (created|updated|deleted)
+ * @param string $azione descrizione leggibile: finisce nella colonna "stato" di Da rivedere
+ * @param string $err    (out) motivo del guasto, stringa vuota se è andata
+ * @return string $label in caso di successo, 'errors' altrimenti
+ */
+function crs_ct_push_outcome($pid, $r, $label, $azione, &$err)
+{
+	if (!empty($r['ok'])) {
+		// andata: se restava la nota di un guasto precedente si toglie — ma solo la nostra
+		$prev = (string) get_post_meta($pid, '_ct_review', true);
+		if (strpos($prev, CRS_PUSH_FAIL) === 0) {
+			delete_post_meta($pid, '_ct_review');
+		}
+		return $label;
+	}
+
+	$err = (string) ($r['err'] ?? 'errore sconosciuto');
+	update_post_meta($pid, '_ct_review', sprintf(
+		'%s (%s) %s: %s',
+		CRS_PUSH_FAIL,
+		$azione,
+		current_time('d/m H:i'),
+		$err
+	));
+	error_log(sprintf('[cardsrift-sync] scrittura CardTrader fallita — prodotto %d — %s — %s', $pid, $azione, $err));
+	return 'errors';
+}
+
 /**
  * Riconcilia UN prodotto con CardTrader in base al suo stato (usato dal push sync e da quello a blocchi):
  *  collegato+stock>0 → UPDATE quantità · collegato+stock0 → DELETE (venduto) · non collegato+blueprint+stock>0 → CREATE · else skip.
+ * Ogni fallimento viene loggato e marcato "Da rivedere" da crs_ct_push_outcome().
+ * @param int    $pid
+ * @param string $err (out, facoltativo) motivo del guasto — i chiamanti esistenti possono ignorarlo
  * @return string created|updated|deleted|skipped|errors  (null se prodotto assente)
  */
-function crs_ct_push_one($pid)
+function crs_ct_push_one($pid, &$err = null)
 {
+	$err     = '';
 	$product = wc_get_product($pid);
 	if (!$product) {
 		return null;
@@ -637,12 +687,15 @@ function crs_ct_push_one($pid)
 	$qty   = max(0, (int) $product->get_stock_quantity());
 
 	if ($ctpid) {
-		$r = $qty > 0 ? crs_ct_update_product($product) : crs_ct_delete_product($product);
-		return !empty($r['ok']) ? ($qty > 0 ? 'updated' : 'deleted') : 'errors';
+		// il DELETE è il caso che fa più danno se fallisce in silenzio: l'inserzione resta in vendita
+		return $qty > 0
+			? crs_ct_push_outcome($pid, crs_ct_update_product($product), 'updated', 'aggiornamento quantità', $err)
+			: crs_ct_push_outcome($pid, crs_ct_delete_product($product), 'deleted', 'cancellazione inserzione', $err);
 	}
 	if (get_post_meta($pid, CRS_META_CT_BLUEPRINT, true) && $qty > 0) {
-		$r = crs_ct_create_product($product);
-		return !empty($r['ok']) ? 'created' : 'errors';
+		// include il caso "risposta senza id prodotto": il POST è passato ma non sappiamo quale
+		// inserzione abbiamo creato — va guardato a mano, o il push successivo la duplica.
+		return crs_ct_push_outcome($pid, crs_ct_create_product($product), 'created', 'creazione inserzione', $err);
 	}
 	return 'skipped';
 }
@@ -1162,7 +1215,11 @@ function crs_ct_orphan_drafts($limit = 200)
 			continue;
 		}
 		$review = (string) get_post_meta($pid, '_ct_review', true);
-		if (!get_post_meta($pid, CRS_META_CT_BLUEPRINT, true)) {
+		if (strpos($review, CRS_PUSH_FAIL) === 0) {
+			// una scrittura fallita ha la precedenza su tutto: è l'unico caso in cui su CardTrader
+			// c'è (o manca) un'inserzione che non corrisponde alla realtà del magazzino.
+			$stato = $review;
+		} elseif (!get_post_meta($pid, CRS_META_CT_BLUEPRINT, true)) {
 			$mm = (string) get_post_meta($pid, '_ct_match_method', true); // motivo del mancato aggancio
 			$stato = $mm ? ('non agganciata: ' . $mm) : 'no-blueprint'; // es. "unmatched" / "no-expansion" / "no-game"
 		} elseif ($review !== '') {

@@ -57,6 +57,8 @@ return [
 		'eyebrow'   => __('In pratica', 'cardsrift'),
 		'testo'     => __('<b>Quello che vedi nella scheda è quello che ricevi.</b> Ogni carta di valore è fotografata fronte e retro, con la sua condizione scritta accanto.', 'cardsrift'),
 		'cta_label' => __('Sfoglia il catalogo', 'cardsrift'),
-		'cta_url'   => '/shop',
+		// ⚠️ Non /shop: quell'URL cr_guard_no_mixed() lo rimanda sempre alla home (niente
+		// catalogo globale). Si punta alle righe per-gioco, come fa la CTA dell'hero.
+		'cta_url'   => '/#giochi',
 	],
 ];

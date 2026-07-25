@@ -126,6 +126,52 @@ function cr_product_has_image($product)
 }
 
 /**
+ * URL della foto del prodotto — per i dati strutturati e le anteprime social.
+ *
+ * Stessa gerarchia di cr_product_has_image(): libreria media se c'è, altrimenti
+ * l'URL remoto del plugin di sync. Serve una funzione apposta perché
+ * `wp_get_attachment_url(get_image_id())` risponde `false` su tutto il catalogo
+ * sincronizzato (l'id resta 0): chi la usava lasciava lo schema Product senza
+ * `image`, che per Google è un campo obbligatorio.
+ */
+function cr_product_image_url($product)
+{
+    if (!$product instanceof WC_Product) {
+        return '';
+    }
+    if ($product->get_image_id()) {
+        return (string) wp_get_attachment_url($product->get_image_id());
+    }
+    $pid = $product->get_id();
+    return (string) (get_post_meta($pid, '_ct_image_full', true) ?: get_post_meta($pid, '_ct_image', true));
+}
+
+/**
+ * Garantisce un `alt` sensato all'immagine, senza sovrascriverne uno già scritto.
+ *
+ * Il fallback di WooCommerce (`alt` = nome prodotto) scatta solo quando esiste un
+ * attachment vero: per le foto remote del sync non si attiva mai, e restavano
+ * `<img>` senza testo alternativo su gran parte del catalogo — un problema per chi
+ * usa uno screen reader e un'occasione persa su Google Immagini.
+ *
+ * @param string $html markup dell'immagine
+ * @param string $alt  testo alternativo da usare se manca
+ */
+function cr_image_alt($html, $alt)
+{
+    if (!is_string($html) || $html === '' || $alt === '') {
+        return $html;
+    }
+    if (preg_match('/\salt="[^"]+"/', $html)) {
+        return $html; // ne ha già uno valorizzato: non tocchiamolo
+    }
+    if (strpos($html, ' alt=') !== false) {
+        return preg_replace('/\salt="[^"]*"/', ' alt="' . esc_attr($alt) . '"', $html, 1);
+    }
+    return str_replace('<img ', '<img alt="' . esc_attr($alt) . '" ', $html);
+}
+
+/**
  * Le foto di listato si caricano pigramente, sempre.
  *
  * Misurato su telefono: un listato di singole scarica ~1,5 MB di sole foto. Il
@@ -145,6 +191,34 @@ function cr_lazy_image($html)
     }
     if (strpos($html, 'loading=') === false) {
         $html = str_replace('<img ', '<img loading="lazy" ', $html);
+    }
+    if (strpos($html, 'decoding=') === false) {
+        $html = str_replace('<img ', '<img decoding="async" ', $html);
+    }
+    return $html;
+}
+
+/**
+ * L'opposto di cr_lazy_image(): questa foto è il contenuto, si carica subito.
+ *
+ * Serve perché il plugin di sync scrive `loading="lazy"` fisso in OGNI <img> che
+ * genera, senza condizioni. La scheda prodotto aggiungeva `fetchpriority="high"` con
+ * uno str_replace che però non toglieva il lazy: il tag finale diceva al browser
+ * "questa è la più importante" e "questa puoi rimandarla" nello stesso respiro, sulla
+ * foto che è l'elemento LCP di ogni pagina prodotto.
+ *
+ * @param string $html     markup dell'immagine
+ * @param bool   $priority anche fetchpriority="high" (solo per la vera LCP: metterlo
+ *                         su più immagini insieme annulla la priorità)
+ */
+function cr_eager_image($html, $priority = true)
+{
+    if (!is_string($html) || $html === '') {
+        return $html;
+    }
+    $html = preg_replace('/\sloading="[^"]*"/', '', $html, 1);
+    if ($priority && strpos($html, 'fetchpriority=') === false) {
+        $html = str_replace('<img ', '<img fetchpriority="high" ', $html);
     }
     if (strpos($html, 'decoding=') === false) {
         $html = str_replace('<img ', '<img decoding="async" ', $html);
@@ -179,10 +253,13 @@ function cr_full_res_image($html, $product)
     $preview = get_post_meta($pid, '_ct_image', true);
     $full    = get_post_meta($pid, '_ct_image_full', true);
 
-    if (!$preview || !$full || strpos($html, $preview) === false) {
-        return $html;
+    if ($preview && $full && strpos($html, $preview) !== false) {
+        $html = str_replace($preview, $full, $html);
     }
-    return str_replace($preview, $full, $html);
+    // Il fallback alt di WooCommerce (alt = nome prodotto) vale solo per gli attachment
+    // veri: su queste foto non scatta mai, quindi lo mettiamo qui — unico punto da cui
+    // passano tutte le immagini prodotto del sito.
+    return cr_image_alt($html, $product->get_name());
 }
 
 /**
@@ -275,12 +352,16 @@ function cr_add_control($product, $size = 'md')
 	// Già tutto nel carrello: il comando resta al suo posto (niente salti di layout)
 	// ma è spento, così non si prova un'aggiunta che il server rifiuterebbe.
 	if (cr_stock_left($product) === 0) {
+		// Il `title` è un tooltip: chi usa uno screen reader non lo sente, e con
+		// aria-hidden sull'intero elemento sembrava che il comando fosse sparito.
+		// L'icona resta decorativa, il motivo lo dice un testo solo-per-lettori.
 		printf(
-			'<span class="%s cr-add--full" data-cr-add-for="%d" aria-hidden="true" title="%s">%s</span>',
+			'<span class="%s cr-add--full" data-cr-add-for="%d" title="%s">%s<span class="sr-only">%s</span></span>',
 			esc_attr($cls),
 			$product->get_id(),
 			esc_attr__('Hai già tutte le copie disponibili nel carrello', 'cardsrift'),
-			cr_icon_check()
+			cr_icon_check(),
+			esc_html(sprintf(__('%s: hai già tutte le copie disponibili nel carrello', 'cardsrift'), $name))
 		);
 		return;
 	}

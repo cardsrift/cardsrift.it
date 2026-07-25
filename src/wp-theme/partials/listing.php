@@ -21,7 +21,8 @@ $facets = function_exists('cr_listing_facets') ? cr_listing_facets($cr_l_game ??
 $total  = (int) $wp_query->found_posts;
 
 // filtri attivi (per selected/valore campi, reset e paginazione che li preserva)
-$keep   = ['pa_espansione', 'pa_condizione', 'pa_lingua', 'pa_foil', 'cr_min', 'cr_max', 'cr_ord'];
+// stessa lista che includes/seo.php usa per canonical e noindex: una sola fonte
+$keep   = function_exists('cr_seo_facet_keys') ? cr_seo_facet_keys() : ['pa_espansione', 'pa_condizione', 'pa_lingua', 'pa_foil', 'cr_min', 'cr_max', 'cr_ord'];
 $active = [];
 foreach ($keep as $k) {
 	if (isset($_GET[$k]) && $_GET[$k] !== '') {
@@ -34,6 +35,9 @@ $orderby = $active['cr_ord'] ?? '';
 <main class="cr-sec" data-th="light">
 	<div class="tw-container tw-section">
 		<div class="py-10 lg:py-14">
+
+			<?php // Il percorso è visibile solo da tablet in su, ma ai motori va dichiarato sempre.
+			if (function_exists('cr_breadcrumb_schema')) cr_breadcrumb_schema($cr_l_crumbs); ?>
 
 			<?php // Su telefono il percorso andava a capo e ripeteva parola per parola la subnav
 			// che gli sta subito sopra ("Magic › Sealed · Carte singole"): due righe di scroll

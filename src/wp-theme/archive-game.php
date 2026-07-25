@@ -56,6 +56,11 @@ $cr_upcoming = function_exists('cr_preorder_products')
 		<div class="relative tw-container tw-section">
 			<div class="min-h-[74vh] lg:min-h-[84vh] flex flex-col justify-end pt-10 pb-16 lg:pb-24">
 
+				<?php if (function_exists('cr_breadcrumb_schema')) cr_breadcrumb_schema([
+					['label' => __('Home', 'cardsrift'), 'url' => home_url('/')],
+					['label' => $cr_label, 'url' => ''],
+				]); ?>
+
 				<nav class="cr-eyebrow !tracking-[.18em] !text-th-soft mb-5" aria-label="<?php esc_attr_e('Percorso', 'cardsrift'); ?>">
 					<a class="no-underline hover:text-th-acc transition-colors" href="<?= esc_url(home_url('/')); ?>"><?php esc_html_e('Home', 'cardsrift'); ?></a>
 					<span class="opacity-40"> / </span><span class="text-th-acc"><?= esc_html($cr_label); ?></span>

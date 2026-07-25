@@ -20,7 +20,7 @@ defined('ABSPATH') || exit;
 
 <div class="woocommerce-checkout-review-order-table">
 
-	<div class="flex flex-col">
+	<div class="flex flex-col" role="list">
 		<?php
 		do_action('woocommerce_review_order_before_cart_contents');
 
@@ -32,7 +32,7 @@ defined('ABSPATH') || exit;
 			}
 			$qty = (int) $cart_item['quantity'];
 		?>
-			<div class="cr-line !py-3 <?= esc_attr(apply_filters('woocommerce_cart_item_class', 'cart_item', $cart_item, $cart_item_key)); ?>">
+			<div class="cr-line !py-3 <?= esc_attr(apply_filters('woocommerce_cart_item_class', 'cart_item', $cart_item, $cart_item_key)); ?>" role="listitem">
 				<?php // ⚠️ niente bollino sulla miniatura: .cr-thumb ha overflow:hidden e lo taglierebbe.
 				// La quantità sta nella riga, come nella conferma d'ordine e nello storico. ?>
 				<span class="cr-thumb !w-11">

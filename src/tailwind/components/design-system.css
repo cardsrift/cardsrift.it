@@ -89,7 +89,8 @@
 	/* §9 accessibilità: il focus da tastiera deve vedersi anche sui bottoni, non solo
 	   sui campi. Nel flusso d'acquisto è l'unico modo per sapere dove si è. */
 	.cr-btn:focus-visible {
-		outline: 2px solid var(--cr-acc2);
+		outline: 2px solid;
+		outline-color: var(--cr-focus, var(--cr-acc2));
 		outline-offset: 3px;
 	}
 	/* stati dell'aggiunta sul pulsante grande della scheda prodotto */
@@ -173,7 +174,8 @@
 		z-index: 1;
 	}
 	.cr-card__link:focus-visible {
-		outline: 2px solid var(--cr-acc2);
+		outline: 2px solid;
+		outline-color: var(--cr-focus, var(--cr-acc2));
 		outline-offset: 2px;
 	}
 
@@ -215,7 +217,8 @@
 		}
 	}
 	.cr-add:focus-visible {
-		outline: 2px solid var(--cr-acc2);
+		outline: 2px solid;
+		outline-color: var(--cr-focus, var(--cr-acc2));
 		outline-offset: 2px;
 	}
 	.cr-add__ico,
@@ -475,7 +478,8 @@
 	.cr-input:focus-visible,
 	.cr-select:focus-visible,
 	.cr-textarea:focus-visible {
-		outline: 2px solid var(--cr-acc2);
+		outline: 2px solid;
+		outline-color: var(--cr-focus, var(--cr-acc2));
 		outline-offset: 1px;
 	}
 	.cr-textarea {

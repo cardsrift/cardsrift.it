@@ -104,7 +104,10 @@ if (!$showcase && CR_PLACEHOLDER) {
 								<div class="relative w-full h-full bg-white-pure rounded-2xl p-4 shadow-th border border-th-line overflow-hidden">
 							<?php // markup dell'immagine già pronto: viene da $product->get_image(),
 							// la stessa API delle card (le foto sono URL remoti del plugin di sync) ?>
-							<?= $s['img']; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+							<?php // Sono le tre foto in cima alla home: differirle peggiora l'LCP, e il
+						// plugin di sync scrive loading="lazy" comunque. La priorità alta va solo
+						// alla prima, altrimenti si annullano a vicenda. ?>
+						<?= cr_eager_image($s['img'], $i === 0); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 								<span class="cr-glare"></span>
 							</div>
 							<?php if ($s['label']) : ?>

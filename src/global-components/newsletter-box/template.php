@@ -33,7 +33,7 @@ $tema = cr_theme($c);
 				<?php else : ?>
 					<!-- placeholder statico finché non c'è il provider (Fase 3) -->
 					<form class="flex gap-2.5 max-w-[430px] mx-auto max-sm:flex-col" onsubmit="return false">
-						<input class="cr-input flex-1 min-w-0" type="email" placeholder="<?= esc_attr__('La tua email', 'cardsrift'); ?>" aria-label="Email">
+						<input class="cr-input flex-1 min-w-0" type="email" placeholder="<?= esc_attr__('La tua email', 'cardsrift'); ?>" aria-label="<?= esc_attr__('Email', 'cardsrift'); ?>">
 						<button class="cr-btn cr-btn-solid justify-center" type="submit"><?= __('Iscriviti', 'cardsrift'); ?></button>
 					</form>
 				<?php endif; ?>

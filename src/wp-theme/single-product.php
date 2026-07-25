@@ -132,8 +132,10 @@ while (have_posts()) : the_post();
 							<?php elseif ($product->is_on_sale()) : ?>
 								<span class="cr-badge cr-badge--sale"><?php esc_html_e('Offerta', 'cardsrift'); ?></span>
 							<?php endif; ?>
-							<?php // foto principale: è il contenuto della pagina, si carica subito e con priorità ?>
-							<?= str_replace('<img ', '<img data-cr-gallery-main fetchpriority="high" decoding="async" ', $product->get_image('woocommerce_single', ['class' => 'max-h-[300px] lg:max-h-[460px] w-auto object-contain'])); ?>
+							<?php // foto principale: è il contenuto della pagina, si carica subito e con
+							// priorità. cr_eager_image() toglie anche il loading="lazy" che il plugin
+							// di sync scrive comunque — insieme a fetchpriority si annullavano. ?>
+							<?= str_replace('<img ', '<img data-cr-gallery-main ', cr_eager_image($product->get_image('woocommerce_single', ['class' => 'max-h-[300px] lg:max-h-[460px] w-auto object-contain']))); ?>
 						</div>
 						<?php if ($gallery) : ?>
 							<?php // le miniature cambiano la foto grande qui accanto; senza JavaScript
@@ -311,7 +313,10 @@ while (have_posts()) : the_post();
 
 	<?php
 	// ---- JSON-LD: Product/Offer + BreadcrumbList (SEO) ----
-	$img_url = wp_get_attachment_url($product->get_image_id());
+	// ⚠️ Niente wp_get_attachment_url(get_image_id()): sul catalogo sincronizzato l'id è
+	// 0, la funzione risponde false e array_filter toglieva `image` — campo obbligatorio
+	// per i rich result di Google — praticamente da ogni scheda del negozio.
+	$img_url = cr_product_image_url($product);
 	$ld_product = array_filter([
 		'@context'    => 'https://schema.org/',
 		'@type'       => 'Product',
@@ -325,19 +330,16 @@ while (have_posts()) : the_post();
 			'priceCurrency' => get_woocommerce_currency(),
 			'availability'  => $in_stock ? 'https://schema.org/InStock' : 'https://schema.org/OutOfStock',
 			'url'           => get_permalink($pid),
-			'itemCondition' => 'https://schema.org/UsedCondition',
+			// le singole sono di seconda mano, il sigillato no
+			'itemCondition' => $is_singole ? 'https://schema.org/UsedCondition' : 'https://schema.org/NewCondition',
 		],
 	]);
 	$crumbs = [['name' => __('Home', 'cardsrift'), 'url' => home_url('/')]];
 	if ($game_slug) $crumbs[] = ['name' => $game_label, 'url' => home_url('/' . $game_slug . '/')];
 	if ($game_slug && $tipo_slug) $crumbs[] = ['name' => $tipo_label, 'url' => home_url('/' . $game_slug . '/' . $tipo_slug . '/')];
 	$crumbs[] = ['name' => $product->get_name(), 'url' => get_permalink($pid)];
-	$ld_crumbs = ['@context' => 'https://schema.org/', '@type' => 'BreadcrumbList', 'itemListElement' => []];
-	foreach ($crumbs as $i => $c) {
-		$ld_crumbs['itemListElement'][] = ['@type' => 'ListItem', 'position' => $i + 1, 'name' => $c['name'], 'item' => $c['url']];
-	}
 	echo '<script type="application/ld+json">' . wp_json_encode($ld_product, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>';
-	echo '<script type="application/ld+json">' . wp_json_encode($ld_crumbs, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) . '</script>';
+	cr_breadcrumb_schema($crumbs);
 	?>
 
 <?php endwhile; ?>

@@ -8,6 +8,12 @@
  */
 get_header(); ?>
 
+<?php // <main>: il landmark del contenuto principale. Mancava proprio sulle pagine più
+// battute (pagine-manifest, carrello, checkout, conferma d'ordine), mentre schede
+// prodotto, listati e ricerca ce l'avevano già — chi usa uno screen reader perdeva
+// il comando "vai al contenuto" a metà del percorso d'acquisto. ?>
+<main>
+
 <?php
 $slug     = get_post_field('post_name', get_queried_object_id());
 $manifest = $slug ? cr_load_manifest($slug) : [];
@@ -36,5 +42,7 @@ if ($manifest) {
 	}
 }
 ?>
+
+</main>
 
 <?php get_footer(); ?>

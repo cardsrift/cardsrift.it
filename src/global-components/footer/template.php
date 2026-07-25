@@ -79,6 +79,8 @@ $tpl = get_template_directory_uri();
 					<a class="iubenda-nostyle iubenda-noiframe iubenda-embed iubenda-noiframe hover:text-th-acc transition-colors" href="https://www.iubenda.com/privacy-policy/20607045" title="Privacy Policy"><?= esc_html__('Privacy', 'cardsrift'); ?></a>
 					<span aria-hidden="true">·</span>
 					<a class="iubenda-nostyle iubenda-noiframe iubenda-embed iubenda-noiframe hover:text-th-acc transition-colors" href="https://www.iubenda.com/privacy-policy/20607045/cookie-policy" title="Cookie Policy"><?= esc_html__('Cookie', 'cardsrift'); ?></a>
+					<span aria-hidden="true">·</span>
+					<a class="hover:text-th-acc transition-colors" href="<?= esc_url(home_url('/dichiarazione-accessibilita/')); ?>"><?= esc_html__('Accessibilità', 'cardsrift'); ?></a>
 				</div>
 				<ul class="flex items-center gap-3">
 					<li class="w-9 h-6"><img class="w-full h-full object-contain" src="<?= esc_url($tpl . '/assets/images/visa.svg'); ?>" alt="Visa"></li>

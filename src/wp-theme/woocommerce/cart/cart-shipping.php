@@ -46,6 +46,12 @@ $single                   = $has_methods && 1 === count($available_methods);
 
 	<?php elseif ($has_methods) : ?>
 		<div class="py-3">
+			<?php // come nel pagamento: il nome del gruppo va legato ai radio, o chi usa uno
+			// screen reader sceglie la spedizione senza sapere a quale pacco si riferisce. ?>
+			<?php // La legend è sr-only e lo <span> visibile resta com'era: un <legend> vero
+			// al suo posto porterebbe con sé lo stile di default del browser. ?>
+			<fieldset class="border-0 m-0 p-0 min-w-0">
+			<legend class="sr-only"><?= wp_kses_post($package_name); ?></legend>
 			<span class="cr-label"><?= wp_kses_post($package_name); ?></span>
 			<ul id="shipping_method" class="woocommerce-shipping-methods cr-optlist">
 				<?php foreach ($available_methods as $method) : ?>
@@ -58,6 +64,7 @@ $single                   = $has_methods && 1 === count($available_methods);
 					</li>
 				<?php endforeach; ?>
 			</ul>
+			</fieldset>
 		</div>
 
 	<?php else : ?>

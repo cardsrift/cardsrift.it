@@ -35,7 +35,7 @@ if (WC()->cart->is_empty()) : ?>
 
 <?php else : ?>
 
-	<div class="flex-1 overflow-y-auto px-5 woocommerce-mini-cart cart_list <?= esc_attr($list_class); ?>">
+	<div class="flex-1 overflow-y-auto px-5 woocommerce-mini-cart cart_list <?= esc_attr($list_class); ?>" role="list">
 		<?php
 		foreach (WC()->cart->get_cart() as $cart_item_key => $cart_item) {
 			$_product   = apply_filters('woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key);
@@ -49,7 +49,7 @@ if (WC()->cart->is_empty()) : ?>
 			$permalink    = apply_filters('woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink($cart_item) : '', $cart_item, $cart_item_key);
 			$qty          = (int) $cart_item['quantity'];
 		?>
-			<div class="cr-line woocommerce-mini-cart-item <?= esc_attr(apply_filters('woocommerce_mini_cart_item_class', 'mini_cart_item', $cart_item, $cart_item_key)); ?>" data-cr-item="<?= esc_attr($product_id); ?>">
+			<div class="cr-line woocommerce-mini-cart-item <?= esc_attr(apply_filters('woocommerce_mini_cart_item_class', 'mini_cart_item', $cart_item, $cart_item_key)); ?>" data-cr-item="<?= esc_attr($product_id); ?>" role="listitem">
 
 				<span class="cr-thumb !w-12"><?= $_product->get_image('woocommerce_thumbnail'); // phpcs:ignore ?></span>
 
@@ -94,10 +94,10 @@ if (WC()->cart->is_empty()) : ?>
 							<span class="cr-qty cr-qty--fixed !h-8"><?= esc_html__('1 pz', 'cardsrift'); ?></span>
 						<?php else : ?>
 							<div class="cr-qty cr-qty--mini">
-								<button type="button" class="cr-qty__btn" data-cr-qty="-" aria-label="<?php esc_attr_e('Diminuisci', 'cardsrift'); ?>">−</button>
+								<button type="button" class="cr-qty__btn" data-cr-qty="-" aria-label="<?= esc_attr(sprintf(__('Diminuisci quantità di %s', 'cardsrift'), wp_strip_all_tags($product_name))); ?>">−</button>
 								<label class="screen-reader-text" for="cr-qty-<?= esc_attr($cart_item_key); ?>"><?= esc_attr(sprintf(__('Quantità di %s', 'cardsrift'), wp_strip_all_tags($product_name))); ?></label>
 								<input type="number" class="qty" id="cr-qty-<?= esc_attr($cart_item_key); ?>" value="<?= esc_attr($qty); ?>" min="1" <?= $cr_max !== null ? 'max="' . esc_attr($cr_max) . '"' : ''; ?> step="1" inputmode="numeric" autocomplete="off" data-cart_item_key="<?= esc_attr($cart_item_key); ?>" />
-								<button type="button" class="cr-qty__btn" data-cr-qty="+" aria-label="<?php esc_attr_e('Aumenta', 'cardsrift'); ?>">+</button>
+								<button type="button" class="cr-qty__btn" data-cr-qty="+" aria-label="<?= esc_attr(sprintf(__('Aumenta quantità di %s', 'cardsrift'), wp_strip_all_tags($product_name))); ?>">+</button>
 							</div>
 						<?php endif; ?>
 						<span class="cr-price !text-sm"><?= apply_filters('woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal($_product, $qty), $cart_item, $cart_item_key); // phpcs:ignore ?></span>

@@ -463,7 +463,8 @@ function cr_free_shipping_bar()
 				); ?>
 			<?php endif; ?>
 		</p>
-		<div class="cr-shipbar" role="progressbar" aria-valuenow="<?= esc_attr($goal['pct']); ?>" aria-valuemin="0" aria-valuemax="100">
+		<?php // senza aria-label lo screen reader annuncia solo "58%, barra di avanzamento" ?>
+		<div class="cr-shipbar" role="progressbar" aria-label="<?php esc_attr_e('Avanzamento verso la spedizione gratuita', 'cardsrift'); ?>" aria-valuenow="<?= esc_attr($goal['pct']); ?>" aria-valuemin="0" aria-valuemax="100">
 			<div class="cr-shipbar__fill" style="width:<?= esc_attr($goal['pct']); ?>%"></div>
 		</div>
 	</div>
@@ -833,7 +834,8 @@ function cr_account_nav_icon($endpoint)
 		'customer-logout' => 'M15 17l5-5-5-5M20 12H9M12 4H5v16h7',
 	];
 	$d = $paths[$endpoint] ?? 'M5 12h14';
-	return '<svg class="cr-accnav__ico" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="' . esc_attr($d) . '"/></svg>';
+	// aria-hidden come tutte le altre icone del tema: il nome della voce è nel testo accanto
+	return '<svg class="cr-accnav__ico" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="' . esc_attr($d) . '"/></svg>';
 }
 
 /* =====================================================================

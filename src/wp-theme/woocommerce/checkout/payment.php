@@ -28,6 +28,11 @@ if (!wp_doing_ajax()) {
 	<?php if (WC()->cart && WC()->cart->needs_payment()) : ?>
 		<h2 class="font-metropolis font-semibold !text-lg mb-4"><?php esc_html_e('Come vuoi pagare', 'cardsrift'); ?></h2>
 
+		<?php // fieldset+legend: senza, chi passa da un radio all'altro con lo screen reader
+		// sente "Bonifico, 1 di 2" e non sa MAI di cosa sta scegliendo. Il fieldset è
+		// azzerato (border-0 m-0 p-0 min-w-0): non cambia nulla di come si vede. ?>
+		<fieldset class="border-0 m-0 p-0 min-w-0">
+			<legend class="sr-only"><?php esc_html_e('Come vuoi pagare', 'cardsrift'); ?></legend>
 		<ul class="wc_payment_methods payment_methods methods cr-optlist">
 			<?php
 			if (!empty($available_gateways)) {
@@ -41,6 +46,7 @@ if (!wp_doing_ajax()) {
 			}
 			?>
 		</ul>
+		</fieldset>
 	<?php endif; ?>
 
 	<div class="form-row place-order mt-7">

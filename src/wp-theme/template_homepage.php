@@ -1,6 +1,8 @@
 <?php /* Template Name: Homepage */ ?>
 <?php get_header(); ?>
 
-<?php cr_render_page('home'); ?>
+<main>
+	<?php cr_render_page('home'); ?>
+</main>
 
 <?php get_footer(); ?>
