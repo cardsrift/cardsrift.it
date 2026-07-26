@@ -73,12 +73,20 @@ $tpl = get_template_directory_uri();
 
 			<!-- Barra inferiore -->
 			<div class="mt-12 pt-6 border-t border-th-line flex flex-col sm:flex-row items-center justify-between gap-4">
-				<div class="flex items-center gap-3 text-xs text-th-soft">
+				<?php // Cinque voci su una riga: su telefono vanno a capo (flex-wrap) e restano centrate
+				// sotto il logo, come il resto della colonna. ?>
+				<div class="flex flex-wrap items-center justify-center sm:justify-start gap-x-3 gap-y-1.5 text-xs text-th-soft">
 					<span>&copy; <?= esc_html(gmdate('Y')); ?> CardsRift</span>
 					<span aria-hidden="true">·</span>
-					<a class="iubenda-nostyle iubenda-noiframe iubenda-embed iubenda-noiframe hover:text-th-acc transition-colors" href="https://www.iubenda.com/privacy-policy/20607045" title="Privacy Policy"><?= esc_html__('Privacy', 'cardsrift'); ?></a>
+					<?= cr_iubenda_link('privacy', __('Privacy', 'cardsrift'), 'hover:text-th-acc transition-colors'); ?>
 					<span aria-hidden="true">·</span>
-					<a class="iubenda-nostyle iubenda-noiframe iubenda-embed iubenda-noiframe hover:text-th-acc transition-colors" href="https://www.iubenda.com/privacy-policy/20607045/cookie-policy" title="Cookie Policy"><?= esc_html__('Cookie', 'cardsrift'); ?></a>
+					<?= cr_iubenda_link('cookie', __('Cookie', 'cardsrift'), 'hover:text-th-acc transition-colors'); ?>
+					<span aria-hidden="true">·</span>
+					<?php // Riapre il pannello del consenso: è l'unica via per cambiare o revocare la
+					// scelta fatta la prima volta, e per legge deve esserci. La classe la legge il
+					// banner di iubenda (funziona su qualsiasi elemento: qui un <button>, perché
+					// non porta da nessuna parte). ?>
+					<button type="button" class="iubenda-cs-preferences-link hover:text-th-acc transition-colors"><?= esc_html__('Preferenze cookie', 'cardsrift'); ?></button>
 					<span aria-hidden="true">·</span>
 					<a class="hover:text-th-acc transition-colors" href="<?= esc_url(home_url('/dichiarazione-accessibilita/')); ?>"><?= esc_html__('Accessibilità', 'cardsrift'); ?></a>
 				</div>
@@ -91,5 +99,4 @@ $tpl = get_template_directory_uri();
 
 		</div>
 	</div>
-	<script type="text/javascript">(function (w,d) {var loader = function () {var s = d.createElement("script"), tag = d.getElementsByTagName("script")[0]; s.src="https://cdn.iubenda.com/iubenda.js"; tag.parentNode.insertBefore(s,tag);}; if(w.addEventListener){w.addEventListener("load", loader, false);}else if(w.attachEvent){w.attachEvent("onload", loader);}else{w.onload = loader;}})(window, document);</script>
 </footer>

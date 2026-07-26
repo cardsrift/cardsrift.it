@@ -15,8 +15,12 @@ $micro = is_array($c['microtrust'] ?? null) ? $c['microtrust'] : [];
 	<div class="tw-container tw-section">
 		<div class="py-14 flex items-center gap-12 flex-wrap">
 
+			<?php /* ⚠️ NON rimettere flex-none: la colonna non si stringerebbe e l'etichetta
+			         (28 caratteri con tracking .18em ≈ 367px) uscirebbe dai telefoni stretti,
+			         dove il contenitore ne ha 327 (375 − 48 di gutter). Con flex-initial si
+			         restringe e va a capo solo dove serve: fino a tb resta affiancata al testo. */ ?>
 			<?php if (!empty($c['percentuale'])) : ?>
-				<div class="text-center flex-none max-lg:mx-auto">
+				<div class="text-center flex-initial max-lg:mx-auto">
 					<span class="block font-metropolis font-bold !text-7xl lg:!text-9xl leading-[0.95] text-th-acc tabular-nums"><?= esc_html($c['percentuale']); ?></span>
 					<?php if (!empty($c['percentuale_label'])) : ?>
 						<span class="block font-bylon text-xs uppercase tracking-[0.18em] text-th-muted mt-2.5"><?= esc_html($c['percentuale_label']); ?></span>

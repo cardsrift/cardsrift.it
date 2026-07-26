@@ -20,7 +20,7 @@ $show_shipping = !wc_ship_to_billing_address_only() && $order->needs_shipping_ad
 
 	<div class="grid grid-cols-1 tb:grid-cols-2 gap-4">
 
-		<div class="cr-panel p-5 woocommerce-column woocommerce-column--billing-address">
+		<div class="cr-panel p-5 min-w-0 woocommerce-column woocommerce-column--billing-address">
 			<h3 class="cr-label"><?php esc_html_e('Indirizzo di fatturazione', 'cardsrift'); ?></h3>
 			<address class="cr-address">
 				<?= wp_kses_post($order->get_formatted_billing_address(esc_html__('Non indicato', 'cardsrift'))); ?>
@@ -35,7 +35,7 @@ $show_shipping = !wc_ship_to_billing_address_only() && $order->needs_shipping_ad
 		</div>
 
 		<?php if ($show_shipping) : ?>
-			<div class="cr-panel p-5 woocommerce-column woocommerce-column--shipping-address">
+			<div class="cr-panel p-5 min-w-0 woocommerce-column woocommerce-column--shipping-address">
 				<h3 class="cr-label"><?php esc_html_e('Indirizzo di spedizione', 'cardsrift'); ?></h3>
 				<address class="cr-address">
 					<?= wp_kses_post($order->get_formatted_shipping_address(esc_html__('Non indicato', 'cardsrift'))); ?>

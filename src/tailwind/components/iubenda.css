@@ -1,0 +1,51 @@
+/*
+	IUBENDA — le poche regole con cui il sito risponde al widget del consenso.
+
+	⚠️ FUORI da @layer components di proposito: Tailwind pota quel layer quando le
+	classi non compaiono in src/ (stessa ragione del blocco `pointer: coarse` in
+	fondo a shop.css), e questi selettori sono markup generato da iubenda.
+
+	Qui NON si veste il banner. Colori, posizione e testi vivono nella
+	configurazione remota dentro widgets/<id>.js e si cambiano nel pannello
+	iubenda: arrivano al sito da soli, senza build né deploy. Il banner nasce già
+	scuro — fondo nero, testo bianco — e si apre in alto al centro.
+
+	Restano queste due cose, che dal pannello non si possono sistemare.
+*/
+
+/*
+	Il bottoncino "preferenze cookie" di iubenda è fisso in un angolo, e il piano
+	attuale non permette di spegnerlo (con `full_customization` disattivo la sua
+	visualizzazione è forzata). L'angolo configurato è in basso a destra: lì sotto,
+	da noi, c'è già una barra fissa — `.cr-stickybar`, cioè "Vai alla cassa" nel
+	carrello e "Aggiungi al carrello" nella scheda prodotto, entrambe solo sotto lg.
+	Senza questo scarto il bottone si siede sull'angolo destro di quella CTA.
+
+	Lo scarto è lo stesso che il footer riserva alla barra in shop.css (84px + area
+	sicura): così i due si sovrappongono mai, né sopra né sotto.
+
+	iubenda mette la posizione fissa sul bottone stesso (`.iubenda-tp-btn` con
+	`data-tp-float`), non su un contenitore: qui non c'è un gruppo flottante
+	(`floatingGroup: false`). Se un domani il bottone finisse dentro il wrapper
+	`.iub-floatable-wrapper-*`, è quello a dover essere spostato.
+*/
+.cr-has-stickybar .iubenda-tp-btn[data-tp-float^="bottom-"] {
+	margin-bottom: calc(84px + env(safe-area-inset-bottom)) !important;
+}
+
+@media (min-width: 1024px) {
+	/* da lg la barra fissa non esiste: il bottone torna al suo angolo (16px, il loro margine) */
+	.cr-has-stickybar .iubenda-tp-btn[data-tp-float^="bottom-"] {
+		margin-bottom: 16px !important;
+	}
+}
+
+/*
+	Il recap del carrello entra da destra proprio sopra quell'angolo, e il bottone
+	di iubenda vive a z-index 2147483647: nessun valore nostro può passargli sopra.
+	Finché il drawer è aperto lo togliamo di mezzo — le preferenze restano
+	raggiungibili dal footer e dal bottone stesso appena si richiude.
+*/
+body:has(.cr-drawer.is-open) .iubenda-tp-btn[data-tp-float] {
+	display: none !important;
+}

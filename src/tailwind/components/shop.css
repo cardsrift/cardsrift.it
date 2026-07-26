@@ -662,8 +662,15 @@
 	 * 10 · DETTAGLI (indirizzi formattati, note d'ordine, tabella ordine)
 	 * ===================================================================== */
 
+	/* ⚠️ Un'email è UNA parola sola per il browser (né `@` né `.` sono punti d'a capo):
+	   oltre i ~43 caratteri usciva dal riquadro — e quindi dallo schermo — sui telefoni
+	   stretti, dove il pannello ne lascia 287. Vale anche per vie e città lunghe.
+	   Da solo `break-words` non basta: la larghezza minima del riquadro resta quella
+	   della parola intera. Serve `min-w-0` su CHI contiene l'indirizzo (i pannelli in
+	   order-details-customer.php, la riga in my-address.php), altrimenti il riquadro si
+	   allarga lo stesso e la spezzatura non scatta mai. */
 	.cr-address {
-		@apply not-italic text-sm leading-relaxed;
+		@apply not-italic text-sm leading-relaxed break-words;
 		color: var(--cr-muted);
 	}
 	.cr-notes {
@@ -1087,6 +1094,38 @@
 	cursor: pointer;
 }
 
+/* "Salva le informazioni di pagamento": WooPayments la stampa come
+   <p class="form-row"> con `width:auto` inline sulla casella e la label in
+   `display:inline`. Ma la nostra `.cr-form .form-row` è flex in colonna: con
+   align-items:stretch la casella si stirava per tutta la larghezza del riquadro
+   e il testo finiva a capo sotto, invece di stare di fianco.
+   L'`!important` sulla larghezza non è pigrizia: lo stile è inline, dal CSS non
+   c'è altro modo di batterlo. `position: static` annulla il `bottom: 1px` che il
+   plugin usa per allineare la casella a una label inline, qui inutile. */
+#payment .woocommerce-SavedPaymentMethods-saveNew {
+	flex-direction: row;
+	align-items: center;
+	gap: 10px;
+	margin: 10px 0 2px;
+}
+#payment .woocommerce-SavedPaymentMethods-saveNew input[type="checkbox"] {
+	width: 18px !important;
+	position: static !important;
+}
+/* la label non ha classi, quindi si prendeva `.cr-form label`: 11px maiuscolo
+   spaziato, cioè il vestito delle etichette di campo. Qui è testo corrente. */
+#payment .woocommerce-SavedPaymentMethods-saveNew label {
+	font-family: inherit;
+	font-size: 13px;
+	font-weight: 400;
+	line-height: 1.5;
+	text-transform: none;
+	letter-spacing: normal;
+	color: var(--cr-muted);
+	margin: 0;
+	cursor: pointer;
+}
+
 /* PayPal: quando è il metodo scelto nasconde #place_order (`.ppcp-hidden`) e mette
    i suoi bottoni in `.ppc-button-wrapper`, che il plugin stampa come fratello del
    blocco pagamento. Gli diamo lo stesso stacco che avrebbe il pulsante vero.
@@ -1109,17 +1148,26 @@
 	display: none;
 }
 
-/* Express checkout di WooPayments (Apple/Google Pay): compare in cima al percorso
-   solo sui dispositivi che lo supportano — qui in locale non si vede mai, in
-   produzione sì. Il testo del separatore lo traduce cr_gateway_strings(). */
+/* Express checkout di WooPayments (Apple/Google Pay): compare solo sui dispositivi
+   che lo supportano — qui in locale non si vede mai, in produzione sì.
+   Da `cr_wcpay_express_move()` esce in fondo, sotto al pulsante d'ordine e ai
+   bottoni PayPal, invece che in cima al percorso.
+
+   ⚠️ Il plugin stampa il separatore ("— oppure —") DOPO i bottoni, perché era
+   pensato per stare in testa alla pagina: il modulo veniva dopo. In fondo va sopra,
+   e l'ordine lo cambia il flex — spostarlo nel DOM significherebbe rimontare
+   l'elemento di Stripe. Il testo lo traduce cr_gateway_strings(). */
 .checkout .wcpay-express-checkout-wrapper {
-	margin-bottom: 4px;
+	display: flex;
+	flex-direction: column;
+	margin-top: 4px;
 }
 .checkout #wcpay-express-checkout-button-separator {
+	order: -1;
 	font-family: metropolis, sans-serif;
 	font-size: 12px;
 	letter-spacing: .08em;
 	text-transform: uppercase;
 	color: var(--cr-soft);
-	margin: 18px 0 !important;
+	margin: 4px 0 14px !important;
 }

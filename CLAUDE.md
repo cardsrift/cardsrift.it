@@ -196,6 +196,43 @@ mai usata — rompeva le spunte del checkout: il suo componente `.checkbox` (24�
 *label* di WooCommerce. daisyUI è stata rimossa; se in futuro si aggiunge una libreria di componenti,
 verificare le collisioni proprio su queste pagine.
 
+### Consenso cookie: iubenda (dal 27/07/2026)
+
+Tutto passa da `includes/iubenda.php`; gli ID stanno in `includes/config.php`
+(`CR_IUBENDA_SITE_ID`, `CR_IUBENDA_WIDGET_ID`). Il banner è il **primo script del `<head>`**
+(`header.php`), **sincrono di proposito**: è da lì che iubenda ferma ciò che installa
+tracciatori. Spostarlo in fondo o metterlo `async` non dà errori — semplicemente il blocco
+preventivo arriva dopo, quando i tracciatori sono già partiti. `iubenda.js` (le informative
+che si aprono in sovrapposizione) è invece enqueue-ato **una volta sola**, async, in coda:
+non ripetere lo snippet inline accanto a ogni link, come suggerisce iubenda.
+
+- **La configurazione non è nel repo**: testi, colori, posizione e servizi bloccati vivono
+  dentro `widgets/<id>.js`, generato dal pannello iubenda, e arrivano al sito da soli senza
+  build né deploy. Si guarda con `curl` a quell'URL. Il banner nasce **già scuro** (fondo
+  nero, testo bianco, in alto al centro): il tema non lo veste.
+- **Il blocco preventivo NON tocca PayPal, e non c'è niente da configurare** (verificato il
+  27/07/2026 leggendo il widget). `window.cmp_iub_vendors_purposes` mappa ogni servizio a una
+  finalità e il blocker esenta in partenza chi ha solo la 1 — "Necessari" — prima di guardare
+  il consenso: `function h(e){return !e || "1"===e}`. PayPal (`"40":"1"`, gestione pagamenti)
+  sta lì, con Tag Manager e Cloudflare. Stripe/WooPayments e Typekit non sono proprio in lista.
+  ⚠️ La lista di domini nel widget (174 voci, 11 servizi) è il **catalogo standard** di iubenda,
+  non i servizi del sito: contiene YouTube, Vimeo, Facebook e AdSense, che qui non esistono.
+  Dice cosa il blocker sa riconoscere, non cosa blocca. Gli unici con consenso obbligato sono
+  Analytics (finalità 4), Google Fonts/FontAwesome (3) e social/adv (4 e 5): **aggiungendo un
+  giorno Analytics, verrebbe bloccato da solo fino al consenso** — che è il comportamento voluto.
+- ⚠️ **Il bottone flottante "preferenze" non si può spegnere** con il piano attuale
+  (`full_customization: false`): sta fisso in basso a destra, cioè sopra `.cr-stickybar`.
+  Lo scarto è in `tailwind/components/iubenda.css`, **fuori da `@layer components`** — e
+  quel file, non il pannello, è l'unico posto da cui si sistema.
+- Nel footer i link usano `cr_iubenda_link()` con `iubenda-nostyle`: senza, iubenda sostituisce
+  il testo con il suo badge bianco. `Preferenze cookie` è un `<button>` con
+  `iubenda-cs-preferences-link` (la classe funziona su qualsiasi elemento) ed è l'unico modo,
+  per legge, di revocare il consenso già dato.
+- Al checkout WooCommerce cercherebbe una **pagina WordPress** per l'informativa e, non
+  trovandola, lascia "informativa sulla privacy" come testo morto: il link a iubenda lo
+  riattacca `cr_iubenda_wc_privacy_text()`, che si fa da parte se un giorno quella pagina
+  esistesse davvero.
+
 ### Mobile e tablet (audit 25/07/2026)
 
 Il negozio si usa soprattutto dal telefono. Quello che segue è la roba che *non* si deduce

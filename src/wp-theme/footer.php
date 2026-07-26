@@ -13,8 +13,8 @@
    <?php // recap del carrello che entra da destra all'aggiunta (includes/shop.php) ?>
    <?php if (function_exists('cr_cart_drawer')) cr_cart_drawer(); ?>
 
-    <!-- IUBENDA -->
-    <script type="text/javascript" async src="//embeds.iubenda.com/widgets/ad10d836-343c-4fc1-933e-5b1048ccce4a.js"></script>
+   <?php // iubenda: il banner sta in cima al <head> (header.php) e iubenda.js entra
+	// dalla coda degli script — vedi includes/iubenda.php. Qui non serve nulla. ?>
    <?php wp_footer(); ?>
 
    </body>

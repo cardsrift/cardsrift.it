@@ -21,7 +21,14 @@ if (!defined('CR_SHIP_IT_COST'))        define('CR_SHIP_IT_COST', '10,90 €'); 
 // ⚠️ Si vende e si spedisce SOLO in Italia (WooCommerce → Generale → "Vendita a").
 // La pagina Spedizioni e resi dice "in Europa su richiesta": è il contatto manuale, non una zona attiva.
 // Aprendo una zona UE, aggiornare qui, nella pagina e nelle Condizioni di vendita su iubenda.
-if (!defined('CR_TERMS_URL'))           define('CR_TERMS_URL', '');             // Condizioni di vendita (iubenda) — SEGNAPOSTO da generare
+if (!defined('CR_TERMS_URL'))           define('CR_TERMS_URL', '');             // Condizioni di vendita (iubenda) — SEGNAPOSTO: una volta generate su iubenda, https://www.iubenda.com/termini-e-condizioni/95831959
+
+// iubenda — informative e banner del consenso (vedi includes/iubenda.php).
+// Il SITE_ID è il numero nell'URL delle informative; il WIDGET_ID è lo script del banner:
+// dentro quel file c'è la configurazione (testi, colori, servizi bloccati), che si cambia
+// nel pannello iubenda e arriva qui da sola — senza build né deploy.
+if (!defined('CR_IUBENDA_SITE_ID'))     define('CR_IUBENDA_SITE_ID', '95831959');
+if (!defined('CR_IUBENDA_WIDGET_ID'))   define('CR_IUBENDA_WIDGET_ID', '2c1de334-b8c8-4eb5-8db4-4d0e3e9b786a');
 
 // Reputazione Cardmarket — àncora di fiducia: sito nuovo, ma storico venditore verificabile.
 if (!defined('CR_CM_URL'))              define('CR_CM_URL', 'https://www.cardmarket.com/it/Magic/Users/CardsRift'); // profilo pubblico

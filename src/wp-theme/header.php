@@ -6,6 +6,16 @@
 	<?php // viewport-fit=cover: senza, env(safe-area-inset-*) vale 0 e la barra sticky del
 	// carrello / il fondo del drawer finiscono sotto la home-indicator degli iPhone. ?>
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+
+	<?php // BANNER COOKIE (iubenda) — il primo script della pagina, e sincrono di proposito:
+	// da qui in giù iubenda può fermare ciò che installa tracciatori prima che parta.
+	// Più in basso (o con async) bloccherebbe cose già avvenute. Sta sotto ai due meta
+	// perché sono tag, non script: charset e viewport devono restare in testa o il
+	// browser rischia di disegnare la prima riga con la larghezza sbagliata.
+	// Configurazione (testi, colori, servizi) nel pannello iubenda — vedi includes/iubenda.php. ?>
+	<link rel="preconnect" href="https://cdn.iubenda.com" crossorigin>
+	<?php if (function_exists('cr_iubenda_banner')) cr_iubenda_banner(); ?>
+
 	<meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE">
 	<meta name="mobile-web-app-capable" content="yes">
 	<meta name="format-detection" content="telephone=no">

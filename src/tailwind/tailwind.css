@@ -9,6 +9,7 @@ Theme Name: Wp Zero
 	layout.css        → utilities legacy layout/menu
 	design-system.css → primitive .cr-* (bottoni, card, badge, form…)
 	shop.css          → primitive del flusso d'acquisto + skin dell'HTML di WooCommerce
+	iubenda.css       → risposta al widget del consenso (banner e bottone preferenze)
 	Gli SCSS in src/scss/ sono SOLO skin legacy header (fino a Fase 2).
 */
 @import "./components/base.css";
@@ -17,6 +18,7 @@ Theme Name: Wp Zero
 @import "./components/layout.css";
 @import "./components/design-system.css";
 @import "./components/shop.css";
+@import "./components/iubenda.css";
 
 
 

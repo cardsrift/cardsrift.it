@@ -87,6 +87,11 @@ if (!wp_doing_ajax()) {
 	// qui PayPal stampa i suoi bottoni: subito sotto al pulsante d'ordine, che nel
 	// frattempo si è nascosto da solo (`.ppcp-hidden`)
 	do_action('woocommerce_review_order_after_payment');
+
+	// …e qui Apple Pay / Google Pay, che WooPayments metterebbe in cima al percorso:
+	// li riporta a valle `cr_wcpay_express_move()`. Fuori dal div per lo stesso
+	// motivo dei bottoni PayPal — vedi la nota qui sopra.
+	do_action('cr_wcpay_express_buttons');
 }
 
 // Le rassicurazioni che contano proprio qui — sicurezza, tempi, imballo — chiudono

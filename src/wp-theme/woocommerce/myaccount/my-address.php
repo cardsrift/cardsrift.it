@@ -39,7 +39,7 @@ if (!wc_ship_to_billing_address_only() && wc_shipping_enabled()) {
 				<h2 class="cr-label"><?= esc_html($address_title); ?></h2>
 			</header>
 
-			<address class="cr-address flex-1">
+			<address class="cr-address flex-1 min-w-0">
 				<?php if ($address) : ?>
 					<?= wp_kses_post($address); ?>
 				<?php else : ?>

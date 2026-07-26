@@ -29,10 +29,16 @@ $cr_games = defined('CR_GAMES') ? CR_GAMES : [];
 			</nav>
 
 			<div class="flex flex-wrap items-end justify-between gap-4">
-				<div>
+				<?php // min-w-0: senza, questa colonna resta larga quanto la parola più lunga del
+				// titolo — cioè quanto il termine cercato, che scrive l'utente. Vedi l'h1 sotto. ?>
+				<div class="min-w-0">
 					<?php // l'occhiello dice l'ambito, non ripete "Ricerca" già presente nel percorso ?>
 					<div class="cr-eyebrow"><?= esc_html($cr_game ? cr_game_label($cr_game) : __('Tutto il catalogo', 'cardsrift')); ?></div>
-					<h1 class="font-metropolis font-bold !text-2xl lg:!text-4xl mt-2">
+					<?php // ⚠️ Qui dentro finisce quello che ha scritto l'utente, a 24px: un termine
+					// senza spazi (un URL incollato) supera i 327px del telefono già a 25 caratteri.
+					// `break-words` spezza la parola, `min-w-0` sul contenitore le toglie il diritto
+					// di allargarlo — servono tutti e due, il primo da solo non fa niente. ?>
+					<h1 class="font-metropolis font-bold !text-2xl lg:!text-4xl mt-2 break-words">
 						<?php if ($cr_term !== '') : ?>
 							<?php printf(esc_html__('Risultati per «%s»', 'cardsrift'), esc_html($cr_term)); ?>
 						<?php else : ?>

@@ -891,6 +891,69 @@ function cr_ppcp_cart_message_hook()
 }
 
 /**
+ * Apple Pay / Google Pay in fondo, insieme agli altri metodi — non in cima.
+ *
+ * WooPayments li stampa su `woocommerce_checkout_before_customer_details`, cioè
+ * sopra ai campi: una fascia di bottoni prima ancora che il cliente abbia scritto
+ * il proprio nome. Qui l'azione viene staccata da quell'hook e riattaccata a una
+ * nostra, che `checkout/payment.php` esegue in coda, accanto ai bottoni PayPal.
+ *
+ * ⚠️ Il plugin non ha nessun filtro per la posizione (PayPal sì, lui no) e non
+ * conserva da nessuna parte l'oggetto che stampa i bottoni: la sua
+ * `maybe_display_express_checkout_buttons()` lo istanzia in una variabile locale e
+ * lo lascia andare. L'unico appiglio è il registro degli hook di WordPress, dove il
+ * callback si riconosce da classe e nome del metodo. Se un aggiornamento rinomina
+ * l'una o l'altro non troviamo più niente e i bottoni restano dov'erano: fuori
+ * posto, mai persi — nessuna pagina si rompe.
+ *
+ * ⚠️ Devono restare FUORI dal div `#payment`. Quello è il frammento che WooCommerce
+ * rimpiazza a ogni aggiornamento dei totali, e l'elemento di Stripe montato dentro
+ * verrebbe distrutto senza che nessuno lo rimonti: i bottoni sparirebbero al primo
+ * cambio di spedizione. Stessa regola dei bottoni PayPal — vedi il commento in
+ * testa a `checkout/payment.php`.
+ */
+add_action('template_redirect', 'cr_wcpay_express_move', 20);
+function cr_wcpay_express_move()
+{
+	if (
+		!is_checkout() || is_order_received_page()
+		|| !class_exists('WC_Payments_Express_Checkout_Button_Display_Handler')
+	) {
+		return;
+	}
+
+	global $wp_filter;
+	$hook = 'woocommerce_checkout_before_customer_details';
+
+	if (empty($wp_filter[$hook])) {
+		return;
+	}
+
+	// Prima si raccoglie, poi si sposta: `remove_action()` modifica la stessa lista
+	// che si sta scorrendo.
+	$trovati = [];
+
+	foreach ($wp_filter[$hook]->callbacks as $priorita => $callbacks) {
+		foreach ($callbacks as $callback) {
+			$fn = $callback['function'] ?? null;
+
+			if (
+				is_array($fn) && isset($fn[0], $fn[1])
+				&& $fn[0] instanceof WC_Payments_Express_Checkout_Button_Display_Handler
+				&& 'display_express_checkout_buttons' === $fn[1]
+			) {
+				$trovati[] = [$fn, $priorita];
+			}
+		}
+	}
+
+	foreach ($trovati as $spostato) {
+		remove_action($hook, $spostato[0], $spostato[1]);
+		add_action('cr_wcpay_express_buttons', $spostato[0]);
+	}
+}
+
+/**
  * ⚠️ PayPal non legge `$gateway->description`: il suo `get_description()` prende il
  * testo dalle proprie opzioni e ricade sulla proprietà solo se quella chiave non
  * esiste — cioè quasi mai, perché il plugin la salva vuota. Il testo passa da qui.
