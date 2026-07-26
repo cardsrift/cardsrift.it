@@ -29,11 +29,26 @@
 
 ## 0 · Prima di partire, qui in locale
 
-- [ ] 🔴 **WooCommerce da 9.8.5 alla 10.7** (la versione di produzione). Così il database parte già
-      allineato e non tocca a WooCommerce aggiornarlo sul server. Dopo l'aggiornamento **ricontrollare
-      gli override** in `src/wp-theme/woocommerce/`: sono scritti sui template 9.8.
-- [ ] 🔴 **`CR_PLACEHOLDER` → `false`** (`includes/config.php`). Con `true` le sezioni vuote si
-      riempiono di prodotti finti: in produzione mostrerebbe merce inesistente.
+- [x] **WooCommerce aggiornato** — fatto il 26/07/2026: locale alla **10.9.4** (`woocommerce_db_version`
+      allineato). ⚠️ In produzione i file sono ancora 10.7.0: siccome i plugin si reinstallano da zero,
+      **WooCommerce va installato prima dell'import del database** — un DB a 10.9.4 servito da file
+      10.7 è la direzione sbagliata (WooCommerce non declassa lo schema).
+- [x] **Override WooCommerce ricontrollati** — 26/07/2026. Dei 38 file in `src/wp-theme/woocommerce/`
+      il core ne ha modificati **9** dopo la 9.8: `order/order-details` (10.9), `cart/cart` (10.8),
+      `myaccount/view-order` (10.6), `myaccount/form-edit-account` (10.5), `notices/notice` (10.4),
+      `global/quantity-input` (10.1), `checkout/form-login` e `cart/mini-cart` (10.0),
+      `myaccount/form-login` (9.9). Nessuno perde hook o campi tranne `mini-cart`, che non riproduce
+      i 5 hook del widget di WooCommerce — scelta del drawer su misura, non una regressione: la
+      conseguenza è che un plugin che si innesta nel mini-carrello (es. i pulsanti express di PayPal)
+      lì non comparirebbe.
+      Prova sul campo con la 10.9.4: carrello e checkout rispondono 200, **zero errori PHP, zero
+      warning, zero errori JS in console**, e tutte le classi da cui dipende `shop.js` sono presenti.
+      ⚠️ Non verificabile in locale: area account da loggati e conclusione d'ordine reale (serve un
+      gateway funzionante) — restano da provare in produzione, §8.
+- [x] **`CR_PLACEHOLDER` → `false`** (`includes/config.php`) — fatto il 26/07/2026. Con `true` le
+      sezioni vuote si riempivano di prodotti finti: in produzione avrebbe mostrato merce
+      inesistente e non acquistabile. Per riaccenderlo solo in locale, senza toccare il repo:
+      `define('CR_PLACEHOLDER', true)` in `wp-config.php` (il deploy non tocca quel file).
 - [ ] 🟠 **Le righe prodotto della home escludono le singole** per scelta, e il catalogo oggi è
       805 singole contro 4 sealed (3 Magic, 1 Pokémon). Con `CR_PLACEHOLDER` spento la riga Magic
       mostra 3 card, quella Pokémon 1, e "In arrivo" sparisce. Delle due: si carica il sealed prima
@@ -48,15 +63,32 @@
 
 L'ordine conta: il database senza i file dà immagini rotte, i file senza i plugin danno un sito a metà.
 
-- [ ] 🔴 **Export del database** locale.
-- [ ] 🔴 **Search-replace degli URL**: `http://localhost/cardsrift/public` → `https://www.cardsrift.it`
-      *(11 occorrenze nelle opzioni, nessuna nei contenuti)*.
-- [ ] 🔴 **Import in produzione**.
-- [ ] 🔴 **`wp-content/uploads` via FTP** — 73 MB, 284 file.
-- [ ] 🔴 **`cardsrift-sync` via FTP** in `wp-content/plugins/` (in produzione non c'è).
-      Senza, niente import né allineamento con CardTrader — e il guardiano scritto apposta perché
-      *solo* la produzione scriva su CardTrader non serve a nulla se il plugin lì non esiste.
-- [ ] 🔴 **Deploy del tema** — `npm run deploy` o la skill `/deploy-theme` (che fa prima un dry-run).
+- [x] **Export del database** locale — fatto il 26/07/2026: `cardsrift-prod.sql.gz` (1,9 MB compressi,
+      18 MB, 51 tabelle, prefisso `cr_`), generato con `wp search-replace --export` per gestire i dati
+      serializzati. In fondo un blocco che chiude il sito e svuota sessioni e transient.
+- [x] **Search-replace degli URL** (`http://localhost/cardsrift/public` → `https://www.cardsrift.it`)
+      — **1109 sostituzioni**, di cui 4 dentro dati serializzati: 11 nelle opzioni, 1056 nei `guid`
+      dei prodotti, il resto sparso. Fatto con `wp search-replace --export`, che ricalcola le
+      lunghezze delle stringhe serializzate — un `sed` qui avrebbe corrotto i dati, perché le due URL
+      hanno lunghezze diverse (33 contro 24 caratteri). Verificato sul file: zero residui di
+      `localhost`, `siteurl`/`home` = `https://www.cardsrift.it/`.
+- [x] **Import in produzione** — fatto dal titolare il 26/07/2026. Verificato dall'esterno: tutte le
+      pagine rispondono senza errori PHP, zero `localhost`, cartello "prossimamente" attivo su TUTTE
+      le pagine (non solo il negozio), wp-login raggiungibile.
+      ⚠️ **Il proxy di Aruba mette in cache le pagine** (`cache-control: max-age=60`,
+      intestazione `x-aruba-cache`). Subito dopo l'import serviva ancora la copia vecchia, e sembrava
+      che il sito fosse aperto e pieno di link a `localhost`. **Ogni verifica va fatta con un
+      parametro anti-cache** (`?nc=123`), altrimenti si diagnostica il passato.
+- [x] **`wp-content/uploads` via FTP** — fatto il 26/07/2026: 73 MB in produzione, allineato al
+      locale. Ripuliti 12 file di prova (3packs di marzo, 9 immagini di aprile) e 4 cartelle vuote.
+      Lasciati di proposito i log WooCommerce e il segnaposto `woocommerce-placeholder*.webp`.
+- [x] **`cardsrift-sync` via FTP** — caricato il 26/07/2026 in `wp-content/plugins/`, 9 file,
+      verifica a zero differenze. Caricato dalla cartella vera del repo (`plugins/cardsrift-sync`),
+      non dal symlink che sta dentro `public/`.
+- [x] **Deploy del tema** — fatto il 26/07/2026, verifica d'integrità superata. 136 file riscritti,
+      6 cancellazioni (`nav-menu.php`, `global-components/hero`, `highlight-slider`,
+      `includes/image_size.php`, `theme-acf-fields.php`, l'export ACF del footer). Home di produzione
+      HTTP 200, nessun errore PHP, `app.js` e `app.css` integri (non 0 byte).
       ⚠️ **Mai senza un via libera esplicito.**
 
 ⚠️ **L'FTP di Aruba funziona solo con le impostazioni di `scripts/deploy.sh`**
@@ -89,25 +121,47 @@ decisa il 25/07/2026 — serve a non ritrovarsi due pulsanti Apple Pay e due mod
 | Carta di credito | WooPayments |
 | Apple Pay · Google Pay | WooPayments |
 | PayPal · Paga in 3 rate | PayPal Payments |
-| Bonifico | WooCommerce (`bacs`) |
 
-- [ ] 🔴 **IBAN del bonifico** (WooCommerce → Pagamenti → Bonifico → Conti bancari). Oggi i campi
-      sono **vuoti**: chi sceglie il bonifico conclude l'ordine e non sa dove pagare.
-- [ ] 🔴 **Contrassegno disattivato** — scelta definitiva, non si usa.
-- [ ] 🔴 **Klarna disattivata** (WooPayments → Metodi di pagamento).
+⚠️ **Niente bonifico e niente contrassegno** (decisi il 26/07/2026): restano solo WooPayments e
+PayPal. Conseguenza da tenere presente — **ogni metodo di pagamento dipende ora da un account
+remoto**. Non c'è più un ripiego offline: se al lancio la riconnessione di WooPayments non va a
+buon fine e PayPal non è configurato, il negozio **non può incassare in nessun modo**. I due
+collegamenti vanno collaudati prima di togliere "Prossimamente".
+
+⚠️ **Metà di queste voci sono impostazioni di database, quindi viaggiano con l'import**: conviene
+farle **qui in locale**, non dopo, nel wp-admin di produzione a sito acceso. Sono nel DB: contrassegno,
+bonifico, Klarna, pagina delle Condizioni e sua assegnazione, e perfino
+`apple_pay_verified_domain`. Vivono invece **sull'account remoto** (quindi solo in produzione, dopo la
+riconnessione): stato reale dei metodi WooPayments, modalità test/live, e tutto il pannello PayPal.
+
+- [x] **Bonifico disattivato** — fatto in locale il 26/07/2026 (`woocommerce_bacs_settings`
+      → `enabled: no`). Scelta definitiva: chiude anche il problema dell'IBAN, che era vuoto e
+      avrebbe lasciato il cliente senza coordinate dopo l'ordine.
+- [x] **Contrassegno disattivato** — fatto in locale il 26/07/2026 (`woocommerce_cod_settings`
+      → `enabled: no`). Scelta definitiva, non si usa.
+- [x] **Klarna disattivata** — fatto in locale il 26/07/2026, in **due** punti: il gateway dedicato
+      (`woocommerce_woocommerce_payments_klarna_settings` → `enabled: no`) e l'elenco dei metodi
+      attivi di WooPayments (`upe_enabled_payment_method_ids`, da `[card, klarna]` a `[card]`).
+      Spegnere solo il primo la lascerebbe nell'elenco.
+      ⚠️ Da **riverificare nel pannello dopo la riconnessione** di WooPayments: lo stato dei metodi
+      vive anche sull'account, e la riconnessione può reimportarlo.
 - [ ] 🔴 **PayPal: spegnere carte e wallet** dal suo pannello, lasciare **solo PayPal + Pay Later**.
       Pay Later senza soglie nostre: PayPal ammette da sé solo 20–3.000 €, quindi il banner "3 rate"
       non comparirà mai su una singola da 4 €. Il venditore incassa subito e per intero.
 - [ ] 🔴 **Dominio Apple Pay = `www.cardsrift.it`.** Nelle impostazioni risulta verificato
       `www.cardsrift.com`: se resta così **il pulsante non compare**, senza errori e senza spiegazioni.
+      Verificato il 26/07/2026: `apple_pay_verified_domain` è `www.cardsrift.com` **nel database
+      locale**, quindi il valore sbagliato sale con l'import. Non basta correggere la stringa: serve
+      la verifica vera del dominio (file in `.well-known/` + registrazione lato account).
       Serve anche il file di verifica in `.well-known/` — il deploy tocca solo la cartella del tema,
       quindi va caricato a mano una volta.
 - [ ] 🟠 **Collaudo**: WooPayments in **modalità test** + PayPal in **sandbox**, giro d'acquisto
       completo, poi si passa a live.
 - [ ] 🟠 **Prove su Safari** (Apple Pay) **e Chrome** (Google Pay): compaiono solo lì, e solo con una
       carta nel portafoglio.
-- [ ] 🟠 **Coupon di benvenuto `BENVENUTO5`**: percentuale 5%, 1 uso per cliente, esclude i prodotti
-      in saldo. Il tema lo mostra già nell'email "Nuovo account" e in home.
+- [x] **Coupon di benvenuto `BENVENUTO5`** — verificato nel DB il 26/07/2026: percentuale 5%,
+      1 uso per cliente, esclude i prodotti in saldo, uso individuale. Il tema lo mostra già
+      nell'email "Nuovo account" e in home.
 - [ ] 🟡 Titoli visibili al cliente: metodo di spedizione → "Spedizione tracciata"; titoli e
       descrizioni dei gateway attivi.
 
@@ -129,7 +183,7 @@ pagina dice "non sono più attivi" ed è linkata nel footer del sito online.
 - [ ] 🔴 **Rinnovare il modulo Termini e Condizioni** e compilarlo da e-commerce: venditore
       Beraldo Marco, P.IVA 13934020960, via Palestro 10, 20823 Lentate sul Seveso (MB),
       cardsrift@gmail.com · carte da collezione singole e sigillate + accessori · pagamenti: carta,
-      Apple Pay, Google Pay, PayPal, Paga in 3 rate, bonifico (**niente contrassegno**) · spedizione
+      Apple Pay, Google Pay, PayPal, Paga in 3 rate (**niente bonifico, niente contrassegno**) · spedizione
       tracciata 10,90 €, preparazione 24/48h, **solo Italia** · recesso 14 giorni · garanzia di
       conformità 2 anni · **prezzi finali, IVA inclusa ove dovuta** (in WooCommerce il calcolo
       imposte è spento: nessuna riga IVA da nessuna parte).
@@ -148,7 +202,9 @@ pagina dice "non sono più attivi" ed è linkata nel footer del sito online.
 - [x] **Solo Italia** — fatto in locale il 25/07/2026. Prima erano 36 paesi in vendita con una sola
       zona di spedizione: un cliente tedesco riempiva il carrello e al checkout non trovava
       spedizioni, senza spiegazione.
-- [ ] 🔴 **Zona Italia con tariffa 10,90 €** (allineata a `CR_SHIP_IT_COST`).
+- [x] **Zona Italia con tariffa 10,90 €** — verificato nel DB il 26/07/2026: `flat_rate` attivo,
+      costo `10,90`, titolo "Spedizione tracciata", allineato a `CR_SHIP_IT_COST`. La zona 0
+      (resto del mondo) non ha metodi, coerente con la vendita sola Italia.
 - [ ] 🟡 **"Gratis sopra 99 €" resta disattivata** (scelta attuale). Se un giorno si accende, la
       barra di avanzamento nel carrello si illumina da sola: nessuna modifica al tema.
 - [ ] 🟡 La pagina *Spedizioni e resi* dice "in Europa su richiesta": è il contatto manuale, non una
@@ -159,8 +215,9 @@ pagina dice "non sono più attivi" ed è linkata nel footer del sito online.
 
 Prodotti, pagine e media salgono col database: qui restano solo le cose che il database non sa fare.
 
-- [ ] 🟠 **Attributi prodotto**: "condizione" con i 7 termini Cardmarket (MT/NM/EX/GD/LP/PL/PO) e
-      "lingua". *(Coerenti con la Guida alle condizioni.)*
+- [x] **Attributi prodotto** — verificato nel DB il 26/07/2026: `condizione` con esattamente i
+      7 termini Cardmarket (MT/NM/EX/GD/LP/PL/PO) e `lingua` con 8 valori (IT/EN/JP/DE/FR/ES/KR/RU).
+      Esistono anche `foil`, `espansione`, `rarita`. *(Coerenti con la Guida alle condizioni.)*
 - [ ] 🟠 **ACF Opzioni tema**: verificare che i loghi si vedano (dipendono dagli upload del §1).
 - [ ] 🟠 Verificare che i **campi ACF generati dai manifest** compaiano e che i pochi campi "edit"
       (es. i 3 prodotti in vetrina dell'hero) siano popolati.
@@ -185,4 +242,5 @@ Prodotti, pagine e media salgono col database: qui restano solo le cose che il d
 - [ ] Link: CTA Telegram (DM precompilato + gruppo), email, Instagram, Cardmarket, link interni nelle FAQ.
 - [ ] **Ordine di prova reale** con gateway live, su Safari e su Chrome, + verifica delle email
       (ordine, nuovo account col codice sconto).
-- [ ] Un ordine di prova che usa il **bonifico**: la pagina di conferma deve mostrare l'IBAN.
+- [ ] Al checkout devono comparire **solo** carta, Apple Pay/Google Pay, PayPal e Paga in 3 rate:
+      nessuna traccia di bonifico, contrassegno o Klarna.

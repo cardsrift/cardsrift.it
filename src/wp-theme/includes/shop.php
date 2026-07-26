@@ -764,6 +764,15 @@ function cr_default_address_fields($fields)
 /** Il secondo indirizzo si chiama "spedizione": diciamolo con parole nostre. */
 add_filter('woocommerce_ship_to_different_address_checked', '__return_false');
 
+/**
+ * Nome del pacco nel riepilogo: WooCommerce lo chiama "Shipment" e la stringa resta
+ * in inglese anche a sito italiano. Qui spediamo un pacco solo, quindi è una riga
+ * di riepilogo, non un contatore.
+ */
+add_filter('woocommerce_shipping_package_name', function ($name, $package_id, $package, $total = 1) {
+	return $total > 1 ? $name : __('Spedizione', 'cardsrift');
+}, 20, 4);
+
 /** Copy dei pulsanti e dei messaggi del checkout. */
 add_filter('woocommerce_order_button_text', function () {
 	return __('Concludi l’ordine', 'cardsrift');
@@ -771,6 +780,145 @@ add_filter('woocommerce_order_button_text', function () {
 add_filter('woocommerce_checkout_must_be_logged_in_message', function () {
 	return __('Per concludere l’ordine devi accedere al tuo account.', 'cardsrift');
 });
+
+/**
+ * Metodi di pagamento: nome e descrizione in italiano.
+ *
+ * WooPayments e PayPal arrivano con le loro etichette in inglese ("Card",
+ * "Pay via PayPal.", "Proceed to PayPal") e non passano da nessun campo di
+ * amministrazione: in negozio si leggevano così com'erano. Il filtro tocca solo
+ * il testo — id, icone e comportamento restano quelli del gateway.
+ */
+add_filter('woocommerce_available_payment_gateways', 'cr_gateway_copy', 20);
+function cr_gateway_copy($gateways)
+{
+	if (is_admin() && !wp_doing_ajax()) {
+		return $gateways;
+	}
+
+	foreach ($gateways as $id => $gateway) {
+		if ('woocommerce_payments' === $id) {
+			$gateway->title = __('Carta di credito o debito', 'cardsrift');
+		}
+
+		if ('ppcp-gateway' === $id) {
+			$gateway->title             = __('PayPal', 'cardsrift');
+			$gateway->description       = cr_paypal_description();
+			$gateway->order_button_text = __('Vai a PayPal', 'cardsrift');
+		}
+	}
+
+	return $gateways;
+}
+
+/**
+ * Ordine dei metodi: prima la carta, poi PayPal.
+ *
+ * Il primo della lista è anche quello **preselezionato**: `set_current_gateway()`
+ * marca come scelto il primo gateway disponibile quando la sessione non ne ha già
+ * uno. Quindi questa funzione decide due cose insieme — l'ordine e il default.
+ *
+ * ⚠️ Sta qui e non in WooCommerce → Pagamenti perché quell'ordine vive nel database:
+ * andrebbe rifatto a mano in produzione e si perderebbe a ogni ripartenza. Il rovescio
+ * della medaglia: trascinare le righe in wp-admin non ha più effetto sul negozio,
+ * l'ordine si cambia da questo array.
+ */
+add_filter('woocommerce_available_payment_gateways', 'cr_gateway_order', 30);
+function cr_gateway_order($gateways)
+{
+	$ordine = ['woocommerce_payments', 'ppcp-gateway'];
+	$primi  = [];
+
+	foreach ($ordine as $id) {
+		if (isset($gateways[$id])) {
+			$primi[$id] = $gateways[$id];
+			unset($gateways[$id]);
+		}
+	}
+
+	// quelli non elencati (bonifico, contrassegno…) restano in coda nel loro ordine
+	return $primi + $gateways;
+}
+
+/**
+ * I bottoni PayPal dentro il riquadro del metodo, non sotto al blocco pagamento.
+ *
+ * Il plugin li stampa di default su `woocommerce_review_order_after_payment`, cioè
+ * fuori da `#payment`: comparivano staccati, sotto l'informativa privacy. Qui il
+ * punto d'aggancio diventa un'azione nostra, che `payment-method.php` esegue dentro
+ * il `payment_box` di PayPal — così i bottoni **nascono** nel riquadro.
+ *
+ * ⚠️ Spostarli via JavaScript non è un'alternativa: sono iframe di PayPal (zoid), e
+ * ri-appenderli altrove nel DOM li fa ricaricare e morire. L'unico modo è cambiare
+ * dove vengono creati.
+ *
+ * ⚠️ Sullo stesso hook il plugin stampa anche i bottoni del gateway "carta PayPal"
+ * (`ppcp-card-button-gateway`, oggi spento): se un domani lo si accende, finirebbe
+ * anche lui dentro il riquadro di PayPal.
+ */
+add_filter('woocommerce_paypal_payments_checkout_button_renderer_hook', 'cr_ppcp_buttons_hook');
+function cr_ppcp_buttons_hook()
+{
+	return 'cr_ppcp_checkout_buttons';
+}
+
+/**
+ * Niente bottoni PayPal nel carrello: si passa sempre dal checkout.
+ *
+ * Il pulsante "Paga con PayPal" accanto a "Vai al checkout" salta il nostro percorso
+ * (contatti, indirizzo, note) e porta l'ordine dritto a PayPal. Qui il punto
+ * d'aggancio dei bottoni del carrello diventa un'azione che **non eseguiamo mai**:
+ * il plugin la registra, nessuno la chiama, i bottoni non nascono.
+ *
+ * ⚠️ Il messaggio "paga in 3 rate" del carrello usava come default lo stesso hook dei
+ * bottoni: senza il secondo filtro sparirebbe anche lui, che invece è solo
+ * un'informazione e resta dov'era (priorità 19, sopra il pulsante).
+ *
+ * Nel drawer non compaiono già oggi, ma non per una scelta del plugin: il nostro
+ * `cart/mini-cart.php` non esegue `woocommerce_widget_shopping_cart_after_buttons`.
+ * Se un domani quell'hook torna nel template, tornano anche i bottoni.
+ */
+add_filter('woocommerce_paypal_payments_proceed_to_checkout_button_renderer_hook', 'cr_ppcp_cart_buttons_hook');
+function cr_ppcp_cart_buttons_hook()
+{
+	return 'cr_ppcp_bottoni_carrello_mai';
+}
+
+add_filter('woocommerce_paypal_payments_cart_messages_renderer_hook', 'cr_ppcp_cart_message_hook');
+function cr_ppcp_cart_message_hook()
+{
+	return 'woocommerce_proceed_to_checkout';
+}
+
+/**
+ * ⚠️ PayPal non legge `$gateway->description`: il suo `get_description()` prende il
+ * testo dalle proprie opzioni e ricade sulla proprietà solo se quella chiave non
+ * esiste — cioè quasi mai, perché il plugin la salva vuota. Il testo passa da qui.
+ */
+add_filter('woocommerce_paypal_payments_gateway_description', 'cr_paypal_description', 20);
+function cr_paypal_description()
+{
+	return __('Confermi su PayPal e torni qui. Paghi con il saldo, il conto collegato o una carta salvata.', 'cardsrift');
+}
+
+/**
+ * Le poche stringhe di WooPayments che restano in inglese anche con WordPress in
+ * italiano: stanno nel dominio del plugin, quindi non passano dai nostri .po.
+ * `<number>` e `<a>` non sono HTML: sono segnaposto che il plugin sostituisce dopo.
+ */
+add_filter('gettext_woocommerce-payments', 'cr_gateway_strings', 20, 2);
+function cr_gateway_strings($translated, $original)
+{
+	$nostre = [
+		// separatore dell'express checkout (Apple Pay / Google Pay)
+		'OR' => __('oppure', 'cardsrift'),
+		// nota della modalità test: si vede solo finché i pagamenti non sono live
+		'Use test card <number>%s</number> or refer to our <a>testing guide</a>.'
+			=> __('Modalità test: usa la carta <number>%s</number> o consulta la <a>guida alle prove</a>.', 'cardsrift'),
+	];
+
+	return $nostre[$original] ?? $translated;
+}
 
 /**
  * "Crea un account" al checkout: la registrazione va giustificata, non chiesta.

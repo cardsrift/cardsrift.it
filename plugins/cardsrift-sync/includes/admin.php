@@ -188,6 +188,56 @@ function crs_page_ct()
 			<p class="description">Riprende da CardTrader il <strong>prezzo</strong> (autopricer) e l'<strong>immagine</strong> di catalogo e li scrive sul sito. Rispetta i prezzi fissati a mano (<code>_crs_price_pinned</code>) e <strong>pubblica i prodotti in bozza</strong> appena hanno un prezzo. Automatico ogni notte alle <strong>02:00</strong>.</p>
 			<p><button class="button button-primary" id="crs-pull-now">Esegui pull ora</button> <span id="crs-pull-status"></span></p>
 			<p class="description">Prossima esecuzione automatica: <code><?php echo esc_html($next ? wp_date('d/m/Y H:i', $next) : 'non pianificata'); ?></code>. ⚠️ Su hosting a basso traffico (Aruba) WP-Cron può non scattare puntuale: imposta un cron di sistema che chiami <code><?php echo esc_url(site_url('wp-cron.php?doing_wp_cron')); ?></code> attorno alle 02:00.</p>
+
+			<?php
+			// Esito dell'ultimo giro. Senza questo blocco "il pull non ha funzionato" e "il pull non è
+			// mai partito" hanno lo stesso aspetto: nessuno. Vedi crs_ct_pull_mark() in sync.php.
+			$lp  = get_option('crs_ct_last_pull');
+			$run = get_option('crs_ct_pull_running');
+			// un pull vivo batte ogni pochi secondi: se l'ultimo battito è vecchio, il processo è morto
+			$morto = is_array($run) && (time() - (int) ($run['beat'] ?? 0)) > 10 * MINUTE_IN_SECONDS;
+			?>
+			<?php if (is_array($run) && !$morto) : ?>
+				<p class="description">⏳ <strong>Pull in corso</strong> — fase <code><?php echo esc_html($run['phase'] ?? '?'); ?></code><?php
+					if (isset($run['total'])) {
+						printf(', prodotto %d di %d', (int) ($run['done'] ?? 0), (int) $run['total']);
+					} ?>, avviato alle <code><?php echo esc_html(wp_date('H:i:s', (int) ($run['started'] ?? 0))); ?></code>.</p>
+			<?php elseif ($morto) : ?>
+				<div class="notice notice-error inline"><p>
+					<strong>L'ultimo pull non è arrivato alla fine.</strong>
+					Avviato alle <code><?php echo esc_html(wp_date('d/m/Y H:i:s', (int) ($run['started'] ?? 0))); ?></code>,
+					ultimo segno di vita alle <code><?php echo esc_html(wp_date('H:i:s', (int) ($run['beat'] ?? 0))); ?></code>
+					(<?php echo esc_html(max(0, (int) ($run['beat'] ?? 0) - (int) ($run['started'] ?? 0))); ?>s),
+					fermo in fase <code><?php echo esc_html($run['phase'] ?? '?'); ?></code><?php
+						if (isset($run['total'])) {
+							printf(' al prodotto %d di %d', (int) ($run['done'] ?? 0), (int) $run['total']);
+						} ?>.
+					Le scorte vendute su CardTrader da quel momento <strong>non sono arrivate sul sito</strong>: rilancia il pull.
+				</p></div>
+			<?php endif; ?>
+			<?php if (is_array($lp)) : ?>
+				<p class="description">
+					Ultimo pull concluso: <code><?php echo esc_html(wp_date('d/m/Y H:i:s', (int) ($lp['time'] ?? 0))); ?></code>
+					in <?php echo esc_html((int) ($lp['secondi'] ?? 0)); ?>s —
+					<?php if (empty($lp['ok'])) : ?>
+						<strong style="color:#b32d2e">fallito</strong>: <?php echo esc_html($lp['err'] ?: 'motivo non registrato'); ?>
+					<?php else : ?>
+						<strong style="color:#00733a">riuscito</strong>.
+						<?php
+						$c = is_array($lp['counts'] ?? null) ? $lp['counts'] : [];
+						$et = [];
+						foreach (['seen' => 'viste', 'price' => 'prezzi', 'stock' => 'scorte', 'image' => 'immagini', 'published' => 'pubblicate', 'imported' => 'importate', 'not_on_ct' => 'assenti da CT', 'pinned' => 'a prezzo fissato'] as $k => $lab) {
+							if (isset($c[$k])) {
+								$et[] = esc_html($lab . ': ' . (int) $c[$k]);
+							}
+						}
+						echo implode(' · ', $et);
+						?>
+					<?php endif; ?>
+				</p>
+			<?php elseif (!is_array($run)) : // niente giro concluso E niente giro in ballo: davvero nessuna traccia ?>
+				<p class="description">Nessun pull ancora registrato (la traccia parte dal primo giro dopo questo aggiornamento).</p>
+			<?php endif; ?>
 			<script>
 			(function () {
 				var nonce = <?php echo wp_json_encode($nonce); ?>;

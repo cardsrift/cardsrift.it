@@ -24,10 +24,10 @@ $cr_singole_url = home_url('/' . $cr_game . '/singole/');
 $h        = function_exists('cr_game_hero') ? cr_game_hero($cr_game) : [];
 $h_img    = $h['img'] ?? '';
 $h_over   = ($h['sopratitolo'] ?? '') ?: ($h_img ? __('Prossima espansione', 'cardsrift') : $cr_label);
-$h_title  = ($h['titolo'] ?? '') ?: sprintf(__('Tutto %s, scelto una carta alla volta.', 'cardsrift'), $cr_label);
+$h_title  = ($h['titolo'] ?? '') ?: sprintf(__('%s, in un unico portale', 'cardsrift'), $cr_label);
 $h_sub    = ($h['sottotitolo'] ?? '') ?: ($h_img
-	? __('Sealed e singole del set in arrivo, controllate una carta alla volta.', 'cardsrift')
-	: __('Sealed e singole selezionate una per una, condizioni oneste e foto reali. Scegli da dove partire.', 'cardsrift'));
+	? __('Scopri i nostri prodotti e il nostro raccoglitore di carte singole.', 'cardsrift')
+	: __('Scopri i nostri prodotti e il nostro raccoglitore di carte singole.', 'cardsrift'));
 $h_date   = $h['data'] ?? '';
 $h_cta_l  = $h['cta_label'] ?? '';
 $h_cta_u  = $h['cta_url'] ?? '';
@@ -56,22 +56,10 @@ $cr_upcoming = function_exists('cr_preorder_products')
 		<div class="relative tw-container tw-section">
 			<div class="min-h-[74vh] lg:min-h-[84vh] flex flex-col justify-end pt-10 pb-16 lg:pb-24">
 
-				<?php if (function_exists('cr_breadcrumb_schema')) cr_breadcrumb_schema([
-					['label' => __('Home', 'cardsrift'), 'url' => home_url('/')],
-					['label' => $cr_label, 'url' => ''],
-				]); ?>
-
-				<nav class="cr-eyebrow !tracking-[.18em] !text-th-soft mb-5" aria-label="<?php esc_attr_e('Percorso', 'cardsrift'); ?>">
-					<a class="no-underline hover:text-th-acc transition-colors" href="<?= esc_url(home_url('/')); ?>"><?php esc_html_e('Home', 'cardsrift'); ?></a>
-					<span class="opacity-40"> / </span><span class="text-th-acc"><?= esc_html($cr_label); ?></span>
-				</nav>
-
-				<div class="cr-eyebrow mb-3"><?= esc_html($h_over); ?></div>
-
 				<h1 class="font-metropolis font-bold !text-4xl sm:!text-6xl lg:!text-7xl !leading-[0.98] max-w-[16ch] [text-wrap:balance]"><?= esc_html($h_title); ?></h1>
 
 				<div class="flex flex-wrap items-center gap-x-4 gap-y-2 mt-5">
-					<span class="cr-chip"><?= esc_html($cr_label); ?></span>
+					
 					<?php if ($h_date) : ?>
 						<span class="font-bylon uppercase tracking-[.14em] text-sm lg:text-base text-th-acc"><?= esc_html($h_date); ?></span>
 					<?php endif; ?>

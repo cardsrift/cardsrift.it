@@ -43,8 +43,9 @@ if (!defined('CR_HEADER_THEME'))        define('CR_HEADER_THEME', 'light');
 // Placeholder prodotti nelle sezioni VUOTE — aiuto di anteprima per vedere la home completa
 // prima di avere il catalogo. Riempie SOLO le sezioni senza prodotti: appena fai il data
 // entry (prodotti / offerte / data_uscita) i placeholder spariscono da soli, mostra il reale.
-// ⚠️ METTERE false PRIMA DEL GO-LIVE (o quando il catalogo è pronto).
-if (!defined('CR_PLACEHOLDER'))         define('CR_PLACEHOLDER', true);
+// Spento il 26/07/2026 in vista del go-live: mostrerebbe merce inesistente e non acquistabile.
+// Per riaccenderlo SOLO in locale, senza toccare il repo: define('CR_PLACEHOLDER', true) in wp-config.php.
+if (!defined('CR_PLACEHOLDER'))         define('CR_PLACEHOLDER', false);
 
 // Categorie prodotto "di tipo" (Singole/Sealed/Accessori): NON sono giochi. Servono al tema per
 // distinguere il termine gioco (Pokémon/Magic) dal tipo — senza dipendere dal plugin sync.

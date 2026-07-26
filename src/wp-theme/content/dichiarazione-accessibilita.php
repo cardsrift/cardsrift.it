@@ -94,7 +94,7 @@ Non abbiamo commissionato un audit esterno né condotto test con persone con dis
 		'eyebrow'   => __('Segnalaci un ostacolo', 'cardsrift'),
 		// ⚠️ claim-progetto rende il testo in grande: due righe, non un paragrafo.
 		// Il dettaglio della procedura sta nella nota delle limitazioni, qui sopra.
-		'testo'     => __('<b>Hai trovato un ostacolo?</b> Scrivici che pagina era e cosa è successo: rispondiamo entro un giorno lavorativo, al massimo cinque.', 'cardsrift'),
+		'testo'     => __('<b>Hai trovato un ostacolo?</b> Scrivici che pagina era e cosa è successo: rispondiamo entro al massimo cinque giorni lavorativi.', 'cardsrift'),
 		'cta_label' => __('Scrivici una email', 'cardsrift'),
 		'cta_url'   => 'mailto:cardsrift@gmail.com?subject=' . rawurlencode(__('Accessibilità del sito', 'cardsrift')),
 	],

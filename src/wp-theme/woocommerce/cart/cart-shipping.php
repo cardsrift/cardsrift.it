@@ -50,7 +50,7 @@ $single                   = $has_methods && 1 === count($available_methods);
 			// screen reader sceglie la spedizione senza sapere a quale pacco si riferisce. ?>
 			<?php // La legend è sr-only e lo <span> visibile resta com'era: un <legend> vero
 			// al suo posto porterebbe con sé lo stile di default del browser. ?>
-			<fieldset class="border-0 m-0 p-0 min-w-0">
+			<fieldset class="cr-fieldset-bare">
 			<legend class="sr-only"><?= wp_kses_post($package_name); ?></legend>
 			<span class="cr-label"><?= wp_kses_post($package_name); ?></span>
 			<ul id="shipping_method" class="woocommerce-shipping-methods cr-optlist">

@@ -121,6 +121,11 @@ function cr_scope_main_query($q)
 	if ($tipo) {
 		$tax[] = ['taxonomy' => 'product_cat', 'field' => 'slug', 'terms' => [$tipo]];
 	}
+	// La vetrina "In evidenza" della landing di gioco mostra SOLO sealed: le singole
+	// hanno la loro porta (il raccoglitore) e in una griglia da 8 annegherebbero i box.
+	if ($q->get('cr_landing')) {
+		$tax[] = ['taxonomy' => 'product_cat', 'field' => 'slug', 'terms' => ['sealed']];
+	}
 
 	// Filtri faccetta dai parametri GET (solo listati, non la landing). Nomi param = taxonomy.
 	if (!$q->get('cr_landing')) {

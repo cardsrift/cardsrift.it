@@ -7,3 +7,7 @@ src/tailwind/build
 *.log
 .playwright-mcp/
 .screenshots/
+# dump del database: contengono il token API CardTrader, i dati account WooPayments
+# e le password degli utenti. Non devono MAI finire in un commit.
+*.sql
+*.sql.gz

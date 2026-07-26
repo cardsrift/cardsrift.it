@@ -146,6 +146,45 @@ Le tre pagine transazionali sono **override PHP di WooCommerce** in `src/wp-them
 - La barra "spedizione gratuita" (`cr_free_shipping_bar()`) si accende **da sola** se in
   WooCommerce → Spedizione esiste un metodo *free_shipping* attivo con importo minimo.
 
+### Gateway di pagamento: WooPayments + PayPal (dal 26/07/2026)
+
+Attivi `woocommerce-payments` (carta, Stripe Elements in un iframe) e `woocommerce-paypal-payments`
+(PayPal + "paga a rate"). Portano CSS e markup propri, e il loro foglio si carica **dopo** il nostro.
+
+- **La riga del metodo è una griglia**, non una label con il radio in `position: absolute`
+  (`.cr-optlist` in `shop.css`): WooPayments rimette la label in `display: inline` e con
+  l'absolute la riga collassava a 26px col pallino a penzoloni fuori dal bordo. Le poche regole
+  che rispondono ai plugin stanno in fondo a `shop.css`, **fuori da `@layer components`** —
+  dentro, Tailwind le poterebbe (`.payment-methods--logos`, `.wc-payment-form`, `.ppc-button-wrapper`
+  non compaiono in `src/`).
+- ⚠️ **`.cr-form fieldset` è il pannello "cambio password" dell'account**: un `<fieldset>` messo per
+  accessibilità (gruppo di radio) se lo prende addosso e disegna un riquadro dentro il riquadro.
+  Per quelli usare `cr-fieldset-bare`.
+- **I bottoni PayPal nascono dentro il riquadro di PayPal**: il filtro
+  `woocommerce_paypal_payments_checkout_button_renderer_hook` (in `cr_ppcp_buttons_hook()`) sposta il
+  punto d'aggancio su un'azione nostra, che `payment-method.php` esegue dentro il `payment_box`.
+  ⚠️ Spostarli via JS non è un'alternativa: sono iframe zoid, e ri-appenderli altrove li ricarica
+  e li rompe. Il `payment_box` va aperto anche senza campi né descrizione, o non hanno dove nascere.
+- **Nel carrello i bottoni PayPal non ci sono: si passa sempre dal checkout.**
+  `cr_ppcp_cart_buttons_hook()` manda il loro punto d'aggancio su un'azione che non eseguiamo mai.
+  ⚠️ Il messaggio "paga in 3 rate" del carrello aveva come default lo stesso hook: `cr_ppcp_cart_message_hook()`
+  lo rimette su `woocommerce_proceed_to_checkout`, altrimenti sparisce anche quello. Nel drawer non
+  compaiono perché `cart/mini-cart.php` non esegue `woocommerce_widget_shopping_cart_after_buttons`.
+- ⚠️ Gli hook `woocommerce_review_order_before/after_payment` restano dove li mette WooCommerce,
+  **fuori da `#payment`** (lì esce il messaggio "paga in 3 rate"). Per lo stesso motivo la fascia
+  "connessione cifrata / 24-48h / imballo" sta in coda a `payment.php` **fuori dal div e solo se
+  `!wp_doing_ajax()`**: durante `update_order_review` WooCommerce rimpiazza
+  `.woocommerce-checkout-payment` con tutto l'output del file, e ciò che sta fuori dal div si
+  duplicherebbe a ogni aggiornamento dei totali.
+- ⚠️ **Niente `gap` nella colonna sinistra del checkout**: i gateway ci infilano contenitori vuoti
+  (express checkout, Apple/Google Pay) e ogni div invisibile valeva 32px di buco.
+- Titoli e testi dei gateway arrivano in inglese e non passano dai nostri `.po`: li traduce
+  `cr_gateway_copy()` in `includes/shop.php`. ⚠️ La descrizione di PayPal **non** si cambia con
+  `$gateway->description` — il suo `get_description()` legge dalle opzioni del plugin: serve il
+  filtro `woocommerce_paypal_payments_gateway_description`.
+- Aspetto e posizione dei bottoni PayPal (uno o due, colore, forma) e delle scritte "paga a rate"
+  si regolano in **WooCommerce → PayPal**, non da CSS: sono iframe di PayPal.
+
 ⚠️ **Tailwind pota anche `@layer components`**: una regola che aggancia markup generato da
 WooCommerce (`.woocommerce-privacy-policy-text`, `.wc-item-meta`, `.blockUI`…) sparisce dal CSS
 perché quella classe non compare in `src/`. Ogni nuovo aggancio va aggiunto al **`safelist`** in

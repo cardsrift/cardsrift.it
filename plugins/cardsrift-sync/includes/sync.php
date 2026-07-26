@@ -816,12 +816,14 @@ function crs_ct_pull($opts = [])
 	// UN SOLO pull per volta (cron notturno + "Pull ora" manuale): due pull concorrenti applicherebbero due
 	// volte lo stesso delta di stock. Lock DEDICATO (non crs_ct_write) così non affama i batch push/autopricer.
 	if (!crs_lock('crs_ct_pull')) {
+		// il marcatore lo possiede il pull che sta girando: non toccarlo
 		return ['ok' => false, 'err' => 'Un pull è già in corso, riprova tra poco.', 'busy' => true];
 	}
+	crs_ct_pull_mark('export');
 	list($ok, $prods, $err) = crs_ct_products();
 	if (!$ok) {
 		crs_unlock('crs_ct_pull');
-		return ['ok' => false, 'err' => $err];
+		return crs_ct_pull_done(['ok' => false, 'err' => $err]);
 	}
 	crs_ct_push_suppress(true); // le riduzioni di stock fatte QUI (vendite su CT) non devono rimbalzare su CardTrader
 	$byId = [];
@@ -839,7 +841,13 @@ function crs_ct_pull($opts = [])
 	// 1) UPDATE — prodotti WC già collegati a CardTrader (prezzo/immagine/bozza→pubblica)
 	$synced = crs_ct_synced_ids();
 	crs_ct_prime_caches($synced); // N+1 → poche query: pull leggero (col decouple dall'autopricer basta a evitare il buco H-1)
+	crs_ct_pull_mark('update', 0, count($synced));
+	$i = 0;
 	foreach ($synced as $pid) {
+		// battito ogni 50: se il processo viene ucciso, `done` dice a che punto del ciclo si è fermato
+		if (++$i % 50 === 0) {
+			crs_ct_pull_mark('update', $i);
+		}
 		$ctpid = (int) get_post_meta($pid, CRS_META_CT_PRODUCT, true);
 		$known[$ctpid] = true;
 		if (!isset($byId[$ctpid])) {
@@ -854,16 +862,27 @@ function crs_ct_pull($opts = [])
 				delete_post_meta($pid, '_ct_absent');
 				delete_post_meta($pid, CRS_META_CT_STOCK); // inserzione sparita → ancora pull azzerata (ri-baseline se torna)
 				delete_post_meta($pid, '_ct_stock_ts');
-				// SEALED: CardTrader è la sua verità di stock. Sparito da CardTrader (2 giri) = esaurito →
-				// azzero lo stock MA lo lascio visibile "Esaurito" (il push non lo ri-crea a stock 0).
-				// Le SINGOLE invece restano intatte (master = Cardmarket): il push le ri-listerà se hanno stock.
-				if (crs_product_type_slug($pid) !== 'singole') { // sealed E accessori: master = CardTrader
-					$sp = wc_get_product($pid);
-					if ($sp && (int) $sp->get_stock_quantity() !== 0) {
-						$sp->set_stock_quantity(0);
-						$sp->set_stock_status('outofstock');
-						$sp->save();
+				// CardTrader è la verità di stock per OGNI tipo, singole comprese. L'export non contiene mai
+				// `quantity: 0` (verificato: 808 inserzioni, minimo 1): un'inserzione esaurita SPARISCE, non
+				// scende a zero. Quindi "assente per 2 giri" = ESAURITA, e va azzerata anche qui — il ramo
+				// delta più sotto non la vede nemmeno, perché senza riga nell'export non c'è nessun delta.
+				//
+				// ⚠️ Prima le singole restavano intatte (master = Cardmarket) e il danno era doppio: il sito
+				// continuava a vendere una carta già venduta su CardTrader, e al push successivo il prodotto
+				// (stock > 0 + blueprint, senza più `_ct_product_id`) rientrava nel ramo `create` di
+				// crs_ct_push_one() → l'inserzione veniva RI-CREATA su CardTrader. Azzerando lo stock il push
+				// la salta da sé ('skipped'), quindi non serve nessun altro guardiano.
+				$sp = wc_get_product($pid);
+				if ($sp && (int) $sp->get_stock_quantity() !== 0) {
+					$sp->set_stock_quantity(0);
+					$sp->set_stock_status('outofstock');
+					// singola esaurita → fuori catalogo, come nel ramo delta; sealed e accessori restano
+					// visibili "Esaurito" (li si ri-ordina, una singola no)
+					if (crs_product_type_slug($pid) === 'singole') {
+						$sp->set_catalog_visibility('hidden');
 					}
+					$sp->save();
+					$counts['stock']++;
 				}
 			} else {
 				update_post_meta($pid, '_ct_absent', $absent);
@@ -919,8 +938,11 @@ function crs_ct_pull($opts = [])
 		// precedente). Applichiamo SOLO la VARIAZIONE di CardTrader dall'ultima volta, non il valore assoluto:
 		// così una vendita sul sito (che riduce WC nativamente E viene spinta su CT dal push, aggiornando l'ancora)
 		// NON viene contata una seconda volta dal pull, e un restock ancora "in volo" verso CT non azzera WC.
-		//  · SINGOLE: master = Cardmarket → applico solo le RIDUZIONI (vendite su CT); i rialzi vengono da Cardmarket.
-		//  · SEALED:  master = CardTrader → applico su e giù.
+		// CardTrader è il master dello stock per OGNI tipo, singole comprese: applico il delta su e giù.
+		// ⚠️ Prima le singole prendevano solo le riduzioni (master = Cardmarket) MA l'ancora avanzava comunque
+		// (vedi sotto): il rialzo non veniva rinviato, veniva SCARTATO, e la divergenza restava per sempre.
+		// Esempio reale: CT 1→3, ancora 3, WC 1; poi una vendita su CT 3→2 dava delta −1 → WC 0 "esaurito"
+		// mentre su CardTrader ce n'erano ancora 2. Si perdevano vendite senza che nulla segnalasse niente.
 		// L'export /products/export di CardTrader è in CACHE (~pochi secondi di ritardo, misurato): se un push
 		// ha appena aggiornato l'ancora, l'export potrebbe ancora mostrare la quantità VECCHIA → un delta spurio.
 		// Perciò salto la riconciliazione stock finché il push è recente (< 2 min): la farà il prossimo pull su dati freschi.
@@ -931,22 +953,24 @@ function crs_ct_pull($opts = [])
 			if (!metadata_exists('post', $pid, CRS_META_CT_STOCK)) {
 				update_post_meta($pid, CRS_META_CT_STOCK, $ctq); // baseline: registra l'ancora senza toccare WC
 			} else {
-				$ct_delta = $ctq - (int) get_post_meta($pid, CRS_META_CT_STOCK, true);
-				$apply    = $is_single ? min(0, $ct_delta) : $ct_delta; // singole: solo riduzioni
+				$apply = $ctq - (int) get_post_meta($pid, CRS_META_CT_STOCK, true);
 				if ($apply !== 0) {
 					$newq = max(0, (int) $product->get_stock_quantity() + $apply);
 					if ($newq !== (int) $product->get_stock_quantity()) {
 						$product->set_stock_quantity($newq);
 						$product->set_stock_status($newq > 0 ? 'instock' : 'outofstock');
-						if ($newq === 0 && $is_single) {
-							$product->set_catalog_visibility('hidden'); // singola esaurita → fuori catalogo (il sealed resta visibile)
+						// La visibilità della singola segue lo stock nei DUE versi. Il ritorno a 'visible' non è
+						// un extra: ora che il pull può ALZARE una singola, senza di esso una carta nascosta da
+						// un esaurimento resterebbe fuori catalogo anche da tornata disponibile — in vendita su
+						// CardTrader e invendibile sul sito, senza nessun errore a vista. Il sealed resta sempre
+						// visibile ("Esaurito"): lo si ri-ordina, una singola no.
+						if ($is_single) {
+							$product->set_catalog_visibility($newq > 0 ? 'visible' : 'hidden');
 						}
 						$changed = true;
 						$counts['stock']++;
 					}
-				}
-				if ($ct_delta !== 0) {
-					update_post_meta($pid, CRS_META_CT_STOCK, $ctq); // avanza l'ancora anche se il rialzo singola è ignorato
+					update_post_meta($pid, CRS_META_CT_STOCK, $ctq); // l'ancora segue sempre CardTrader
 				}
 			}
 		}
@@ -966,6 +990,7 @@ function crs_ct_pull($opts = [])
 	}
 
 	// 2) IMPORT — inserzioni su CardTrader senza prodotto WC (aggiunte a mano su CardTrader)
+	crs_ct_pull_mark('import', count($synced));
 	foreach ($byId as $ctid => $listing) {
 		if (isset($known[$ctid])) {
 			continue;
@@ -977,7 +1002,58 @@ function crs_ct_pull($opts = [])
 
 	$counts['ok'] = true;
 	crs_unlock('crs_ct_pull');
-	return ['ok' => true, 'counts' => $counts];
+	return crs_ct_pull_done(['ok' => true, 'counts' => $counts]);
+}
+
+/**
+ * TRACCIA DEL PULL — due marcatori, non un log.
+ *
+ * ⚠️ Perché esiste: il pull era l'unico dei tre giri senza record di esecuzione (push e autopricer
+ * scrivono `crs_ct_last_push` / `crs_ct_last_autoprice`). Un pull ucciso a metà non lasciava NIENTE,
+ * quindi era indistinguibile da un pull mai partito — successo il 26/07/2026, dove il giro delle 02:00
+ * è morto in mezzo e per capirlo è servita mezz'ora di indagine su transient e `post_modified`, senza
+ * arrivare a una risposta certa. E il pull è l'UNICO canale in ingresso da CardTrader: se fallisce in
+ * silenzio le scorte del sito restano ferme mentre su CardTrader si vende.
+ *
+ *  · `crs_ct_pull_running` — scritto all'AVVIO, cancellato alla fine. Se lo si trova ancora lì, il pull
+ *    è morto in mezzo: `phase` dice in quale fase, `done`/`total` a che punto del ciclo, `beat` a che ora.
+ *  · `crs_ct_last_pull`    — esito dell'ultimo giro CONCLUSO, riuscito o fallito.
+ *
+ * Deliberatamente NON un file di log e NON una riga per prodotto: su hosting condiviso un file che
+ * nessuno ruota diventa un problema, e un'option che cresce pure. Qui sono due option riscritte in posto.
+ */
+function crs_ct_pull_mark($phase, $done = null, $total = null)
+{
+	$m = get_option('crs_ct_pull_running');
+	if (!is_array($m)) {
+		$m = ['started' => time()];
+	}
+	$m['phase'] = (string) $phase;
+	if ($done !== null) {
+		$m['done'] = (int) $done;
+	}
+	if ($total !== null) {
+		$m['total'] = (int) $total;
+	}
+	$m['beat'] = time(); // ultimo segno di vita: se il pull muore, dice a che ora si è fermato
+	update_option('crs_ct_pull_running', $m, false);
+}
+
+/** Chiude la traccia: scrive l'esito e toglie il marcatore d'avvio. @return array il risultato, invariato */
+function crs_ct_pull_done($res)
+{
+	$m = get_option('crs_ct_pull_running');
+	$started = is_array($m) ? (int) ($m['started'] ?? 0) : 0;
+	update_option('crs_ct_last_pull', [
+		'time'    => time(),
+		'started' => $started,
+		'secondi' => $started ? max(0, time() - $started) : 0,
+		'ok'      => !empty($res['ok']),
+		'err'     => (string) ($res['err'] ?? ''),
+		'counts'  => is_array($res['counts'] ?? null) ? $res['counts'] : [],
+	], false);
+	delete_option('crs_ct_pull_running');
+	return $res;
 }
 
 /** Immagini di catalogo (blueprint CDN) di un'inserzione: ['preview'=>miniatura, 'full'=>piena]. */

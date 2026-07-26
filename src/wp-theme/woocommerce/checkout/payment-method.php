@@ -15,6 +15,12 @@
  */
 
 defined('ABSPATH') || exit;
+
+// PayPal crea i suoi bottoni su questa azione (vedi cr_ppcp_buttons_hook() in
+// includes/shop.php): eseguendola qui nascono dentro il riquadro del metodo.
+// Il box va aperto anche se il gateway non ha né campi né descrizione, o i
+// bottoni non avrebbero dove comparire.
+$cr_extra = 'ppcp-gateway' === $gateway->id ? 'cr_ppcp_checkout_buttons' : '';
 ?>
 <li class="wc_payment_method payment_method_<?= esc_attr($gateway->id); ?>">
 	<input id="payment_method_<?= esc_attr($gateway->id); ?>" type="radio" class="input-radio" name="payment_method" value="<?= esc_attr($gateway->id); ?>" <?php checked($gateway->chosen, true); ?> data-order_button_text="<?= esc_attr($gateway->order_button_text); ?>" />
@@ -24,9 +30,12 @@ defined('ABSPATH') || exit;
 		<?= $gateway->get_icon(); // phpcs:ignore ?>
 	</label>
 
-	<?php if ($gateway->has_fields() || $gateway->get_description()) : ?>
+	<?php if ($gateway->has_fields() || $gateway->get_description() || $cr_extra) : ?>
 		<div class="payment_box payment_method_<?= esc_attr($gateway->id); ?>" <?php if (!$gateway->chosen) : ?>style="display:none;"<?php endif; ?>>
 			<?php $gateway->payment_fields(); ?>
+			<?php if ($cr_extra) {
+				do_action($cr_extra);
+			} ?>
 		</div>
 	<?php endif; ?>
 </li>

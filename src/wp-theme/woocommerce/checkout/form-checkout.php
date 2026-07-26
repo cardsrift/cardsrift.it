@@ -68,7 +68,11 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
 		</aside>
 
 		<!-- ============ COLONNA DATI ============ -->
-		<div class="min-w-0 flex flex-col gap-8 lg:gap-10">
+		<?php // ⚠️ Niente `gap` qui: in questa colonna i gateway infilano contenitori loro
+		// (express checkout, messaggio PayPal, bottoni Apple/Google Pay) che restano vuoti
+		// finché il dispositivo non li supporta. Con un gap ognuno di quei div invisibili
+		// valeva 32px di vuoto in mezzo al percorso. Lo stacco lo mettono i blocchi nostri. ?>
+		<div class="min-w-0 flex flex-col">
 
 			<?php if ($checkout->get_checkout_fields()) : ?>
 				<?php do_action('woocommerce_checkout_before_customer_details'); ?>
@@ -80,7 +84,9 @@ if (!$checkout->is_registration_enabled() && $checkout->is_registration_required
 			<?php endif; ?>
 
 			<?php // pagamento + termini + "Concludi l'ordine": la fine del percorso, non un accessorio ?>
-			<?php woocommerce_checkout_payment(); ?>
+			<div class="mt-8 lg:mt-10">
+				<?php woocommerce_checkout_payment(); ?>
+			</div>
 		</div>
 
 	</div>

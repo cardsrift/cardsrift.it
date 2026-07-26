@@ -195,18 +195,42 @@
 	 * 4 · CARD SELEZIONABILE (spedizione, pagamento)
 	 * Il markup lo genera WooCommerce (input e label fratelli dentro <li>),
 	 * quindi lo stato "scelto" si legge col selettore :has().
+	 *
+	 * ⚠️ La riga è una GRIGLIA a due colonne (pallino | contenuto), non una label
+	 * con il radio in `position: absolute`. Con l'absolute bastava che un plugin
+	 * rimettesse la label in `display: inline` — WooPayments lo fa, e il suo CSS
+	 * si carica dopo il nostro — perché la riga collassasse e il pallino finisse
+	 * mezzo fuori dal riquadro. In griglia il pallino occupa una cella vera:
+	 * qualunque cosa il gateway infili dentro (descrizione, form della carta,
+	 * avvisi) si incolonna sotto il titolo senza sovrapporsi a niente.
 	 * ===================================================================== */
 
 	.cr-optlist {
-		@apply flex flex-col gap-2.5 list-none p-0 m-0;
+		@apply flex flex-col gap-2 list-none p-0 m-0;
 	}
 	.cr-optlist li {
 		@apply relative rounded-xl transition-colors;
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		align-items: center;
+		column-gap: 12px;
+		padding: 12px 14px;
 		border: 1px solid var(--cr-line-s);
 		background-color: var(--cr-surface);
 	}
-	.cr-optlist li:hover {
-		border-color: var(--cr-acc2);
+	/* tutto ciò che non è il pallino sta nella colonna del testo, in ordine di DOM */
+	.cr-optlist li > * {
+		grid-column: 2;
+	}
+	.cr-optlist li > input[type="radio"] {
+		@apply cursor-pointer;
+		grid-column: 1;
+		grid-row: 1;
+	}
+	@media (hover: hover) {
+		.cr-optlist li:hover {
+			border-color: var(--cr-acc2);
+		}
 	}
 	.cr-optlist li:has(input:checked) {
 		border-color: var(--cr-acc2);
@@ -214,14 +238,9 @@
 		box-shadow: 0 0 0 1px var(--cr-acc2) inset;
 	}
 	.cr-optlist li > label {
-		@apply flex items-center gap-3 cursor-pointer font-metropolis font-semibold text-sm m-0;
+		@apply flex items-center gap-2.5 cursor-pointer font-metropolis font-semibold text-sm normal-case tracking-normal m-0 p-0 min-w-0;
+		grid-row: 1;
 		color: var(--cr-ink);
-		padding: 14px 16px 14px 44px;
-	}
-	.cr-optlist li > input[type="radio"] {
-		@apply absolute cursor-pointer;
-		left: 16px;
-		top: 16px;
 	}
 	/* prezzo/etichetta a destra dentro la label (WooCommerce ci mette la <bdi>) */
 	.cr-optlist li > label .amount,
@@ -233,12 +252,15 @@
 	.cr-optlist li > label img {
 		@apply ml-auto max-h-6 w-auto;
 	}
-	/* descrizione del gateway: appare sotto, dentro il box */
+	/* descrizione del gateway (e form della carta): sotto il titolo, incolonnata */
 	.cr-optlist .payment_box {
-		@apply text-sm leading-relaxed;
+		@apply text-[13px] leading-relaxed;
 		color: var(--cr-muted);
-		padding: 0 16px 14px 44px;
+		padding: 8px 0 2px;
 		margin: 0;
+	}
+	.cr-optlist .payment_box p {
+		margin: 0 0 8px;
 	}
 	.cr-optlist .payment_box p:last-child {
 		margin-bottom: 0;
@@ -590,6 +612,14 @@
 	.cr-form fieldset legend {
 		@apply font-metropolis font-semibold text-base px-2;
 		color: var(--cr-ink);
+	}
+	/* Fieldset "invisibile": esiste solo per lo screen reader (gruppo di radio del
+	   pagamento e della spedizione, con la legend sr-only). Senza questa classe
+	   ereditava il pannello del cambio password — `.cr-form fieldset` batte
+	   `border-0 p-0` per specificità — e intorno alle scelte compariva una
+	   seconda cornice, riquadro dentro riquadro. */
+	.cr-form fieldset.cr-fieldset-bare {
+		@apply rounded-none border-0 m-0 p-0 min-w-0;
 	}
 
 	/* =====================================================================
@@ -987,4 +1017,109 @@
 	.cr-qty--mini .cr-qty__btn {
 		width: 2.5rem;
 	}
+}
+
+/*
+	GATEWAY DI PAGAMENTO — dove il nostro vestito incontra il CSS dei plugin.
+
+	WooPayments e PayPal spediscono i loro fogli di stile e li accodano DOPO il
+	nostro: a parità di specificità vincono loro. Qui stanno le poche regole che
+	servono a rimettere il loro markup dentro la nostra riga, più lo spazio per i
+	pezzi che iniettano da soli (form della carta, bottoni PayPal, express checkout).
+
+	⚠️ FUORI da @layer components di proposito, come il blocco qui sopra: questi
+	selettori agganciano classi dei plugin (`.payment-methods--logos`,
+	`.wc-payment-form`, `.ppc-button-wrapper`) che non compaiono in src/, e dentro
+	al layer Tailwind le poterebbe via in silenzio.
+*/
+
+/* WooPayments rimette la label in `display: inline` (dist/checkout.css). Con la
+   label inline la riga collassava a 26px, i loghi delle carte uscivano in float
+   e il pallino restava appeso sotto il bordo. L'`!important` è la scorciatoia
+   onesta: alzare la specificità richiederebbe un selettore che si rompe al primo
+   aggiornamento del plugin. */
+#payment .cr-optlist li > label {
+	display: flex !important;
+}
+/* i loghi (Visa, Mastercard, Amex, "+3"): in una label flex il float del plugin
+   non fa nulla, la spinta a destra la dà il margine automatico.
+   Sotto i 640px spariscono: rubavano 160px dei 390 dello schermo e mandavano
+   "Carta di credito o debito" su due righe. Il titolo dice già la stessa cosa. */
+#payment .cr-optlist li > label .payment-methods--logos {
+	display: none;
+	margin-left: auto;
+	min-width: 0;
+}
+@media (min-width: 640px) {
+	#payment .cr-optlist li > label .payment-methods--logos {
+		display: block;
+	}
+}
+#payment .cr-optlist li > label img {
+	max-height: 24px;
+	width: auto;
+}
+
+/* Form della carta (Stripe Elements dentro WooPayments): arriva avvolto in un
+   <fieldset> con il bordo di default del browser e `padding: 7px` inline —
+   terza cornice annidata dentro la riga. Qui resta solo il campo. */
+#payment fieldset.wc-payment-form {
+	border: 0 !important;
+	padding: 0 !important;
+	margin: 6px 0 2px;
+	min-width: 0;
+}
+#payment .wcpay-upe-form {
+	margin: 0;
+}
+/* avviso "carta di prova" della modalità test: una nota, non un blocco di testo */
+#payment .testmode-info {
+	font-size: 12px;
+	line-height: 1.5;
+	color: var(--cr-soft);
+	margin: 0 0 8px;
+}
+#payment .testmode-info button {
+	font: inherit;
+	color: var(--cr-acc);
+	text-decoration: underline;
+	text-underline-offset: 2px;
+	cursor: pointer;
+}
+
+/* PayPal: quando è il metodo scelto nasconde #place_order (`.ppcp-hidden`) e mette
+   i suoi bottoni in `.ppc-button-wrapper`, che il plugin stampa come fratello del
+   blocco pagamento. Gli diamo lo stesso stacco che avrebbe il pulsante vero.
+   I contenitori di Apple/Google Pay restano vuoti finché il dispositivo non li
+   supporta: vuoti devono sparire, o lasciano un buco in mezzo alla colonna. */
+.ppc-button-wrapper {
+	margin-top: 16px;
+}
+/* "Paga in 3 rate…": il plugin lo stampa appena sopra il blocco pagamento (e nel
+   carrello sopra il pulsante), dove senza margine si incollava al titolo o al
+   bottone. Regola non ristretta al checkout: lo stesso messaggio esce anche nel
+   riepilogo del carrello e nella scheda prodotto. */
+.ppcp-messages {
+	margin: 0 0 14px;
+}
+.ppc-button-wrapper:empty,
+.ppcp-messages:empty,
+#ppc-button-ppcp-applepay:empty,
+#ppc-button-ppcp-googlepay:empty {
+	display: none;
+}
+
+/* Express checkout di WooPayments (Apple/Google Pay): compare in cima al percorso
+   solo sui dispositivi che lo supportano — qui in locale non si vede mai, in
+   produzione sì. Il testo del separatore lo traduce cr_gateway_strings(). */
+.checkout .wcpay-express-checkout-wrapper {
+	margin-bottom: 4px;
+}
+.checkout #wcpay-express-checkout-button-separator {
+	font-family: metropolis, sans-serif;
+	font-size: 12px;
+	letter-spacing: .08em;
+	text-transform: uppercase;
+	color: var(--cr-soft);
+	margin: 18px 0 !important;
 }
