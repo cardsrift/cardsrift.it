@@ -118,6 +118,24 @@ function crs_ct_get($path, $params = [], $timeout = 20)
 	]));
 }
 
+/**
+ * Modalità simulazione: quando è attiva, nessuna scrittura verso CardTrader parte (le letture sì).
+ * Interruttore in memoria, valido per la sola richiesta corrente — di proposito: se fosse
+ * un'opzione in DB, una richiesta andata in timeout lo lascerebbe acceso e i push successivi
+ * fallirebbero in silenzio per ore.
+ * @param  bool|null $set true/false per cambiarlo, null per leggerlo
+ * @return bool      stato PRIMA della chiamata (così chi lo alza sa a cosa tornare)
+ */
+function crs_ct_dry_run($set = null)
+{
+	static $on = false;
+	$was = $on;
+	if ($set !== null) {
+		$on = (bool) $set;
+	}
+	return $was;
+}
+
 /** Chiamata di SCRITTURA (POST/PUT/DELETE) con corpo JSON. Ritorna [ok, data, err]. */
 function crs_ct_send($method, $path, $body = null, $timeout = 30)
 {
@@ -132,6 +150,14 @@ function crs_ct_send($method, $path, $body = null, $timeout = 30)
 		$why = crs_ct_writes_blocked_reason();
 		error_log('[cardsrift-sync] ' . strtoupper($method) . ' ' . $path . ' — ' . $why);
 		return [false, null, $why];
+	}
+	// SIMULAZIONE: secondo interruttore sulla stessa porta. In produzione il guardiano qui sopra
+	// lascia passare tutto — è il suo mestiere — quindi una passata "a secco" lanciata da lì non
+	// avrebbe nessuna rete sotto: basterebbe un ramo dimenticato per riscrivere le inserzioni vere.
+	// Con questo, l'unico modo di scrivere durante una simulazione sarebbe un transport diverso,
+	// che non esiste. Chi simula alza crs_ct_dry_run() e lo rimette a posto in un `finally`.
+	if (strtoupper($method) !== 'GET' && crs_ct_dry_run()) {
+		return [false, null, 'simulazione in corso: scrittura non eseguita'];
 	}
 	$args = [
 		'method'  => strtoupper($method),

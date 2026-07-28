@@ -103,7 +103,9 @@ function crs_import_row($rec, $opts)
 	// (prezzo provvisorio per il primo push). Sui prodotti esistenti aggiorna solo lo STOCK, così un
 	// re-import NON sovrascrive il prezzo di mercato riportato dal pull né i prezzi fissati a mano.
 	if ($creating && $rec['price'] !== '') {
-		$product->set_regular_price((string) $rec['price']);
+		// mai sotto il minimo: nell'export Cardmarket i bulk stanno a 2-3 cent, e di qui finivano
+		// dritti sul marketplace col primo push — è la porta da cui sono passate le vendite a 0,03 €
+		$product->set_regular_price((string) crs_price_floor($rec['price']));
 	}
 
 	// STOCK — modello DELTA multi-canale: l'import applica la VARIAZIONE di Cardmarket allo stock WC,

@@ -323,7 +323,7 @@ function crs_ct_push_payload($product)
 	$pid = $product->get_id();
 	return [
 		'blueprint_id' => (int) get_post_meta($pid, CRS_META_CT_BLUEPRINT, true),
-		'price'        => (float) $product->get_regular_price(),
+		'price'        => crs_price_floor($product->get_regular_price(), $pid),
 		'quantity'     => max(0, (int) $product->get_stock_quantity()),
 		'properties'   => crs_ct_push_properties($pid, crs_product_game_slug($pid)),
 	];
@@ -833,7 +833,7 @@ function crs_ct_pull($opts = [])
 		}
 	}
 
-	$counts = ['price' => 0, 'image' => 0, 'published' => 0, 'pinned' => 0, 'not_on_ct' => 0, 'stock' => 0, 'imported' => 0, 'seen' => 0];
+	$counts = ['price' => 0, 'image' => 0, 'published' => 0, 'pinned' => 0, 'not_on_ct' => 0, 'stock' => 0, 'foil' => 0, 'imported' => 0, 'seen' => 0];
 	$known  = [];
 	// se l'autopricer CUSTOM è attivo, il prezzo lo possiede lui: il pull NON lo prende da CardTrader
 	$autoprice_on = (bool) get_option('crs_ct_autoprice_on');
@@ -842,6 +842,22 @@ function crs_ct_pull($opts = [])
 	$synced = crs_ct_synced_ids();
 	crs_ct_prime_caches($synced); // N+1 → poche query: pull leggero (col decouple dall'autopricer basta a evitare il buco H-1)
 	crs_ct_pull_mark('update', 0, count($synced));
+
+	// Quante inserzioni mancano da questo export? Il numero decide se fidarsi della VERIFICA MIRATA
+	// (poche mancanti = vendite normali) o restare alla prudenza del doppio giro (tante mancanti =
+	// l'export è troncato, e mille chiamate di verifica non lo aggiusterebbero comunque).
+	$missing = 0;
+	foreach ($synced as $pid_m) {
+		$ct_m = (int) get_post_meta($pid_m, CRS_META_CT_PRODUCT, true);
+		if ($ct_m && !isset($byId[$ct_m])) {
+			$missing++;
+		}
+	}
+	$verify_on = $missing > 0 && $missing <= crs_ct_missing_verify_cap(count($synced));
+	if ($missing && !$verify_on) {
+		error_log(sprintf('[cardsrift-sync] pull: %d inserzioni mancanti su %d — troppe per la verifica mirata, uso il doppio giro', $missing, count($synced)));
+	}
+
 	$i = 0;
 	foreach ($synced as $pid) {
 		// battito ogni 50: se il processo viene ucciso, `done` dice a che punto del ciclo si è fermato
@@ -852,11 +868,25 @@ function crs_ct_pull($opts = [])
 		$known[$ctpid] = true;
 		if (!isset($byId[$ctpid])) {
 			$counts['not_on_ct']++;
-			// Scollego SOLO dopo che l'inserzione manca in DUE pull consecutivi. Un export parziale (risposta 200
-			// troncata di un grande venditore) fa mancare tante inserzioni per UN giro, non per due → così NON
-			// scollego in massa e NON provoco ri-creazioni duplicate al push successivo (fix regressione M7).
+			// VERIFICA MIRATA — chiedo a CardTrader la SOLA carta che manca. Se manca anche nella
+			// risposta mirata non è un export troncato: è venduta, e lo stock si allinea SUBITO.
+			// Senza questo servivano due pull consecutivi, cioè fino a 48h con un pull notturno —
+			// e col catalogo attuale non è un caso raro: 666 inserzioni su 775 hanno una sola copia,
+			// quindi per l'86% delle carte OGNI vendita è un esaurimento e passa di qui. Nel mezzo
+			// il sito continuava a vendere carte non più disponibili.
+			$gone = $verify_on ? crs_ct_listing_confirmed_gone($pid, $ctpid) : null;
+			if ($gone === false) {
+				// c'è ancora: l'export era incompleto. Azzero il contatore, così una serie di
+				// export monchi non arriva mai a farla scollegare.
+				delete_post_meta($pid, '_ct_absent');
+				continue;
+			}
+			// Senza conferma mirata (verifica non disponibile o rete muta) resta la vecchia prudenza:
+			// scollego solo dopo DUE pull consecutivi. Un export parziale (risposta 200 troncata di un
+			// grande venditore) fa mancare tante inserzioni per UN giro, non per due → così NON scollego
+			// in massa e NON provoco ri-creazioni duplicate al push successivo (fix regressione M7).
 			$absent = (int) get_post_meta($pid, '_ct_absent', true) + 1;
-			if ($absent >= 2) {
+			if ($gone === true || $absent >= 2) {
 				delete_post_meta($pid, CRS_META_CT_PRODUCT);
 				delete_post_meta($pid, '_ct_price_synced');
 				delete_post_meta($pid, '_ct_absent');
@@ -864,8 +894,9 @@ function crs_ct_pull($opts = [])
 				delete_post_meta($pid, '_ct_stock_ts');
 				// CardTrader è la verità di stock per OGNI tipo, singole comprese. L'export non contiene mai
 				// `quantity: 0` (verificato: 808 inserzioni, minimo 1): un'inserzione esaurita SPARISCE, non
-				// scende a zero. Quindi "assente per 2 giri" = ESAURITA, e va azzerata anche qui — il ramo
-				// delta più sotto non la vede nemmeno, perché senza riga nell'export non c'è nessun delta.
+				// scende a zero. Quindi "sparita e confermata dalla verifica mirata" — o, in mancanza,
+				// "assente per 2 giri" — = ESAURITA, e va azzerata anche qui: il ramo delta più sotto non
+				// la vede nemmeno, perché senza riga nell'export non c'è nessun delta.
 				//
 				// ⚠️ Prima le singole restavano intatte (master = Cardmarket) e il danno era doppio: il sito
 				// continuava a vendere una carta già venduta su CardTrader, e al push successivo il prodotto
@@ -896,6 +927,22 @@ function crs_ct_pull($opts = [])
 		$counts['seen']++;
 		delete_post_meta($pid, '_ct_absent'); // presente nell'export → azzera il contatore "assente"
 		$listing = $byId[$ctpid];
+
+		// ANCORA DEL PREZZO — `_ct_price_synced` deve dire quanto costa DAVVERO l'inserzione su
+		// CardTrader, non quanto credevamo di averci scritto l'ultima volta.
+		// ⚠️ L'autopricer salta la PUT quando l'ancora coincide col prezzo calcolato
+		// (`$synced !== (string) $price`). Se l'ancora resta ferma a un valore che su CardTrader non
+		// esiste più, quella PUT non parte MAI e la divergenza diventa permanente: il 28/07/2026 il
+		// sito aveva 107 carte riportate al minimo e il marketplace ne aveva ancora 131 a 0,02 €,
+		// con l'autopricer che le dichiarava "invariate" a ogni giro.
+		// Riallineandola qui su ciò che l'export riporta, il giro successivo vede la differenza e
+		// rispinge il prezzo da solo.
+		if (isset($listing['price_cents'])) {
+			$ct_real = (string) round(((int) $listing['price_cents']) / 100, 2);
+			if ((string) get_post_meta($pid, '_ct_price_synced', true) !== $ct_real) {
+				update_post_meta($pid, '_ct_price_synced', $ct_real);
+			}
+		}
 		$changed = false;
 		// SINGOLE vs resto (sealed/accessori): le singole sono master=Cardmarket e passano dall'autopricer;
 		// sealed/accessori sono master=CardTrader → prezzo e stock (su e giù) li governa CardTrader.
@@ -916,11 +963,30 @@ function crs_ct_pull($opts = [])
 			}
 		} elseif ((!$autoprice_on || !$is_single) && isset($listing['price_cents'])) {
 			// prezzo da CardTrader: quando l'autopricer è spento, e SEMPRE per sealed/accessori (non si autoprezzano)
-			$price = round(((int) $listing['price_cents']) / 100, 2);
+			// ⚠️ col floor: è questo il ramo che, ad autopricer spento, riportava sul sito i 3 cent di CardTrader
+			$price = crs_price_floor(round(((int) $listing['price_cents']) / 100, 2), $pid);
 			if (abs((float) $product->get_regular_price() - $price) > 0.001) {
 				$product->set_regular_price((string) $price);
 				$changed = true;
 				$counts['price']++;
+			}
+		}
+
+		// FOIL — CardTrader è la fonte di verità del finish, perché è l'unica che ce l'ha.
+		// L'export Cardmarket NON contiene il foil Magic (nessuna colonna `isFoil`, solo `ReverseHolo`
+		// tutta a "N": vedi docs/catalogo-import.md §8.1), quindi ogni carta entra come 'normale' e le
+		// foil finivano in vendita al prezzo delle non-foil — con l'autopricer a confermare il valore
+		// sbagliato, perché cercava il prezzo sul mercato del finish sbagliato.
+		// Marcando l'inserzione su CardTrader, il finish arriva qui da solo a ogni pull.
+		// ⚠️ `properties_hash` assente ≠ "non è foil": in quel caso non si tocca niente, o un export
+		// povero cancellerebbe una marcatura buona.
+		$ph_l = $listing['properties_hash'] ?? null;
+		if (is_array($ph_l) && $ph_l) {
+			$foil_ct  = crs_ct_foil_to_slug($ph_l); // 'foil' · 'reverse-holo' · 'normale'
+			$foil_now = crs_first_term_slug($pid, 'pa_foil');
+			if ($foil_now !== '' && $foil_ct !== $foil_now) {
+				wp_set_object_terms($pid, $foil_ct, wc_attribute_taxonomy_name('foil'));
+				$counts['foil']++;
 			}
 		}
 
@@ -1173,7 +1239,7 @@ function crs_ct_import_listing($listing)
 	$product->set_status('publish'); // ha già un prezzo definitivo (autopricer / prezzo CardTrader del sealed)
 	// visibilità: il SEALED resta visibile anche esaurito ("Esaurito"); una SINGOLA a 0 esce dal catalogo
 	$product->set_catalog_visibility(($kind === 'singole' && $qty <= 0) ? 'hidden' : 'visible');
-	$product->set_regular_price((string) round(((int) ($listing['price_cents'] ?? 0)) / 100, 2));
+	$product->set_regular_price((string) crs_price_floor(round(((int) ($listing['price_cents'] ?? 0)) / 100, 2)));
 	$product->set_manage_stock(true);
 	$product->set_stock_quantity($qty);
 	$product->set_stock_status($qty > 0 ? 'instock' : 'outofstock');
@@ -1393,8 +1459,10 @@ function crs_ct_autoprice_ctx()
 {
 	return [
 		'myuser' => crs_ct_user_id(),
-		'floor'  => (float) get_option('crs_ct_floor', 0.20),
-		'markup' => (float) get_option('crs_ct_markup', 5),
+		// il floor NON sta più qui: lo applica crs_price_floor() (contract.php), che è lo stesso
+		// guardiano di import, pull e push — un solo posto da cambiare, nessuna porta scoperta
+		'markup'    => (float) get_option('crs_ct_markup', 5),
+		'zero_only' => (bool) get_option('crs_ct_zero_only', 1), // default acceso: vendiamo in Zero
 	];
 }
 
@@ -1462,6 +1530,11 @@ function crs_ct_market_for($eid)
 				'cents' => (int) ($m['price_cents'] ?? ($m['price']['cents'] ?? 0)),
 				'uid'   => (int) ($m['user']['id'] ?? 0),
 				'vac'   => !empty($m['on_vacation']),
+				// CardTrader Zero: il venditore spedisce tramite l'hub. È il paniere in cui siamo
+				// davvero in concorrenza (la spedizione è nel servizio, quindi i prezzi sono più
+				// alti) e in cui il compratore ci confronta. Verificato sulla risposta API il
+				// 28/07/2026: `user.can_sell_via_hub`, booleano.
+				'hub'   => !empty($m['user']['can_sell_via_hub']),
 				'ph'    => $m['properties_hash'] ?? [],
 			];
 		}
@@ -1477,33 +1550,46 @@ function crs_ct_market_for($eid)
  * (crs_ct_reference_price) + ricarico + floor; skip se invariato; scrive su WC e — se il prodotto è già su
  * CardTrader — fa la PUT del prezzo. @return array{status:string,floored?:bool}|null (null = non prezzabile)
  */
-function crs_ct_price_from_market($pid, $market, $ctx)
+/**
+ * CALCOLO PURO del prezzo di un prodotto sul mercato dell'espansione. Nessun effetto: non salva,
+ * non scrive meta, non chiama CardTrader. Separata da crs_ct_price_from_market() proprio perché la
+ * SIMULAZIONE possa usare la stessa identica logica del giro vero — se il preventivo passasse da
+ * un'altra strada, misurerebbe qualcosa che poi non succede.
+ *
+ * @return array{ok:bool,status:?string,price:?float,floored:bool,note:string,basis:string,n:int,n_zero:int}
+ */
+function crs_ct_compute_price($pid, $market, $ctx)
 {
+	$no = function ($status) {
+		return ['ok' => false, 'status' => $status, 'price' => null, 'floored' => false, 'note' => '', 'basis' => '', 'n' => 0, 'n_zero' => 0];
+	};
+
 	$bid = (int) get_post_meta($pid, CRS_META_CT_BLUEPRINT, true);
 	if (!$bid) {
-		return null;
+		return $no(null);
 	}
 	if (crs_product_type_slug($pid) !== 'singole') {
-		return null; // sealed/accessori: prezzo da CardTrader (pull), non dal mercato per condizione/lingua
+		return $no(null); // sealed/accessori: prezzo da CardTrader (pull), non dal mercato per condizione/lingua
 	}
 	if (get_post_meta($pid, CRS_META_PRICE_PINNED, true) === 'yes') {
-		// prezzo fissato a mano = definitivo → pubblica se è ancora in bozza (H2 pubblica solo a prezzo reale)
-		return ['status' => 'skipped_pinned', 'published' => crs_ct_publish_if_priced($pid)];
+		return $no('skipped_pinned'); // prezzo fissato a mano = definitivo
 	}
-
 	// chiavi property per gioco (Magic: mtg_*; Pokémon: pokemon_language + pokemon_reverse). null = non mappato.
 	$gp = crs_ct_game_props(crs_product_game_slug($pid));
 	if (!$gp) {
-		update_post_meta($pid, '_ct_review', 'gioco non mappato'); // finisce nella lista "da rivedere" (sez.6)
-		return ['status' => 'unsupported_game'];
+		$r = $no('unsupported_game');
+		$r['note'] = 'gioco non mappato';
+		return $r;
 	}
 	$condCT = crs_condition_to_ct(strtoupper(crs_first_term_slug($pid, 'pa_condizione')));
 	$langCT = crs_slug_to_ct_lang(crs_first_term_slug($pid, 'pa_lingua') ?: 'it');
 	$foilOn = crs_first_term_slug($pid, 'pa_foil') === $gp['foil_slug']; // Magic 'foil' · Pokémon 'reverse-holo'
 
-	$list  = $market[$bid] ?? []; // forma compatta di crs_ct_market_for: {cents,uid,vac,ph}
-	$exact = []; // condizione+lingua+foil esatti: il prezzo per-lingua che vogliamo
-	$broad = []; // stessa condizione+foil, QUALSIASI lingua → campione ampio = "valore reale" della carta (ancora di sanità)
+	$list    = $market[$bid] ?? []; // forma compatta di crs_ct_market_for: {cents,uid,vac,hub,ph}
+	$exact   = []; // condizione+lingua+foil esatti: il prezzo per-lingua che vogliamo
+	$broad   = []; // stessa condizione+foil, QUALSIASI lingua → campione ampio (ancora di sanità)
+	$exact_z = []; // come sopra, ma SOLO venditori CardTrader Zero
+	$broad_z = [];
 	foreach ($list as $m) {
 		if ($m['uid'] === $ctx['myuser'] || $m['vac'] || $m['cents'] <= 0) {
 			continue; // non le mie · venditore in vacanza · prezzo nullo
@@ -1515,36 +1601,69 @@ function crs_ct_price_from_market($pid, $market, $ctx)
 		if ((!empty($ph[$gp['foil']])) !== $foilOn) {
 			continue; // stesso finish (foil / reverse holo)
 		}
-		$eur = $m['cents'] / 100;
+		$eur     = $m['cents'] / 100;
+		$isLang  = ($ph[$gp['lang']] ?? '') === $langCT; // l'API ignora il parametro lingua → filtro qui
 		$broad[] = $eur;
-		if (($ph[$gp['lang']] ?? '') === $langCT) {
-			$exact[] = $eur; // stessa lingua (l'API ignora il parametro → filtro qui)
+		if ($isLang) {
+			$exact[] = $eur;
+		}
+		if (!empty($m['hub'])) {
+			$broad_z[] = $eur;
+			if ($isLang) {
+				$exact_z[] = $eur;
+			}
 		}
 	}
 
 	if (!$exact && !$broad) {
-		update_post_meta($pid, '_ct_review', 'nessun dato di mercato'); // davvero niente su cui prezzare
-		return ['status' => 'skipped_nodata'];
+		$r = $no('skipped_nodata');
+		$r['note'] = 'nessun dato di mercato';
+		return $r;
+	}
+
+	// PANIERE: con l'opzione attiva ci si confronta con i soli venditori CardTrader Zero — la
+	// concorrenza vera, visto che vendiamo in Zero anche noi. Chi spedisce per conto suo può stare
+	// più basso perché il compratore ci aggiunge la spedizione: inseguirlo regalava margine.
+	// Misurato il 28/07/2026 su un campione reale: +47% medio, e il mercato Zero è ~90% delle
+	// inserzioni, quindi il campione NON si assottiglia (18 carte su 18 ne avevano uno).
+	$note  = '';
+	$basis = 'completo';
+	$n_all = count($broad); // dimensione del mercato COMPLETO: va letta prima di sostituire il paniere
+	if (!empty($ctx['zero_only'])) {
+		// ⚠️ Serve un campione Zero MINIMO. L'ancora di sanità qui sotto viene calcolata su $broad:
+		// passandole il paniere Zero, confronta il campione con se stesso e il cap non scatta più.
+		// Con 2-3 inserzioni Zero bastava un prezzo alto isolato per far uscire 21 € su una carta
+		// da 1,45 € (misurato il 28/07/2026 su Temple of the False God). Sotto la soglia il mercato
+		// Zero non è un mercato: è un aneddoto, e si prezza sul completo.
+		$min_z = (int) apply_filters('crs_ct_zero_min_listings', 4);
+		if (count($broad_z) >= $min_z) {
+			$exact = $exact_z;
+			$broad = $broad_z;
+			$basis = 'zero';
+		} elseif ($broad_z) {
+			$note = 'solo ' . count($broad_z) . ' inserzioni CardTrader Zero → prezzo dal mercato completo';
+		} else {
+			$note = 'nessuna inserzione CardTrader Zero → prezzo dal mercato completo';
+		}
 	}
 
 	// Ancora di SANITÀ: valore robusto della carta sul mercato AMPIO (tutte le lingue, stessa cond+foil). Serve a
 	// smascherare i placeholder-spazzatura quando il mercato nella lingua esatta è sottile o inquinato.
 	$anchor = crs_ct_reference_price($broad); // null solo se $broad è vuoto
 	$cap    = (float) apply_filters('crs_ct_price_cap_mult', 4.0); // il prezzo-lingua non può eccedere Nx il mercato generale
-	$note   = '';
 
 	if (count($exact) >= 4) {
 		$base = crs_ct_reference_price($exact); // abbastanza dati: prezzo per-lingua robusto (filtro simmetrico)
 		if ($anchor !== null && $base > $anchor * $cap) {
 			$base = $anchor; // sballa in alto vs il mercato generale = dati-lingua inquinati (placeholder)
-			$note = 'prezzo lingua anomalo → uso il mercato generale';
+			$note = ($note ? $note . ' · ' : '') . 'prezzo lingua anomalo → uso il mercato generale';
 		}
 	} elseif ($exact) {
 		// mercato-lingua SOTTILE (1-3): mi fido solo se coerente col generale, IN ALTO E IN BASSO (simmetrico)
 		$tent = crs_ct_median($exact);
 		if ($anchor !== null && ($tent > $anchor * $cap || $tent < $anchor / $cap)) {
 			$base = $anchor;
-			$note = 'poche inserzioni nella lingua e prezzo anomalo → uso il mercato generale';
+			$note = ($note ? $note . ' · ' : '') . 'poche inserzioni nella lingua e prezzo anomalo → uso il mercato generale';
 		} else {
 			$base = $tent;
 		}
@@ -1553,17 +1672,42 @@ function crs_ct_price_from_market($pid, $market, $ctx)
 	}
 
 	$price   = round($base * (1 + $ctx['markup'] / 100), 2); // più basso legittimo + ricarico
-	$floored = false;
-	if ($price < $ctx['floor']) {
-		$price   = $ctx['floor'];
-		$floored = true;
-	}
+	$fl      = crs_price_floor($price, $pid); // stesso guardiano di import/pull/push: un solo punto di verità
+	$floored = $fl > $price;
+	$price   = $fl;
 	// campione minuscolo: il prezzo si scrive comunque (mai lasciare spazzatura), ma si segnala per un controllo umano
 	if (count($broad) < 4) {
 		$note = ($note ? $note . ' · ' : '') . 'pochi dati di mercato: verifica';
 	}
-	if ($note !== '') {
-		update_post_meta($pid, '_ct_review', $note); // prezzato ma con nota → compare in "Da rivedere"
+
+	return [
+		'ok' => true, 'status' => null, 'price' => $price, 'floored' => $floored,
+		'note' => $note, 'basis' => $basis, 'n' => $n_all, 'n_zero' => count($broad_z),
+	];
+}
+
+function crs_ct_price_from_market($pid, $market, $ctx)
+{
+	$c = crs_ct_compute_price($pid, $market, $ctx);
+
+	if (!$c['ok']) {
+		if ($c['status'] === null) {
+			return null; // non prezzabile: nessun blueprint, oppure sealed/accessori
+		}
+		if ($c['status'] === 'skipped_pinned') {
+			// prezzo fissato a mano = definitivo → pubblica se è ancora in bozza (H2 pubblica solo a prezzo reale)
+			return ['status' => 'skipped_pinned', 'published' => crs_ct_publish_if_priced($pid)];
+		}
+		if ($c['note'] !== '') {
+			update_post_meta($pid, '_ct_review', $c['note']); // finisce nella lista "da rivedere" (sez.6)
+		}
+		return ['status' => $c['status']];
+	}
+
+	$price   = $c['price'];
+	$floored = $c['floored'];
+	if ($c['note'] !== '') {
+		update_post_meta($pid, '_ct_review', $c['note']); // prezzato ma con nota → compare in "Da rivedere"
 	} else {
 		delete_post_meta($pid, '_ct_review');
 	}
@@ -1613,6 +1757,47 @@ function crs_ct_price_from_market($pid, $market, $ctx)
 	return ['status' => 'priced', 'floored' => $floored, 'published' => $published];
 }
 
+/**
+ * Quante inserzioni possono mancare da un export prima di considerarlo TRONCATO invece che
+ * "carte vendute". Sotto la soglia si verifica una per una; sopra, non si verifica affatto:
+ * sarebbero centinaia di chiamate per confermare un export che è già evidentemente incompleto.
+ */
+function crs_ct_missing_verify_cap($total)
+{
+	return max(5, (int) apply_filters('crs_ct_missing_verify_cap', (int) ceil($total * 0.2), $total));
+}
+
+/**
+ * L'inserzione è DAVVERO sparita da CardTrader? Interroga l'export filtrato sul solo blueprint
+ * della carta: una risposta piccola e mirata, che un troncamento del catalogo intero non tocca.
+ *
+ * Distingue i tre casi che il pull confondeva in uno:
+ *   true  = confermato assente → venduta: si può azzerare subito, senza aspettare il secondo giro
+ *   false = c'è ancora        → l'export completo era monco: NON toccare niente
+ *   null  = non verificabile  → rete muta, 429, o carta senza blueprint: si torna alla prudenza
+ *
+ * ⚠️ Ritorna null anche quando la risposta arriva vuota MA la chiamata è fallita: "vuoto" e
+ * "errore" non vanno confusi, o un timeout cancellerebbe una carta ancora in vendita.
+ */
+function crs_ct_listing_confirmed_gone($pid, $ctpid)
+{
+	$bid = (int) get_post_meta($pid, CRS_META_CT_BLUEPRINT, true);
+	if (!$bid || !$ctpid) {
+		return null; // senza blueprint non c'è modo di fare una domanda mirata
+	}
+	list($ok, $data) = crs_ct_products(['blueprint_id' => $bid]);
+	usleep(110000); // stesso pacing del resto delle letture (10 req/s)
+	if (!$ok) {
+		return null; // errore ≠ assenza
+	}
+	foreach (crs_ct_arr($data) as $p) {
+		if ((int) ($p['id'] ?? 0) === (int) $ctpid) {
+			return false; // eccola: era l'export grande a essere incompleto
+		}
+	}
+	return true;
+}
+
 /** Prime le cache di meta e termini per un set di prodotti in poche query (evita l'N+1 nei loop). */
 function crs_ct_prime_caches($ids)
 {
@@ -1627,16 +1812,24 @@ function crs_ct_prime_caches($ids)
  * Raggruppa i prodotti prezzabili (con `_ct_blueprint_id`) per ESPANSIONE CardTrader: una fetch di mercato
  * per set copre tutte le carte e tutte le lingue di quel set. @return array di ['eid','pids']
  */
-function crs_ct_autoprice_groups()
+function crs_ct_autoprice_groups(&$excluded = null)
 {
+	// ⚠️ Gli scarti QUI dentro avvengono PRIMA che il prodotto entri nel giro, quindi non finiscono
+	// in nessun conteggio: il riepilogo diceva "prezzate 352" e taceva su tutti quelli mai entrati
+	// in lista. È così che 131 carte sono rimaste a 0,02 € senza che niente lo segnalasse
+	// (28/07/2026). Ora ogni scarto è contato per motivo e mostrato accanto ai risultati.
+	$excluded = ['no_blueprint' => 0, 'non_singola' => 0, 'no_espansione' => 0, 'gioco_non_mappato' => 0];
+
 	$ids = crs_ct_synced_ids();
 	crs_ct_prime_caches($ids); // N+1 → poche query (H3)
 	$groups = [];
 	foreach ($ids as $pid) {
 		if (!get_post_meta($pid, CRS_META_CT_BLUEPRINT, true)) {
+			$excluded['no_blueprint']++;
 			continue;
 		}
 		if (crs_product_type_slug($pid) !== 'singole') {
+			$excluded['non_singola']++;
 			continue; // solo le singole si autoprezzano; sealed/accessori prendono il prezzo da CardTrader (pull)
 		}
 		// espansione CardTrader dove vive il blueprint: preferisci quella SALVATA al match (già risolta con gli
@@ -1645,6 +1838,7 @@ function crs_ct_autoprice_groups()
 		if (!$eid) {
 			$game = crs_ct_game_id(crs_product_game_slug($pid));
 			if (!$game) {
+				$excluded['gioco_non_mappato']++;
 				continue;
 			}
 			$lk    = crs_ct_expansion_lookup($game);
@@ -1659,7 +1853,9 @@ function crs_ct_autoprice_groups()
 				$eid = (int) ($lk['by_name'][crs_nrm(get_post_meta($pid, CRS_META_CM_EXP, true))] ?? 0);
 			}
 			if (!$eid) {
-				continue;
+				$excluded['no_espansione']++;
+				update_post_meta($pid, '_ct_review', 'espansione CardTrader non risolta: il prezzatore non lo vede');
+				continue; // ora almeno compare in "Da rivedere" invece di sparire
 			}
 		}
 		$groups[$eid]['eid']    = $eid;
@@ -1724,18 +1920,26 @@ function crs_ct_autoprice_start()
 		delete_option('crs_ct_ap_job'); // job vecchio bloccato (blocco morto) → lo recupero, niente stallo eterno (C3)
 		delete_option('crs_ct_ap_groups');
 	}
-	$groups = crs_ct_autoprice_groups();
+	$groups = crs_ct_autoprice_groups($excluded);
 	if (!$groups) {
 		return 0;
+	}
+	// quanti prodotti sono nella lista da prezzare: senza questo numero, "prezzate N" non dice
+	// nulla — N su quanti? Era il buco che nascondeva le carte mai entrate nel giro.
+	$in_list = 0;
+	foreach ($groups as $g) {
+		$in_list += count($g['pids']);
 	}
 	// H4: i gruppi (con tutti gli ID) stanno in un'option scritta UNA volta; il "job" tiene solo il cursore
 	// leggero (offset/counts), riscritto ad ogni blocco → niente riscrittura di un blob da centinaia di KB.
 	update_option('crs_ct_ap_groups', $groups, false);
 	update_option('crs_ct_ap_job', [
-		'total'   => count($groups),
-		'offset'  => 0,
-		'counts'  => crs_ct_autoprice_counts(),
-		'started' => time(),
+		'total'    => count($groups),
+		'offset'   => 0,
+		'counts'   => crs_ct_autoprice_counts(),
+		'in_list'  => $in_list,
+		'excluded' => $excluded,
+		'started'  => time(),
 	], false);
 	crs_ct_autoprice_enqueue(0);
 	return count($groups);
@@ -1816,13 +2020,171 @@ function crs_ct_do_autoprice_batch($offset = 0)
 		update_option('crs_ct_ap_job', $job, false); // solo il cursore leggero (H4)
 		crs_ct_autoprice_enqueue($job['offset']);
 	} else {
-		update_option('crs_ct_last_autoprice', ['time' => time(), 'counts' => $job['counts'], 'total' => $job['total']], false);
+		update_option('crs_ct_last_autoprice', [
+			'time'     => time(),
+			'counts'   => $job['counts'],
+			'total'    => $job['total'],
+			'in_list'  => $job['in_list'] ?? null,   // carte davvero entrate nel giro
+			'excluded' => $job['excluded'] ?? null,  // e quelle mai entrate, per motivo
+		], false);
 		delete_option('crs_ct_ap_job');
 		delete_option('crs_ct_ap_groups');
 	}
 	crs_unlock('crs_ct_write');
 }
 add_action('crs_ct_autoprice_batch', 'crs_ct_do_autoprice_batch', 10, 1);
+
+/* ---- RIMEDIO: alza i prezzi GIÀ sotto il minimo (WooCommerce + CardTrader) -------------------- */
+
+/**
+ * Trova — e, se non è una simulazione, corregge — i prodotti con un prezzo sotto il minimo.
+ *
+ * Serve per il PREGRESSO. crs_price_floor() presidia le scritture nuove, ma una carta già in
+ * vendita a 0,03 € resta a 0,03 finché qualcosa non la riscrive, e l'autopricer da solo non basta:
+ * salta i sealed/accessori, i giochi non mappati, i prezzi fissati a mano e le carte senza dati di
+ * mercato ('skipped_nodata') — che sono proprio quelle rimaste indietro.
+ *
+ * Alza il prezzo su WooCommerce e, se l'inserzione esiste su CardTrader, ci rispinge il prezzo.
+ * In simulazione non tocca niente: nessun save, nessuna chiamata (doppia garanzia — non chiama le
+ * scritture E le blocca in crs_ct_send con crs_ct_dry_run).
+ *
+ * ⚠️ `$limit` conta le correzioni APPLICATE, non i prodotti esaminati: ogni correzione può valere
+ * una PUT (~70ms di pacing + rete), e su un catalogo intero si andrebbe oltre il timeout della
+ * richiesta admin. Il report dice sempre quanti ne restano: si rilancia finché è 0.
+ *
+ * @param  bool $dry   true = solo conteggio (default: la modalità sicura)
+ * @param  int  $limit massimo di correzioni per esecuzione (0 = nessun limite; ignorato in simulazione)
+ * @return array{floor:float,found:int,fixed:int,pinned:int,put_ok:int,put_err:int,remaining:int,gain:float,rows:array}
+ */
+function crs_ct_floor_sweep($dry = true, $limit = 300)
+{
+	global $wpdb;
+
+	$floor = crs_price_floor_value();
+	$out   = [
+		'floor' => $floor, 'found' => 0, 'fixed' => 0, 'pinned' => 0,
+		'put_ok' => 0, 'put_err' => 0, 'remaining' => 0, 'gain' => 0.0, 'rows' => [],
+		'no_floor' => false, 'scanned' => 0, 'no_price' => 0, 'cheapest' => [],
+	];
+	if ($floor <= 0) {
+		$out['no_floor'] = true; // ⚠️ diverso da "non ne ho trovati": qui non ho nemmeno guardato
+		return $out;
+	}
+
+	// DIAGNOSTICA — senza questi numeri "nessun prodotto sotto il minimo" è indistinguibile da
+	// "non li sto cercando dove stanno". Costa una query e fa risparmiare mezz'ora di indovinelli.
+	$out['scanned'] = (int) $wpdb->get_var(
+		"SELECT COUNT(*) FROM {$wpdb->posts} p
+		 INNER JOIN {$wpdb->postmeta} m ON m.post_id = p.ID AND m.meta_key = '_regular_price'
+		 WHERE p.post_type = 'product' AND p.post_status IN ('publish','draft','private') AND m.meta_value <> ''"
+	);
+	$out['no_price'] = (int) $wpdb->get_var(
+		"SELECT COUNT(*) FROM {$wpdb->posts} p
+		 LEFT JOIN {$wpdb->postmeta} m ON m.post_id = p.ID AND m.meta_key = '_regular_price'
+		 WHERE p.post_type = 'product' AND p.post_status IN ('publish','draft','private')
+		   AND (m.meta_id IS NULL OR m.meta_value = '')"
+	);
+	// i 5 prezzi più bassi del catalogo: dicono al volo se il problema è la query o i dati
+	$out['cheapest'] = $wpdb->get_results(
+		"SELECT p.ID, p.post_title, p.post_status, m.meta_value AS price
+		 FROM {$wpdb->posts} p
+		 INNER JOIN {$wpdb->postmeta} m ON m.post_id = p.ID AND m.meta_key = '_regular_price'
+		 WHERE p.post_type = 'product' AND p.post_status IN ('publish','draft','private')
+		   AND m.meta_value <> '' AND CAST(m.meta_value AS DECIMAL(12,4)) > 0
+		 ORDER BY CAST(m.meta_value AS DECIMAL(12,4)) ASC LIMIT 5",
+		ARRAY_A
+	);
+
+	// prodotti con un prezzo REALE ma sotto il minimo. `> 0` esclude i "non prezzati", che non
+	// vanno inventati (stessa regola di crs_price_floor).
+	$ids = $wpdb->get_col($wpdb->prepare(
+		"SELECT p.ID FROM {$wpdb->posts} p
+		 INNER JOIN {$wpdb->postmeta} m ON m.post_id = p.ID AND m.meta_key = '_regular_price'
+		 WHERE p.post_type = 'product'
+		   AND p.post_status IN ('publish', 'draft', 'private')
+		   AND m.meta_value <> ''
+		   AND CAST(m.meta_value AS DECIMAL(12,4)) > 0
+		   AND CAST(m.meta_value AS DECIMAL(12,4)) < %f
+		 ORDER BY p.ID",
+		$floor
+	));
+	if (!$ids) {
+		return $out;
+	}
+	crs_ct_prime_caches($ids); // N+1 → poche query (stesso trattamento di autopricer e pull)
+
+	$was_dry = $dry ? crs_ct_dry_run(true) : false; // in simulazione: sbarra anche il transport
+	try {
+		foreach ($ids as $pid) {
+			$pid     = (int) $pid;
+			$product = wc_get_product($pid);
+			if (!$product) {
+				continue;
+			}
+			$old = (float) $product->get_regular_price();
+			if ($old <= 0 || $old >= $floor) {
+				continue; // cambiato sotto il naso tra query ed esecuzione
+			}
+			if (get_post_meta($pid, CRS_META_PRICE_PINNED, true) === 'yes') {
+				$out['pinned']++; // prezzo deciso a mano: non si tocca, si conta soltanto
+				continue;
+			}
+			$out['found']++;
+			$qty = max(0, (int) $product->get_stock_quantity());
+			$out['gain'] += ($floor - $old) * $qty;
+
+			// le prime righe finiscono nel report a schermo: serve vedere COSA si sta per alzare,
+			// non solo quanto (un conteggio senza nomi non è verificabile)
+			if (count($out['rows']) < 50) {
+				$out['rows'][] = [
+					'id'    => $pid,
+					'name'  => get_the_title($pid),
+					'old'   => $old,
+					'new'   => $floor,
+					'qty'   => $qty,
+					'on_ct' => (bool) get_post_meta($pid, CRS_META_CT_PRODUCT, true),
+				];
+			}
+
+			if ($dry) {
+				continue;
+			}
+			if ($limit > 0 && $out['fixed'] >= $limit) {
+				$out['remaining']++; // oltre il tetto di questa esecuzione: lo prende il giro dopo
+				continue;
+			}
+
+			$product->set_regular_price((string) $floor);
+			$product->save();
+			$out['fixed']++;
+
+			// CardTrader: allinea l'inserzione, se esiste. Se la PUT fallisce NON aggiorno
+			// `_ct_price_synced`, così il prossimo giro (o l'autopricer) ritenta da solo.
+			$ctpid = (int) get_post_meta($pid, CRS_META_CT_PRODUCT, true);
+			if ($ctpid) {
+				list($ok) = crs_ct_send('PUT', 'products/' . $ctpid, ['price' => $floor]);
+				if ($ok) {
+					update_post_meta($pid, '_ct_price_synced', (string) $floor);
+					$out['put_ok']++;
+				} else {
+					$out['put_err']++;
+				}
+			}
+		}
+	} finally {
+		if ($dry) {
+			crs_ct_dry_run($was_dry); // l'interruttore torna com'era anche se qualcosa esplode
+		}
+	}
+
+	update_option('crs_ct_last_floor_sweep', ['time' => time(), 'dry' => (bool) $dry, 'counts' => [
+		'found' => $out['found'], 'fixed' => $out['fixed'], 'pinned' => $out['pinned'],
+		'put_ok' => $out['put_ok'], 'put_err' => $out['put_err'], 'remaining' => $out['remaining'],
+		'gain' => round($out['gain'], 2),
+	]], false);
+
+	return $out;
+}
 
 /** Routine notturna del cron: pull (immagini/import/pubblica) e poi, se attivo, l'autopricer custom. */
 function crs_ct_nightly()

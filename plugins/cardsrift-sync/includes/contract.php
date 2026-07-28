@@ -22,6 +22,46 @@ const CRS_META_PRICE_PINNED = '_crs_price_pinned';    // il sync non tocca il pr
 const CRS_META_CM_STOCK     = '_cm_stock';            // ULTIMA qty Cardmarket vista: ancora del delta stock (multi-canale)
 const CRS_META_CT_STOCK     = '_ct_stock';            // ULTIMA qty CardTrader nota (scritta da noi o osservata): ancora del delta pull
 
+/* ---- PREZZO MINIMO (floor): guardiano unico su OGNI scrittura di prezzo ---------------------- */
+
+/** Il prezzo minimo di vendita in euro. Unica lettura dell'opzione: nessun get_option sparso. */
+function crs_price_floor_value()
+{
+	return (float) get_option('crs_ct_floor', 0.20);
+}
+
+/**
+ * Applica il prezzo minimo. È il GUARDIANO: ogni punto che scrive un prezzo — import CSV, pull
+ * CardTrader, creazione da inserzione, payload di push, autopricer — passa da qui.
+ *
+ * ⚠️ Prima il floor viveva SOLO dentro l'autopricer (crs_ct_price_from_market): tutte le altre
+ * porte scrivevano prezzi nudi. Il 28/07/2026 sono state vendute carte a 0,03 € su CardTrader —
+ * nate dall'import Cardmarket (dove i bulk stanno a 2-3 cent) e spinte sul marketplace dal push,
+ * senza mai incontrare il minimo. Con l'autopricer spento non c'era nessun altro a guardarle.
+ *
+ * Due prezzi NON vengono toccati, di proposito:
+ *  - `0`/vuoto = "non prezzato": alzarlo inventerebbe un prezzo dove manca il dato, e la bozza
+ *    verrebbe pubblicata su un valore finto (la pubblicazione richiede un prezzo reale);
+ *  - `_crs_price_pinned` = 'yes': il prezzo fissato a mano è una decisione umana esplicita e
+ *    batte l'automatismo — stesso principio per cui l'autopricer li salta ('skipped_pinned').
+ *
+ * @param  float|string $price prezzo proposto
+ * @param  int          $pid   prodotto (0 = nessun contesto, es. in creazione: il pinned non esiste ancora)
+ * @return float        il prezzo, mai sotto il minimo
+ */
+function crs_price_floor($price, $pid = 0)
+{
+	$p = (float) $price;
+	if ($p <= 0) {
+		return $p; // "non prezzato": non si inventa un prezzo
+	}
+	if ($pid && get_post_meta($pid, CRS_META_PRICE_PINNED, true) === 'yes') {
+		return $p; // prezzo fissato a mano: vince sull'automatismo
+	}
+	$floor = crs_price_floor_value();
+	return $p < $floor ? $floor : $p;
+}
+
 /* Vocabolari: schema, import e sync li leggono TUTTI da qui. */
 function crs_games()
 {

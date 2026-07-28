@@ -55,7 +55,15 @@ function crs_page_ct()
 		update_option('crs_ct_floor', max(0, $fl), false);
 		$mk = (float) str_replace(',', '.', (string) ($_POST['crs_ct_markup'] ?? '5'));
 		update_option('crs_ct_markup', max(0, $mk), false);
+		update_option('crs_ct_zero_only', !empty($_POST['crs_ct_zero']) ? 1 : 0, false);
 		echo '<div class="notice notice-success is-dismissible"><p>Impostazioni autopricer salvate.</p></div>';
+	}
+
+	// passata sui prezzi già sotto il minimo. Il default è la SIMULAZIONE: si applica solo con
+	// il bottone esplicito, perché l'altra strada riscrive inserzioni vere sul marketplace.
+	$sweep = null;
+	if (!empty($_POST['crs_floor_sweep']) && check_admin_referer('crs_ct_floorsweep')) {
+		$sweep = crs_ct_floor_sweep($_POST['crs_floor_sweep'] !== 'apply', 100);
 	}
 
 	$has   = crs_ct_configured();
@@ -226,7 +234,7 @@ function crs_page_ct()
 						<?php
 						$c = is_array($lp['counts'] ?? null) ? $lp['counts'] : [];
 						$et = [];
-						foreach (['seen' => 'viste', 'price' => 'prezzi', 'stock' => 'scorte', 'image' => 'immagini', 'published' => 'pubblicate', 'imported' => 'importate', 'not_on_ct' => 'assenti da CT', 'pinned' => 'a prezzo fissato'] as $k => $lab) {
+						foreach (['seen' => 'viste', 'price' => 'prezzi', 'stock' => 'scorte', 'foil' => 'foil corretti', 'image' => 'immagini', 'published' => 'pubblicate', 'imported' => 'importate', 'not_on_ct' => 'assenti da CT', 'pinned' => 'a prezzo fissato'] as $k => $lab) {
 							if (isset($c[$k])) {
 								$et[] = esc_html($lab . ': ' . (int) $c[$k]);
 							}
@@ -343,6 +351,15 @@ function crs_page_ct()
 			<form method="post">
 				<?php wp_nonce_field('crs_ct_cfg'); ?>
 				<p><label><input type="checkbox" name="crs_ct_ap_on" value="1" <?php checked($ap_on); ?>> <strong>Attiva l'autopricer custom</strong> (sostituisce quello di CardTrader)</label></p>
+			<p>
+				<label><input type="checkbox" name="crs_ct_zero" value="1" <?php checked((bool) get_option('crs_ct_zero_only', 1)); ?>> <strong>Prezza sul solo mercato CardTrader Zero</strong></label>
+				<br><span class="description">
+					Si confronta con i venditori che spediscono tramite l'hub — la concorrenza vera, visto che
+					vendiamo in Zero anche noi. Chi spedisce per conto proprio può stare più basso, perché il
+					compratore ci somma la spedizione: inseguirlo regala margine. Se una carta non ha nessuna
+					inserzione Zero si ripiega sul mercato completo, segnalandolo in "Da rivedere".
+				</span>
+			</p>
 				<p>
 					Ricarico sul più basso: <input type="text" name="crs_ct_markup" value="<?php echo esc_attr(rtrim(rtrim(number_format($markup, 2, '.', ''), '0'), '.')); ?>" size="4"> % &nbsp;
 					Prezzo minimo (floor): <input type="text" name="crs_ct_floor" value="<?php echo esc_attr(number_format($floor, 2, '.', '')); ?>" size="6"> € &nbsp;
@@ -366,6 +383,21 @@ function crs_page_ct()
 							(int) ($c['skipped_pinned'] ?? 0),
 							(int) ($c['errors'] ?? 0)
 						);
+						// Quante carte sono ENTRATE nel giro, e quante no. Senza questi due numeri
+						// "prezzate 352" non dice se le altre fossero a posto o mai guardate: e' il
+						// buco che ha tenuto 131 carte a 0,02 euro senza che nulla lo segnalasse.
+						if (isset($la['in_list'])) {
+							printf(' &mdash; <strong>in lista %d carte</strong>', (int) $la['in_list']);
+						}
+						if (!empty($la['excluded']) && array_sum((array) $la['excluded']) > 0) {
+							$ex = [];
+							foreach ((array) $la['excluded'] as $k => $v) {
+								if ($v > 0) {
+									$ex[] = esc_html(str_replace('_', ' ', $k)) . ' ' . (int) $v;
+								}
+							}
+							echo ' &middot; <strong style="color:#a00">mai entrate nel giro: ' . implode(' &middot; ', $ex) . '</strong>';
+						}
 					} else {
 						echo 'Mai eseguito.';
 					}
@@ -400,6 +432,91 @@ function crs_page_ct()
 				});
 			})();
 			</script>
+
+			<h2>8 · Prezzi sotto il minimo</h2>
+			<p class="description">
+				Cerca i prodotti che hanno un prezzo <strong>sotto il minimo</strong> impostato qui sopra e li porta
+				al minimo, sul sito <em>e</em> su CardTrader. Serve per il pregresso: l'autopricer non li prende
+				tutti (salta sealed, accessori, giochi non mappati e carte senza dati di mercato), e finché nessuno
+				li tocca restano in vendita al prezzo vecchio. I prezzi <strong>fissati a mano</strong> non si toccano.
+				<br><strong>Simula</strong> non scrive niente, da nessuna parte. Applica al massimo 100 carte per volta:
+				se ne restano, rilancia.
+			</p>
+			<form method="post">
+				<?php wp_nonce_field('crs_ct_floorsweep'); ?>
+				<p>
+					<button class="button button-primary" name="crs_floor_sweep" value="dry">Simula</button>
+					<button class="button" name="crs_floor_sweep" value="apply"
+						onclick="return confirm('Alza davvero i prezzi al minimo, sul sito E su CardTrader?\n\nLe inserzioni sono reali e in vendita.');">Applica</button>
+				</p>
+			</form>
+			<?php if (is_array($sweep) && !empty($sweep['no_floor'])) : ?>
+				<div class="notice notice-error inline" style="margin:14px 0">
+					<p><strong>Nessun prezzo minimo impostato</strong> — qui sopra il campo "Prezzo minimo (floor)" vale 0,
+					quindi non ho cercato niente. Non significa che vada tutto bene: significa che non ho guardato.
+					Imposta un minimo, salva, e rilancia.</p>
+				</div>
+			<?php elseif (is_array($sweep)) : ?>
+				<div class="notice notice-<?php echo $sweep['found'] ? 'warning' : 'success'; ?> inline" style="margin:14px 0">
+					<p>
+						<strong><?php echo $sweep['found'] ? 'Simulazione' : 'Nessun prodotto sotto il minimo'; ?></strong>
+						<?php if ($sweep['found']) : ?>
+							— minimo <code><?php echo esc_html(number_format($sweep['floor'], 2, ',', '')); ?> €</code>:
+							<strong><?php echo (int) $sweep['found']; ?></strong> prodotti sotto,
+							<?php echo (int) $sweep['pinned']; ?> a prezzo fissato (saltati),
+							valore del rialzo <strong><?php echo esc_html(number_format($sweep['gain'], 2, ',', '.')); ?> €</strong>
+							sullo stock a magazzino.
+							<?php if ($sweep['fixed']) : ?>
+								<br>Corretti <strong><?php echo (int) $sweep['fixed']; ?></strong> ·
+								CardTrader aggiornati <?php echo (int) $sweep['put_ok']; ?>
+								<?php if ($sweep['put_err']) : ?>
+									· <strong>errori <?php echo (int) $sweep['put_err']; ?></strong> (si ritenta al prossimo giro)
+								<?php endif; ?>
+								<?php if ($sweep['remaining']) : ?>
+									· <strong>ne restano <?php echo (int) $sweep['remaining']; ?></strong>: rilancia
+								<?php endif; ?>
+							<?php endif; ?>
+						<?php endif; ?>
+					</p>
+					<p style="margin-top:6px">
+						<em>Controllo:</em> minimo in uso <code><?php echo esc_html(number_format($sweep['floor'], 2, ',', '')); ?> €</code> ·
+						prodotti con un prezzo esaminati <strong><?php echo (int) $sweep['scanned']; ?></strong> ·
+						senza prezzo (ignorati) <?php echo (int) $sweep['no_price']; ?>
+						<?php if (!empty($sweep['cheapest'])) : ?>
+							<br>I 5 prezzi più bassi in catalogo:
+							<?php
+							$bits = [];
+							foreach ($sweep['cheapest'] as $c) {
+								$bits[] = sprintf(
+									'<code>%s €</code> %s%s',
+									esc_html(number_format((float) $c['price'], 2, ',', '')),
+									esc_html(mb_substr((string) $c['post_title'], 0, 28)),
+									$c['post_status'] !== 'publish' ? ' <em>(' . esc_html($c['post_status']) . ')</em>' : ''
+								);
+							}
+							echo implode(' · ', $bits); // già passati da esc_html sopra
+							?>
+						<?php endif; ?>
+					</p>
+				</div>
+				<?php if ($sweep['rows']) : ?>
+					<table class="widefat striped" style="max-width:900px">
+						<thead><tr><th>Prodotto</th><th>Prezzo</th><th>Diventa</th><th>Q.tà</th><th>Su CardTrader</th></tr></thead>
+						<tbody>
+						<?php foreach ($sweep['rows'] as $r) : ?>
+							<tr>
+								<td><a href="<?php echo esc_url(get_edit_post_link($r['id'])); ?>"><?php echo esc_html($r['name']); ?></a></td>
+								<td><?php echo esc_html(number_format($r['old'], 2, ',', '')); ?> €</td>
+								<td><strong><?php echo esc_html(number_format($r['new'], 2, ',', '')); ?> €</strong></td>
+								<td><?php echo (int) $r['qty']; ?></td>
+								<td><?php echo $r['on_ct'] ? 'sì' : '—'; ?></td>
+							</tr>
+						<?php endforeach; ?>
+						</tbody>
+					</table>
+					<p class="description">Prime <?php echo count($sweep['rows']); ?> righe.</p>
+				<?php endif; ?>
+			<?php endif; ?>
 		<?php else : ?>
 			<p><em>Salva un token per abilitare test e anteprima.</em></p>
 		<?php endif; ?>
